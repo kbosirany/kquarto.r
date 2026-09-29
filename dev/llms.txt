@@ -1,0 +1,106 @@
+# kquarto.r
+
+Site : <https://kbosirany.github.io/kquarto.r/> (version en
+développement : [/dev](https://kbosirany.github.io/kquarto.r/dev/))
+
+Créer, modéliser (templates) et générer des rapports Quarto de type
+*book*, dans un package R ou dans un projet de rédaction indépendant.
+
+## Utilisation
+
+``` r
+
+library(kquarto.r)
+
+# Créer deux rapports avec un _quarto.yml rempli
+create_book(
+  c("rapport_technique", "note_synthese"),
+  title = c(note_synthese = "Note de synthèse"),
+  author = "Kevin",
+  lang = "fr",
+  chapters = c("Introduction", "Méthodes")
+)
+# -> rapport_technique/chapitre-01-introduction.qmd, chapitre-02-methodes.qmd
+
+# Ajouter un chapitre : numéro suivant, ajouté au _quarto.yml
+create_book_chapter("rapport_technique", "Résultats")
+# -> chapitre-03-resultats.qmd ("chapter-03-..." si lang = "en")
+
+# Générer un rapport (par défaut dans rapport_technique/_book)
+render_book("rapport_technique")
+
+# ... ou ailleurs, chemin relatif au dossier du rapport
+render_book("rapport_technique", output_dir = "../docs/rapport_technique")
+
+# Générer tous les books du dossier courant
+render_book()
+```
+
+## Templates
+
+``` r
+
+# Enregistrer un rapport déjà configuré comme template réutilisable
+create_template_book("mon_template", from = "rapport_technique")
+list_templates_book()
+
+# L'utiliser dans un autre projet
+create_book("nouveau_rapport", template = "mon_template")
+```
+
+Les templates utilisateur sont stockés dans
+[`template_dir()`](https://kbosirany.github.io/kquarto.r/dev/reference/template_dir.md)
+(`tools::R_user_dir("kquarto.r", "data")`), modifiable via
+`options(kquarto.r.template_dir = "...")`.
+
+### Templates livrés par un package
+
+Un package (par exemple une charte institutionnelle) peut livrer ses
+templates dans `inst/templates/<nom>/` :
+
+``` r
+
+# Depuis la racine de ce package
+create_template_book("inrae", from = "default", dir = "inst/templates")
+
+# Utilisation
+create_book("rapport", template = "kquarto.r.inrae::inrae")
+list_templates_book(packages = "kquarto.r.inrae")
+```
+
+Pour en faire le template par défaut, le package peut envelopper les
+fonctions (`template = "kquarto.r.inrae::inrae"` par défaut) ou définir
+`options(kquarto.r.template = "kquarto.r.inrae::inrae")`.
+
+# Package index
+
+## Créer et générer des books
+
+- [`create_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_book.md)
+  : Create one or several Quarto book reports
+- [`create_book_chapter()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_book_chapter.md)
+  : Add a chapter to a Quarto book
+- [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md)
+  : Render Quarto book reports
+- [`list_books()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_books.md)
+  : List the Quarto books of a folder
+- [`chapter_prefix()`](https://kbosirany.github.io/kquarto.r/dev/reference/chapter_prefix.md)
+  : Default chapter file prefix for a language
+
+## Templates
+
+- [`create_template_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_book.md)
+  : Create a reusable book template
+- [`list_templates_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_templates_book.md)
+  : List the available book templates
+- [`remove_template_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/remove_template_book.md)
+  : Remove a user book template
+- [`template_dir()`](https://kbosirany.github.io/kquarto.r/dev/reference/template_dir.md)
+  : Folder where user templates are stored
+
+# Articles
+
+### All vignettes
+
+- [Prise en main de
+  kquarto.r](https://kbosirany.github.io/kquarto.r/dev/articles/kquarto.r.md):

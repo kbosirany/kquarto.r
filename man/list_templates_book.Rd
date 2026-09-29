@@ -28,13 +28,15 @@ containing a \verb{_quarto.yml}). They are used with
 A package such as \code{kquarto.r.inrae} can also make its template the
 default, either by wrapping the functions:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{create_book <- function(dirname_reports, ..., template = "kquarto.r.inrae::inrae") \{
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{create_book <- function(dirname_reports, ...,
+                        template = "kquarto.r.inrae::inrae") \{
   kquarto.r::create_book(dirname_reports, ..., template = template)
 \}
 }\if{html}{\out{</div>}}
 
 or by setting the option \code{kquarto.r.template} (e.g. in its \code{.onLoad()} or
-in a user's \code{.Rprofile}): \code{options(kquarto.r.template = "kquarto.r.inrae::inrae")}.
+in a user's \code{.Rprofile}):
+\code{options(kquarto.r.template = "kquarto.r.inrae::inrae")}.
 }
 
 \examples{

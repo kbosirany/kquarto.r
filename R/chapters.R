@@ -25,15 +25,20 @@
 #' create_book_chapter("rapport", "Introduction", path = tmp)
 #' create_book_chapter("rapport", "Matériel et méthodes", path = tmp)
 #' list.files(file.path(tmp, "rapport"))
-create_book_chapter <- function(book, name, path = ".", title = name, prefix = NULL) {
-  if (!is.character(name) || length(name) != 1 || is.na(name) || !nzchar(name)) {
+create_book_chapter <- function(book, name, path = ".", title = name,
+                                prefix = NULL) {
+  if (!is.character(name) || length(name) != 1 || is.na(name) ||
+      !nzchar(name)) {
     stop("`name` must be a single non-empty string.", call. = FALSE)
   }
   book_dir <- file.path(path, book)
   yml <- file.path(book_dir, "_quarto.yml")
   if (!file.exists(yml)) {
-    stop("No `_quarto.yml` in: ", book_dir, ". Create the book with `create_book()` first.",
-         call. = FALSE)
+    stop(
+      "No `_quarto.yml` in: ", book_dir,
+      ". Create the book with `create_book()` first.",
+      call. = FALSE
+    )
   }
   config <- yaml::read_yaml(yml)
   prefix <- prefix %||% chapter_prefix(config$lang)
@@ -63,7 +68,8 @@ create_book_chapter <- function(book, name, path = ".", title = name, prefix = N
 #' chapter_prefix("fr-FR")
 #' chapter_prefix("en")
 chapter_prefix <- function(lang) {
-  if (!is.null(lang) && grepl("^fr([-_]|$)", tolower(lang))) "chapitre" else "chapter"
+  is_french <- !is.null(lang) && grepl("^fr([-_]|$)", tolower(lang))
+  if (is_french) "chapitre" else "chapter"
 }
 
 next_chapter_number <- function(book_dir, prefix) {
@@ -79,8 +85,16 @@ slugify <- function(x) {
   x <- enc2utf8(x)
   # Common accented letters are mapped explicitly: iconv's transliteration
   # differs between platforms (e.g. "\u00e9" becomes "'e" on macOS).
+  accented <- paste0(
+      "\u00e0\u00e2\u00e4\u00e1\u00e3\u00e9\u00e8\u00ea\u00eb\u00ed",
+      "\u00ec\u00ee\u00ef\u00f3\u00f2\u00f4\u00f6\u00f5\u00fa\u00f9",
+      "\u00fb\u00fc\u00fd\u00ff\u00e7\u00f1\u00c0\u00c2\u00c4\u00c1",
+      "\u00c3\u00c9\u00c8\u00ca\u00cb\u00cd\u00cc\u00ce\u00cf\u00d3",
+      "\u00d2\u00d4\u00d6\u00d5\u00da\u00d9\u00db\u00dc\u00dd\u0178",
+      "\u00c7\u00d1"
+  )
   x <- chartr(
-    "\u00e0\u00e2\u00e4\u00e1\u00e3\u00e9\u00e8\u00ea\u00eb\u00ed\u00ec\u00ee\u00ef\u00f3\u00f2\u00f4\u00f6\u00f5\u00fa\u00f9\u00fb\u00fc\u00fd\u00ff\u00e7\u00f1\u00c0\u00c2\u00c4\u00c1\u00c3\u00c9\u00c8\u00ca\u00cb\u00cd\u00cc\u00ce\u00cf\u00d3\u00d2\u00d4\u00d6\u00d5\u00da\u00d9\u00db\u00dc\u00dd\u0178\u00c7\u00d1",
+    accented,
     "aaaaaeeeeiiiiooooouuuuyycnAAAAAEEEEIIIIOOOOOUUUUYYCN",
     x
   )

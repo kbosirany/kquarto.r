@@ -7,7 +7,8 @@ Authors@R: c(
       given = c("Kevin", "Bosirany"),
       family = "Orlando",
       email = "kevinbosirany@gmail.com",
-      role = c("aut", "cre")
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0009-0009-2784-3108")
     )
   )
 Description: Helpers to manage 'Quarto' book reports, either inside an R

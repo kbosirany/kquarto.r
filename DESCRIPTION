@@ -4,7 +4,8 @@ Title: Create, Template and Render 'Quarto' Books
 Version: 0.1.0.9000
 Authors@R: c(
     person(
-      "Kevin", "Bosirany",
+      given = c("Kevin", "Bosirany"),
+      family = "Orlando",
       email = "kevinbosirany@gmail.com",
       role = c("aut", "cre")
     )

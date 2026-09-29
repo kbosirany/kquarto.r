@@ -33,7 +33,7 @@ create_book(
   c("rapport_technique", "note_synthese"),
   path = projet,
   title = c(note_synthese = "Note de synthèse"),
-  author = c("Kevin", "Camille"),
+  author = c("Kevin Orlando", "Camille Martin"),
   lang = "fr",
   chapters = c("Introduction", "Méthodes")
 )

@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/kbosirany/kquarto.r/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/kbosirany/kquarto.r/blob/v0.1.0/DESCRIPTION)
 
 Bosirany K (2026). *kquarto.r: Create, Template and Render 'Quarto'
 Books*. R package version 0.1.0,

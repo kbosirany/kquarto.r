@@ -14,14 +14,19 @@ Description: Helpers to manage 'Quarto' book reports, either inside an R
     folders with a filled '_quarto.yml', reuse your own templates across
     projects and render the books with 'quarto'.
 License: MIT + file LICENSE
+URL: https://github.com/kbosirany/kquarto.r, https://kbosirany.github.io/kquarto.r/
+BugReports: https://github.com/kbosirany/kquarto.r/issues
 Encoding: UTF-8
 Imports:
     quarto,
     tools,
     yaml
 Suggests:
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0),
     withr
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.1.0

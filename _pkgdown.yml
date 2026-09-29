@@ -1,0 +1,26 @@
+url: https://kbosirany.github.io/kquarto.r/
+
+lang: fr
+
+template:
+  bootstrap: 5
+
+# Le site de la branche main est publié à la racine, celui de la branche
+# dev dans /dev (voir .github/workflows/pkgdown.yaml).
+development:
+  mode: auto
+
+reference:
+  - title: Créer et générer des books
+    contents:
+      - create_book
+      - create_book_chapter
+      - render_book
+      - list_books
+      - chapter_prefix
+  - title: Templates
+    contents:
+      - create_template_book
+      - list_templates_book
+      - remove_template_book
+      - template_dir

@@ -49,7 +49,8 @@ report folder (\code{project: output-dir}).}
 
 \item{chapters}{Optional character vector of chapter names. Each one
 creates a numbered chapter file after \code{index.qmd} with
-\code{\link[=create_book_chapter]{create_book_chapter()}}, e.g. \code{chapitre-01-introduction.qmd}.}
+\code{\link[=create_book_chapter]{create_book_chapter()}}, e.g. \code{chapitre-01-introduction.qmd}. A
+chapter whose file already exists is not created again.}
 
 \item{chapter_prefix}{Prefix of the chapter files. By default
 \code{"chapitre"} when \code{lang} is French, \code{"chapter"} otherwise.}
@@ -60,7 +61,9 @@ creates a numbered chapter file after \code{index.qmd} with
 
 \item{overwrite}{If \code{FALSE} (the default), an error is raised when a
 report folder already contains a \verb{_quarto.yml}. If \code{TRUE}, the
-\verb{_quarto.yml} and the template files are overwritten.}
+\verb{_quarto.yml} and the template files are overwritten; chapters already
+listed in the old \verb{_quarto.yml} whose file still exists are kept in
+\code{book: chapters}, after those of the template.}
 }
 \value{
 The paths of the report folders, invisibly.

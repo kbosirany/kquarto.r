@@ -26,7 +26,8 @@
 #'   `"default"`.
 #' @param chapters Optional character vector of chapter names. Each one
 #'   creates a numbered chapter file after `index.qmd` with
-#'   [create_book_chapter()], e.g. `chapitre-01-introduction.qmd`.
+#'   [create_book_chapter()], e.g. `chapitre-01-introduction.qmd`. A
+#'   chapter whose file already exists is not created again.
 #' @param chapter_prefix Prefix of the chapter files. By default
 #'   `"chapitre"` when `lang` is French, `"chapter"` otherwise.
 #' @param output_dir Output folder of the rendered book, relative to the
@@ -36,7 +37,9 @@
 #'   `book = list(chapters = c("index.qmd", "methodes.qmd"))`.
 #' @param overwrite If `FALSE` (the default), an error is raised when a
 #'   report folder already contains a `_quarto.yml`. If `TRUE`, the
-#'   `_quarto.yml` and the template files are overwritten.
+#'   `_quarto.yml` and the template files are overwritten; chapters already
+#'   listed in the old `_quarto.yml` whose file still exists are kept in
+#'   `book: chapters`, after those of the template.
 #'
 #' @return The paths of the report folders, invisibly.
 #' @export
@@ -93,6 +96,7 @@ create_book <- function(dirname_reports,
 
   for (i in seq_along(report_dirs)) {
     report_dir <- report_dirs[[i]]
+    old_chapters <- existing_chapters(report_dir)
     dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
     copy_dir(template_path, report_dir, overwrite = overwrite, exclude = "_quarto.yml")
 
@@ -104,11 +108,15 @@ create_book <- function(dirname_reports,
     if (!is.null(date)) config$book$date <- date
     if (!is.null(lang)) config$lang <- lang
     if (length(extra) > 0) config <- utils::modifyList(config, extra)
+    config$book$chapters <- merge_chapters(config$book$chapters, old_chapters)
 
     write_quarto_yml(config, file.path(report_dir, "_quarto.yml"))
     add_lines(file.path(report_dir, ".gitignore"), c("/.quarto/", paste0("/", output_dir, "/")))
 
+    prefix <- if (is.null(chapter_prefix)) chapter_prefix(config$lang) else chapter_prefix
     for (chapter in chapters) {
+      pattern <- paste0("^", escape_regex(prefix), "-[0-9]+-", slugify(chapter), "\\.qmd$")
+      if (length(list.files(report_dir, pattern = pattern)) > 0) next
       suppressMessages(create_book_chapter(
         dirname_reports[[i]], chapter, path = path, prefix = chapter_prefix
       ))
@@ -148,6 +156,21 @@ list_books <- function(path = ".", recursive = FALSE) {
     identical(config$project$type, "book")
   }, logical(1))
   unname(dirs[is_book])
+}
+
+existing_chapters <- function(report_dir) {
+  yml <- file.path(report_dir, "_quarto.yml")
+  if (!file.exists(yml)) {
+    return(list())
+  }
+  chapters <- as.list(yaml::read_yaml(yml)$book$chapters)
+  Filter(function(x) !is.character(x) || file.exists(file.path(report_dir, x)), chapters)
+}
+
+merge_chapters <- function(chapters, old_chapters) {
+  chapters <- as.list(chapters)
+  new <- Filter(function(x) !any(vapply(chapters, identical, logical(1), x)), old_chapters)
+  c(chapters, new)
 }
 
 check_dirnames <- function(dirname_reports) {

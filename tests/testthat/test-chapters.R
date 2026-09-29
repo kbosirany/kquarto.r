@@ -61,3 +61,29 @@ test_that("create_book_chapter validates its inputs", {
   expect_error(create_book_chapter("r", "!!", path = dir), "letter or digit")
   expect_error(create_book("s", path = dir, chapters = 1), "character")
 })
+
+test_that("overwrite keeps the existing chapters", {
+  dir <- local_book_env()
+  suppressMessages(create_book("r", path = dir, chapters = c("A", "B")))
+  unlink(file.path(dir, "r", "chapitre-02-b.qmd"))
+  suppressMessages(create_book("r", path = dir, title = "Nouveau", overwrite = TRUE))
+  config <- yaml::read_yaml(file.path(dir, "r", "_quarto.yml"))
+  expect_equal(config$book$title, "Nouveau")
+  expect_equal(unlist(config$book$chapters), c("index.qmd", "chapitre-01-a.qmd"))
+  expect_true(file.exists(file.path(dir, "r", "chapitre-01-a.qmd")))
+})
+
+test_that("create_book does not duplicate existing chapters", {
+  dir <- local_book_env()
+  suppressMessages(create_book("r", path = dir, chapters = c("A", "B")))
+  suppressMessages(create_book("r", path = dir, chapters = c("A", "C"), overwrite = TRUE))
+  expect_setequal(
+    list.files(file.path(dir, "r"), pattern = "^chapitre"),
+    c("chapitre-01-a.qmd", "chapitre-02-b.qmd", "chapitre-03-c.qmd")
+  )
+  config <- yaml::read_yaml(file.path(dir, "r", "_quarto.yml"))
+  expect_equal(
+    unlist(config$book$chapters),
+    c("index.qmd", "chapitre-01-a.qmd", "chapitre-02-b.qmd", "chapitre-03-c.qmd")
+  )
+})

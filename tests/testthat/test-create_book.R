@@ -49,7 +49,7 @@ test_that("extra fields are merged and booleans stay YAML 1.2", {
 
   expect_error(create_book("s", path = dir, title = "S", author = NULL, lang = "fr",
                            date = NULL, template = "default", output_dir = "_book",
-                           list(1)), "named")
+                           chapters = NULL, chapter_prefix = NULL, list(1)), "named")
 })
 
 test_that("existing _quarto.yml is protected unless overwrite = TRUE", {

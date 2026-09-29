@@ -45,3 +45,24 @@ test_that("template names and folders are validated", {
   expect_error(create_template_book("../x"), "letters")
   expect_error(create_template_book("x", from = dir), "_quarto.yml")
 })
+
+test_that("templates can come from another package with pkg::name", {
+  dir <- local_book_env()
+  suppressMessages(create_book("r", path = dir, template = "kquarto.r::default"))
+  expect_true(file.exists(file.path(dir, "r", "index.qmd")))
+
+  templates <- list_templates_book(packages = "kquarto.r")
+  expect_true("kquarto.r::default" %in% templates$name)
+
+  expect_error(create_book("s", path = dir, template = "pasdepackage123::x"), "not installed")
+  expect_error(create_book("s", path = dir, template = "kquarto.r::nope"), "no template")
+})
+
+test_that("the default template can be set with an option", {
+  dir <- local_book_env()
+  tpl <- suppressMessages(create_template_book("charte", dir = file.path(dir, "inst_templates")))
+  writeLines("# Charte", file.path(tpl, "charte.qmd"))
+  withr::local_options(kquarto.r.template = tpl)
+  suppressMessages(create_book("r", path = dir))
+  expect_true(file.exists(file.path(dir, "r", "charte.qmd")))
+})

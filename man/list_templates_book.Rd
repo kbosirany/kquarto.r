@@ -4,16 +4,39 @@
 \alias{list_templates_book}
 \title{List the available book templates}
 \usage{
-list_templates_book()
+list_templates_book(packages = NULL)
+}
+\arguments{
+\item{packages}{Names of other packages whose templates are listed too.}
 }
 \value{
-A data frame with the template \code{name}, its \code{source} (\code{"user"} or
-\code{"package"}) and its \code{path}. A user template with the same name as a
-package template takes precedence over it.
+A data frame with the template \code{name}, its \code{source} (\code{"user"},
+\code{"package"} for the templates of kquarto.r, or the name of another
+package) and its \code{path}. A user template with the same name as a
+kquarto.r template takes precedence over it. Templates of other
+packages are named \code{"pkg::name"}.
 }
 \description{
 List the available book templates
 }
+\section{Templates from another package}{
+
+Any package can ship templates in \verb{inst/templates/<name>/} (each folder
+containing a \verb{_quarto.yml}). They are used with
+\code{create_book(template = "pkg::name")}.
+
+A package such as \code{kquarto.r.inrae} can also make its template the
+default, either by wrapping the functions:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{create_book <- function(dirname_reports, ..., template = "kquarto.r.inrae::inrae") \{
+  kquarto.r::create_book(dirname_reports, ..., template = template)
+\}
+}\if{html}{\out{</div>}}
+
+or by setting the option \code{kquarto.r.template} (e.g. in its \code{.onLoad()} or
+in a user's \code{.Rprofile}): \code{options(kquarto.r.template = "kquarto.r.inrae::inrae")}.
+}
+
 \examples{
 list_templates_book()
 }

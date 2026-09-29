@@ -20,8 +20,15 @@
 #' @param date Book date (`book: date`), e.g. `"today"` or
 #'   `"last-modified"`. `NULL` to leave the template value.
 #' @param template Template used to initialise the reports: the name of a
-#'   template (see [list_templates_book()]) or the path to a folder that
-#'   contains a `_quarto.yml`.
+#'   template (see [list_templates_book()]), a template shipped by another
+#'   package as `"pkg::name"`, or the path to a folder that contains a
+#'   `_quarto.yml`. Defaults to the option `kquarto.r.template`, or
+#'   `"default"`.
+#' @param chapters Optional character vector of chapter names. Each one
+#'   creates a numbered chapter file after `index.qmd` with
+#'   [create_book_chapter()], e.g. `chapitre-01-introduction.qmd`.
+#' @param chapter_prefix Prefix of the chapter files. By default
+#'   `"chapitre"` when `lang` is French, `"chapter"` otherwise.
 #' @param output_dir Output folder of the rendered book, relative to the
 #'   report folder (`project: output-dir`).
 #' @param ... Additional fields merged (recursively) into `_quarto.yml`, e.g.
@@ -41,7 +48,8 @@
 #'   c("rapport_technique", "note_synthese"),
 #'   path = tmp,
 #'   title = c(note_synthese = "Note de synthèse"),
-#'   author = "Kevin"
+#'   author = "Kevin",
+#'   chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")
 #' )
 #' list.files(tmp, recursive = TRUE)
 create_book <- function(dirname_reports,
@@ -50,8 +58,10 @@ create_book <- function(dirname_reports,
                         author = NULL,
                         lang = "fr",
                         date = NULL,
-                        template = "default",
+                        template = getOption("kquarto.r.template", "default"),
                         output_dir = "_book",
+                        chapters = NULL,
+                        chapter_prefix = NULL,
                         ...,
                         overwrite = FALSE) {
   check_dirnames(dirname_reports)
@@ -59,6 +69,9 @@ create_book <- function(dirname_reports,
     stop("`path` does not exist: ", path, call. = FALSE)
   }
   titles <- resolve_titles(title, dirname_reports)
+  if (!is.null(chapters) && (!is.character(chapters) || anyNA(chapters))) {
+    stop("`chapters` must be a character vector.", call. = FALSE)
+  }
   template_path <- resolve_template(template)
   extra <- list(...)
   if (length(extra) > 0 && (is.null(names(extra)) || any(names(extra) == ""))) {
@@ -94,6 +107,12 @@ create_book <- function(dirname_reports,
 
     write_quarto_yml(config, file.path(report_dir, "_quarto.yml"))
     add_lines(file.path(report_dir, ".gitignore"), c("/.quarto/", paste0("/", output_dir, "/")))
+
+    for (chapter in chapters) {
+      suppressMessages(create_book_chapter(
+        dirname_reports[[i]], chapter, path = path, prefix = chapter_prefix
+      ))
+    }
   }
 
   if (file.exists(file.path(path, "DESCRIPTION"))) {

@@ -4,7 +4,12 @@
 \alias{create_template_book}
 \title{Create a reusable book template}
 \usage{
-create_template_book(name, from = "default", overwrite = FALSE)
+create_template_book(
+  name,
+  from = "default",
+  overwrite = FALSE,
+  dir = template_dir()
+)
 }
 \arguments{
 \item{name}{Template name.}
@@ -16,6 +21,10 @@ folder, typically a report you already set up. Rendering outputs
 
 \item{overwrite}{Whether to replace an existing template with the same
 name.}
+
+\item{dir}{Folder where the template is saved. Defaults to
+\code{\link[=template_dir]{template_dir()}}; use \code{"inst/templates"} from the root of a package
+that ships templates.}
 }
 \value{
 The path of the template folder, invisibly. Edit its files to
@@ -32,6 +41,11 @@ Templates are stored in \code{\link[=template_dir]{template_dir()}}, i.e. the us
 the package by default, so they are available from every project. Set
 the option \code{kquarto.r.template_dir} to share templates via another folder
 (e.g. a folder under version control).
+
+To ship templates in your own package (e.g. an institutional charter),
+create them with \code{dir = "inst/templates"} in that package; they are then
+available as \code{create_book(template = "pkg::name")}. See the
+"Templates from another package" section of \code{\link[=list_templates_book]{list_templates_book()}}.
 }
 \examples{
 old <- options(kquarto.r.template_dir = tempfile())

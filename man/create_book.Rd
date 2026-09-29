@@ -11,8 +11,10 @@ create_book(
   author = NULL,
   lang = "fr",
   date = NULL,
-  template = "default",
+  template = getOption("kquarto.r.template", "default"),
   output_dir = "_book",
+  chapters = NULL,
+  chapter_prefix = NULL,
   ...,
   overwrite = FALSE
 )
@@ -37,11 +39,20 @@ named by the report folders.}
 \code{"last-modified"}. \code{NULL} to leave the template value.}
 
 \item{template}{Template used to initialise the reports: the name of a
-template (see \code{\link[=list_templates_book]{list_templates_book()}}) or the path to a folder that
-contains a \verb{_quarto.yml}.}
+template (see \code{\link[=list_templates_book]{list_templates_book()}}), a template shipped by another
+package as \code{"pkg::name"}, or the path to a folder that contains a
+\verb{_quarto.yml}. Defaults to the option \code{kquarto.r.template}, or
+\code{"default"}.}
 
 \item{output_dir}{Output folder of the rendered book, relative to the
 report folder (\code{project: output-dir}).}
+
+\item{chapters}{Optional character vector of chapter names. Each one
+creates a numbered chapter file after \code{index.qmd} with
+\code{\link[=create_book_chapter]{create_book_chapter()}}, e.g. \code{chapitre-01-introduction.qmd}.}
+
+\item{chapter_prefix}{Prefix of the chapter files. By default
+\code{"chapitre"} when \code{lang} is French, \code{"chapter"} otherwise.}
 
 \item{...}{Additional fields merged (recursively) into \verb{_quarto.yml}, e.g.
 \code{format = list(html = list(theme = "flatly"))} or
@@ -70,7 +81,8 @@ create_book(
   c("rapport_technique", "note_synthese"),
   path = tmp,
   title = c(note_synthese = "Note de synthèse"),
-  author = "Kevin"
+  author = "Kevin",
+  chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")
 )
 list.files(tmp, recursive = TRUE)
 }

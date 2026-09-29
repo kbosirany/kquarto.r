@@ -184,7 +184,8 @@ template_folders <- function(dir) {
     return(character())
   }
   folders <- list.dirs(dir, full.names = TRUE, recursive = FALSE)
-  folders[file.exists(file.path(folders, "_quarto.yml"))]
+  folders <- folders[file.exists(file.path(folders, "_quarto.yml"))]
+  normalizePath(folders)
 }
 
 check_template_name <- function(name) {

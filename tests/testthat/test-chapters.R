@@ -87,3 +87,7 @@ test_that("create_book does not duplicate existing chapters", {
     c("index.qmd", "chapitre-01-a.qmd", "chapitre-02-b.qmd", "chapitre-03-c.qmd")
   )
 })
+
+test_that("slugify handles French ligatures and cedillas", {
+  expect_equal(slugify("État des cœurs à la façon"), "etat-des-coeurs-a-la-facon")
+})

@@ -1,7 +1,7 @@
 # kquarto.r
 
 Site : <https://kbosirany.github.io/kquarto.r/> (version en
-développement : [/dev](https://kbosirany.github.io/kquarto.r/dev/))
+développement : <https://kbosirany.github.io/kquarto.r/dev/>)
 
 Créer, modéliser (templates) et générer des rapports Quarto de type
 *book*, dans un package R ou dans un projet de rédaction indépendant.

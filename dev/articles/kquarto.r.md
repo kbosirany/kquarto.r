@@ -34,7 +34,8 @@ create_book(
 list.files(file.path(projet, "rapport_technique"))
 #> [1] "_quarto.yml"                  "chapitre-01-introduction.qmd"
 #> [3] "chapitre-02-methodes.qmd"     "index.qmd"
-cat(readLines(file.path(projet, "rapport_technique", "_quarto.yml")), sep = "\n")
+yml <- file.path(projet, "rapport_technique", "_quarto.yml")
+cat(readLines(yml), sep = "\n")
 #> project:
 #>   type: book
 #>   output-dir: _book
@@ -78,7 +79,7 @@ create_book_chapter("rapport_technique", "Résultats", path = projet)
 #> Chapter created: rapport_technique/chapitre-03-resultats.qmd
 list_books(projet)
 #> [1] "note_synthese"     "rapport_technique"
-yaml::read_yaml(file.path(projet, "rapport_technique", "_quarto.yml"))$book$chapters
+yaml::read_yaml(yml)$book$chapters
 #> [1] "index.qmd"                    "chapitre-01-introduction.qmd"
 #> [3] "chapitre-02-methodes.qmd"     "chapitre-03-resultats.qmd"
 ```

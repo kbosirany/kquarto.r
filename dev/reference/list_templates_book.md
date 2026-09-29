@@ -31,7 +31,8 @@ containing a `_quarto.yml`). They are used with
 A package such as `kquarto.r.inrae` can also make its template the
 default, either by wrapping the functions:
 
-    create_book <- function(dirname_reports, ..., template = "kquarto.r.inrae::inrae") {
+    create_book <- function(dirname_reports, ...,
+                            template = "kquarto.r.inrae::inrae") {
       kquarto.r::create_book(dirname_reports, ..., template = template)
     }
 

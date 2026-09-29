@@ -16,7 +16,7 @@ library(kquarto.r)
 create_book(
   c("rapport_technique", "note_synthese"),
   title = c(note_synthese = "Note de synthèse"),
-  author = "Kevin",
+  author = "Kevin Orlando",
   lang = "fr",
   chapters = c("Introduction", "Méthodes")
 )

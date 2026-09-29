@@ -2,21 +2,22 @@
 
 ## Authors
 
-- **Kevin Bosirany**. Author, maintainer.
+- **Kevin Bosirany Orlando**. Author, maintainer.
+  [](https://orcid.org/0009-0009-2784-3108)
 
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/kbosirany/kquarto.r/blob/v0.1.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/kbosirany/kquarto.r/blob/main/DESCRIPTION)
 
-Bosirany K (2026). *kquarto.r: Create, Template and Render 'Quarto'
-Books*. R package version 0.1.0,
+Orlando KB (2026). *kquarto.r: Create, Template and Render 'Quarto'
+Books*. R package version 0.1.1,
 <https://github.com/kbosirany/kquarto.r>.
 
     @Manual{,
       title = {kquarto.r: Create, Template and Render 'Quarto' Books},
-      author = {Kevin Bosirany},
+      author = {Kevin Bosirany Orlando},
       year = {2026},
-      note = {R package version 0.1.0},
+      note = {R package version 0.1.1},
       url = {https://github.com/kbosirany/kquarto.r},
     }

@@ -25,7 +25,7 @@ create_book(
   c("rapport_technique", "note_synthese"),
   path = projet,
   title = c(note_synthese = "Note de synthèse"),
-  author = c("Kevin", "Camille"),
+  author = c("Kevin Orlando", "Camille Martin"),
   lang = "fr",
   chapters = c("Introduction", "Méthodes")
 )
@@ -45,8 +45,8 @@ cat(readLines(file.path(projet, "rapport_technique", "_quarto.yml")), sep = "\n"
 #>   - chapitre-01-introduction.qmd
 #>   - chapitre-02-methodes.qmd
 #>   author:
-#>   - Kevin
-#>   - Camille
+#>   - Kevin Orlando
+#>   - Camille Martin
 #> lang: fr
 #> format:
 #>   html:

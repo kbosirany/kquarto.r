@@ -1,4 +1,4 @@
 # License
 
     YEAR: 2026
-    COPYRIGHT HOLDER: kquarto.r authors
+    COPYRIGHT HOLDER: Kevin Bosirany Orlando

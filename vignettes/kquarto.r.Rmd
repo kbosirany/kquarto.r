@@ -1,0 +1,105 @@
+---
+title: "Prise en main de kquarto.r"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Prise en main de kquarto.r}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+`kquarto.r` gère des rapports Quarto de type *book*, que ce soit dans un
+package R (les dossiers de rapport sont alors ajoutés à `.Rbuildignore`) ou
+dans un projet de rédaction indépendant.
+
+```{r setup}
+library(kquarto.r)
+
+projet <- file.path(tempdir(), "mon_projet")
+dir.create(projet)
+```
+
+## Créer des rapports
+
+`create_book()` crée un dossier par rapport, copie les fichiers du template
+et écrit un `_quarto.yml` rempli. Le titre vaut par défaut le nom du
+dossier ; un vecteur nommé permet de ne changer que certains titres.
+
+```{r}
+create_book(
+  c("rapport_technique", "note_synthese"),
+  path = projet,
+  title = c(note_synthese = "Note de synthèse"),
+  author = c("Kevin", "Camille"),
+  lang = "fr",
+  chapters = c("Introduction", "Méthodes")
+)
+
+list.files(file.path(projet, "rapport_technique"))
+cat(readLines(file.path(projet, "rapport_technique", "_quarto.yml")), sep = "\n")
+```
+
+Tout autre champ du `_quarto.yml` peut être passé par `...` :
+
+```{r, eval = FALSE}
+create_book(
+  "rapport",
+  format = list(html = list(theme = "flatly", `code-fold` = TRUE))
+)
+```
+
+## Ajouter des chapitres
+
+Les chapitres sont numérotés après `index.qmd`, avec un préfixe qui suit la
+langue du book (`chapitre` en français, `chapter` sinon).
+`create_book_chapter()` prend le numéro suivant et met à jour
+`_quarto.yml` :
+
+```{r}
+create_book_chapter("rapport_technique", "Résultats", path = projet)
+list_books(projet)
+yaml::read_yaml(file.path(projet, "rapport_technique", "_quarto.yml"))$book$chapters
+```
+
+## Générer les rapports
+
+`render_book()` appelle `quarto::quarto_render()`. Par défaut, le rapport
+est généré dans `_book/` à l'intérieur de son dossier ; `output_dir` est un
+chemin relatif au dossier du rapport.
+
+```{r, eval = FALSE}
+render_book("rapport_technique")
+render_book("rapport_technique", output_dir = "../docs/rapport_technique")
+render_book() # tous les books du dossier courant
+```
+
+## Templates
+
+Un template est un dossier contenant au moins un `_quarto.yml`, plus tous
+les fichiers à copier dans un nouveau rapport (chapitres, `references.bib`,
+`styles.css`, logos...). Un rapport déjà mis en forme peut devenir un
+template :
+
+```{r, eval = FALSE}
+create_template_book("mon_template", from = "rapport_technique")
+list_templates_book()
+create_book("nouveau_rapport", template = "mon_template")
+```
+
+Les templates utilisateur sont stockés dans `template_dir()`. Un package
+peut aussi livrer ses propres templates dans `inst/templates/<nom>/`, par
+exemple pour une charte graphique institutionnelle :
+
+```{r, eval = FALSE}
+# Depuis la racine du package kquarto.r.inrae
+create_template_book("inrae", dir = "inst/templates")
+
+# Puis, partout
+create_book("rapport", template = "kquarto.r.inrae::inrae")
+
+# Ou comme template par défaut
+options(kquarto.r.template = "kquarto.r.inrae::inrae")
+```

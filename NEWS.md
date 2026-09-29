@@ -1,3 +1,5 @@
+# kquarto.r (development version)
+
 # kquarto.r 0.1.1
 
 * Correction du nom de l'auteur (Kevin Bosirany Orlando) et ajout de son

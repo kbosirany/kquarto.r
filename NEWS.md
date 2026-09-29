@@ -1,3 +1,5 @@
+# kquarto.r (development version)
+
 # kquarto.r 0.1.0
 
 * Première version : `create_book()`, `create_book_chapter()`,

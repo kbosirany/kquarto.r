@@ -16,9 +16,14 @@ test_that("render_book calls quarto_render with the right arguments", {
   expect_equal(out[[1]], file.path(normalizePath(file.path(dir, "a")), "_book"))
 
   calls <- list()
-  out <- render_book("b", path = dir, output_dir = "../docs/b", output_format = "html",
-                     quarto_args = "--no-cache")
-  expect_equal(calls[[1]]$quarto_args, c("--no-cache", "--output-dir", "../docs/b"))
+  out <- render_book(
+    "b", path = dir, output_dir = "../docs/b", output_format = "html",
+    quarto_args = "--no-cache"
+  )
+  expect_equal(
+    calls[[1]]$quarto_args,
+    c("--no-cache", "--output-dir", "../docs/b")
+  )
   expect_equal(calls[[1]]$output_format, "html")
 })
 

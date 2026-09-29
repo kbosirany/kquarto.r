@@ -72,7 +72,8 @@ render_book <- function(dirname_reports = NULL,
       dots
     )
     do.call(quarto_render, args)
-    outputs[[i]] <- file.path(report_dir, output_dir %||% book_output_dir(report_dir))
+    out_dir <- output_dir %||% book_output_dir(report_dir)
+    outputs[[i]] <- file.path(report_dir, out_dir)
   }
   invisible(outputs)
 }

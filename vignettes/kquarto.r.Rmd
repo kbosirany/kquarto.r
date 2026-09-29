@@ -39,7 +39,8 @@ create_book(
 )
 
 list.files(file.path(projet, "rapport_technique"))
-cat(readLines(file.path(projet, "rapport_technique", "_quarto.yml")), sep = "\n")
+yml <- file.path(projet, "rapport_technique", "_quarto.yml")
+cat(readLines(yml), sep = "\n")
 ```
 
 Tout autre champ du `_quarto.yml` peut être passé par `...` :
@@ -61,7 +62,7 @@ langue du book (`chapitre` en français, `chapter` sinon).
 ```{r}
 create_book_chapter("rapport_technique", "Résultats", path = projet)
 list_books(projet)
-yaml::read_yaml(file.path(projet, "rapport_technique", "_quarto.yml"))$book$chapters
+yaml::read_yaml(yml)$book$chapters
 ```
 
 ## Générer les rapports

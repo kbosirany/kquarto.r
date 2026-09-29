@@ -1,17 +1,28 @@
 Package: kquarto.r
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Create, Template and Render 'Quarto' Books
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Kevin", "Bosirany",
+      email = "kevinbosirany@gmail.com",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Helpers to manage 'Quarto' book reports, either inside an R
+    package or in a standalone writing project. Create one or several book
+    folders with a filled '_quarto.yml', reuse your own templates across
+    projects and render the books with 'quarto'.
+License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
+Imports:
+    quarto,
+    tools,
+    yaml
+Suggests:
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0
 Config/roxygen2/version: 8.1.0

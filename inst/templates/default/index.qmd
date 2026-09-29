@@ -1,0 +1,3 @@
+# Introduction {.unnumbered}
+
+Ce rapport a été initialisé avec le package `kquarto.r`.

@@ -1,6 +1,11 @@
 # Changelog
 
-## kquarto.r (development version)
+## kquarto.r 0.1.1
+
+- Correction du nom de l’auteur (Kevin Bosirany Orlando) et ajout de son
+  ORCID.
+- Les workflows GitHub Actions utilisent `actions/checkout@v5` (Node.js
+  24).
 
 ## kquarto.r 0.1.0
 

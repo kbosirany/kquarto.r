@@ -84,7 +84,7 @@ create_book(
   c("rapport_technique", "note_synthese"),
   path = tmp,
   title = c(note_synthese = "Note de synthèse"),
-  author = "Kevin",
+  author = "Kevin Orlando",
   chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")
 )
 list.files(tmp, recursive = TRUE)

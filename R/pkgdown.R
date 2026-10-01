@@ -140,6 +140,9 @@ build_site <- function(path = "reports",
     for (book in books) {
       target <- file.path(dest, site_subdir, book)
       if (clean) unlink(target, recursive = TRUE)
+      # The folder must exist for normalizePath() to return an absolute path
+      # (otherwise Quarto resolves it relative to the book folder).
+      dir.create(target, recursive = TRUE, showWarnings = FALSE)
       render_book(
         book,
         path = path,

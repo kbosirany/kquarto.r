@@ -51,6 +51,7 @@ test_that("build_site renders the books then builds the site", {
   build_site(path = ".", dest = "public")
   expect_length(calls, 1)
   expect_equal(calls[[1]][[1]], "a-fr")
-  expect_match(calls[[1]][[2]], "public/reports/a-fr$")
+  # normalizePath() uses backslashes on Windows
+  expect_match(calls[[1]][[2]], "public[/\\\\]reports[/\\\\]a-fr$")
   expect_true(file.exists("_pkgdown.yml"))
 })

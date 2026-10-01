@@ -13,6 +13,13 @@
 - [`chapter_prefix()`](https://kbosirany.github.io/kquarto.r/dev/reference/chapter_prefix.md)
   : Default chapter file prefix for a language
 
+## Site pkgdown
+
+- [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  : Build a pkgdown site including the rendered books
+- [`update_pkgdown_yml()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_pkgdown_yml.md)
+  : Add the books to the navbar of a pkgdown site
+
 ## Templates
 
 - [`create_template_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_book.md)

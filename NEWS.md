@@ -1,5 +1,10 @@
 # kquarto.r (development version)
 
+* Nouveau : `build_site()` rend les books dans le dossier d'un site
+  pkgdown, les ajoute à la barre de navigation puis construit le site.
+* Nouveau : `update_pkgdown_yml()` ajoute les books (menus `reports_fr`,
+  `reports_en`, ...) à `_pkgdown.yml`.
+
 # kquarto.r 0.1.1
 
 * Correction du nom de l'auteur (Kevin Bosirany Orlando) et ajout de son

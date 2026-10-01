@@ -42,6 +42,17 @@ render_book("rapport_technique", output_dir = "../docs/rapport_technique")
 render_book()
 ```
 
+## Site pkgdown
+
+```r
+# Rendre les books de reports/ dans public/reports/, les ajouter à la
+# barre de navigation (_pkgdown.yml) puis construire le site pkgdown
+build_site()
+
+# Seulement mettre à jour la barre de navigation
+update_pkgdown_yml()
+```
+
 ## Templates
 
 ```r

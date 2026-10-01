@@ -18,6 +18,10 @@ reference:
       - render_book
       - list_books
       - chapter_prefix
+  - title: Site pkgdown
+    contents:
+      - build_site
+      - update_pkgdown_yml
   - title: Templates
     contents:
       - create_template_book

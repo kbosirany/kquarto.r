@@ -69,19 +69,19 @@ create_template_book <- function(name, from = "default", overwrite = FALSE,
 #' containing a `_quarto.yml`). They are used with
 #' `create_book(template = "pkg::name")`.
 #'
-#' A package such as `kquarto.r.inrae` can also make its template the
-#' default, either by wrapping the functions:
+#' Such a package can also make its template the default, either by
+#' wrapping the functions:
 #'
 #' ```r
 #' create_book <- function(dirname_reports, ...,
-#'                         template = "kquarto.r.inrae::inrae") {
+#'                         template = "monpkg::charte") {
 #'   kquarto.r::create_book(dirname_reports, ..., template = template)
 #' }
 #' ```
 #'
 #' or by setting the option `kquarto.r.template` (e.g. in its `.onLoad()` or
 #' in a user's `.Rprofile`):
-#' `options(kquarto.r.template = "kquarto.r.inrae::inrae")`.
+#' `options(kquarto.r.template = "monpkg::charte")`.
 #'
 #' @param packages Names of other packages whose templates are listed too.
 #'

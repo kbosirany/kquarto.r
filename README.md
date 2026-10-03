@@ -68,20 +68,45 @@ Les templates utilisateur sont stockés dans `template_dir()`
 (`tools::R_user_dir("kquarto.r", "data")`), modifiable via
 `options(kquarto.r.template_dir = "...")`.
 
-### Templates livrés par un package
+### Template INRAE
 
-Un package (par exemple une charte institutionnelle) peut livrer ses
-templates dans `inst/templates/<nom>/` :
+Le template `inrae` est livré avec le package : couleurs et polices de la
+[charte graphique INRAE](https://www.inrae.fr/charte-graphique-inrae),
+logo, favicon, page de titre et bibliographie (`references.bib`).
+
+```r
+create_book("rapport", template = "inrae", author = "Kevin Orlando")
+
+# Ou comme template par défaut, par exemple dans le .Rprofile
+options(kquarto.r.template = "inrae")
+
+# Dériver un template pour une unité (autre logo, chapitres types...)
+create_template_book("inrae_mon_unite", from = "inrae")
+```
+
+Contenu du template (`inst/templates/inrae/`) :
+
+- `_quarto.yml` : book HTML en français, page de titre (titre,
+  sous-titre, auteurs, date), logo, favicon, pied de page, bibliographie ;
+- `inrae.scss` : couleurs et polices de la charte (Raleway pour les
+  titres, Avenir Next Pro ou Calibri pour le texte) ;
+- `references.bib` : bibliographie, citée avec `[@cle]` ;
+- `images/logo-inrae.png` et `images/favicon-inrae.png` : logo et sigle
+  INRAE.
+
+### Templates livrés par un autre package
+
+Un package (par exemple une charte d'unité) peut livrer ses templates
+dans `inst/templates/<nom>/` :
 
 ```r
 # Depuis la racine de ce package
-create_template_book("inrae", from = "default", dir = "inst/templates")
+create_template_book("charte", from = "inrae", dir = "inst/templates")
 
 # Utilisation
-create_book("rapport", template = "kquarto.r.inrae::inrae")
-list_templates_book(packages = "kquarto.r.inrae")
+create_book("rapport", template = "monpkg::charte")
+list_templates_book(packages = "monpkg")
 ```
 
-Pour en faire le template par défaut, le package peut envelopper les
-fonctions (`template = "kquarto.r.inrae::inrae"` par défaut) ou définir
-`options(kquarto.r.template = "kquarto.r.inrae::inrae")`.
+Pour en faire le template par défaut :
+`options(kquarto.r.template = "monpkg::charte")`.

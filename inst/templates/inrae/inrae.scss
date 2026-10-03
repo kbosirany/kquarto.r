@@ -1,0 +1,62 @@
+/*-- scss:defaults --*/
+
+// Couleurs de la charte graphique INRAE (version 4.2, avril 2024) :
+// https://www.inrae.fr/charte-graphique-inrae
+$inrae-vert: #00a3a6;       // couleur institutionnelle (Pantone 7467 C)
+$inrae-vert-fonce: #00787a; // A VERIFIER : variante foncée non officielle,
+                            // pour le contraste des liens (WCAG AA)
+$inrae-anis: #9dc544;
+$inrae-violet: #423089;
+$inrae-corail: #ed6e6c;
+$inrae-beige: #c4c0b3;
+$inrae-bleu-clair: #9ed6e3;
+$inrae-gris: #797870;
+
+$primary: $inrae-vert;
+$secondary: $inrae-gris;
+$success: $inrae-anis;
+$info: $inrae-bleu-clair;
+$warning: $inrae-beige;
+$danger: $inrae-corail;
+$link-color: $inrae-vert-fonce;
+
+// Polices : Raleway pour les titres, Avenir Next Pro (ou Calibri) pour le
+// texte. Avenir Next Pro n'est pas libre : elle n'est utilisée que si elle
+// est installée sur le poste du lecteur.
+$web-font-path: "https://fonts.googleapis.com/css2" +
+  "?family=Raleway:wght@400;700;800&display=swap";
+$font-family-sans-serif: "Avenir Next Pro", "Avenir Next", Calibri,
+  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$headings-font-family: Raleway, $font-family-sans-serif;
+$headings-color: $inrae-vert-fonce;
+
+/*-- scss:rules --*/
+
+// Page de titre
+.quarto-title-banner,
+#title-block-header {
+  border-bottom: 4px solid $inrae-vert;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.quarto-title .title {
+  color: $inrae-vert-fonce;
+  font-weight: 800;
+}
+
+.quarto-title .subtitle {
+  color: $inrae-gris;
+}
+
+// Logo de la barre latérale : zone de protection d'une demi-hauteur et
+// largeur minimale de 100 px (charte INRAE)
+.sidebar-logo {
+  min-width: 100px;
+  max-width: 160px;
+  margin: 0.5rem auto 1rem auto;
+}
+
+.callout-note {
+  border-left-color: $inrae-vert !important;
+}

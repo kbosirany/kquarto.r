@@ -20,7 +20,8 @@
 #' @param date Book date (`book: date`), e.g. `"today"` or
 #'   `"last-modified"`. `NULL` to leave the template value.
 #' @param template Template used to initialise the reports: the name of a
-#'   template (see [list_templates_book()]), a template shipped by another
+#'   template (see [list_templates_book()]), e.g. `"default"` or `"inrae"`
+#'   (INRAE graphic charter), a template shipped by another
 #'   package as `"pkg::name"`, or the path to a folder that contains a
 #'   `_quarto.yml`. Defaults to the option `kquarto.r.template`, or
 #'   `"default"`.

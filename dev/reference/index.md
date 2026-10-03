@@ -13,6 +13,11 @@
 - [`chapter_prefix()`](https://kbosirany.github.io/kquarto.r/dev/reference/chapter_prefix.md)
   : Default chapter file prefix for a language
 
+## Tableaux
+
+- [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)
+  : Format a table for a Quarto book
+
 ## Site pkgdown
 
 - [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)

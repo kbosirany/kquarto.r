@@ -65,15 +65,17 @@ from another package" section of
 ``` r
 old <- options(kquarto.r.template_dir = tempfile())
 path <- create_template_book("mon_template")
-#> Template 'mon_template' created in: /tmp/Rtmp4fCYaD/file1b214ed74bf9/mon_template
+#> Template 'mon_template' created in: /tmp/RtmpkGtfYv/file1acf54125a1f/mon_template
 list.files(path)
 #> [1] "_quarto.yml" "index.qmd"  
 list_templates_book()
 #>           name  source
 #> 1 mon_template    user
 #> 2      default package
+#> 3        inrae package
 #>                                                          path
-#> 1               /tmp/Rtmp4fCYaD/file1b214ed74bf9/mon_template
+#> 1               /tmp/RtmpkGtfYv/file1acf54125a1f/mon_template
 #> 2 /home/runner/work/_temp/Library/kquarto.r/templates/default
+#> 3   /home/runner/work/_temp/Library/kquarto.r/templates/inrae
 options(old)
 ```

@@ -113,17 +113,41 @@
 <span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"nouveau_rapport"</span>, template <span class="op">=</span> <span class="st">"mon_template"</span><span class="op">)</span></span></code></pre></div>
 <p>Les templates utilisateur sont stockés dans <code><a href="reference/template_dir.html">template_dir()</a></code> (<code>tools::R_user_dir("kquarto.r", "data")</code>), modifiable via <code>options(kquarto.r.template_dir = "...")</code>.</p>
 <div class="section level3">
-<h3 id="templates-livrés-par-un-package">Templates livrés par un package<a class="anchor" aria-label="anchor" href="#templates-livr%C3%A9s-par-un-package"></a>
+<h3 id="template-inrae">Template INRAE<a class="anchor" aria-label="anchor" href="#template-inrae"></a>
 </h3>
-<p>Un package (par exemple une charte institutionnelle) peut livrer ses templates dans <code>inst/templates/&lt;nom&gt;/</code> :</p>
+<p>Le template <code>inrae</code> est livré avec le package : couleurs et polices de la <a href="https://www.inrae.fr/charte-graphique-inrae" class="external-link">charte graphique INRAE</a>, logo, favicon, page de titre et bibliographie (<code>references.bib</code>).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span>, author <span class="op">=</span> <span class="st">"Kevin Orlando"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Ou comme template par défaut, par exemple dans le .Rprofile</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>kquarto.r.template <span class="op">=</span> <span class="st">"inrae"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Dériver un template pour une unité (autre logo, chapitres types...)</span></span>
+<span><span class="fu"><a href="reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"inrae_mon_unite"</span>, from <span class="op">=</span> <span class="st">"inrae"</span><span class="op">)</span></span></code></pre></div>
+<p>Contenu du template (<code>inst/templates/inrae/</code>) :</p>
+<ul>
+<li>
+<code>_quarto.yml</code> : book HTML en français, page de titre (titre, sous-titre, auteurs, date), logo, favicon, pied de page, bibliographie ;</li>
+<li>
+<code>inrae.scss</code> : couleurs et polices de la charte (Raleway pour les titres, Avenir Next Pro ou Calibri pour le texte) ;</li>
+<li>
+<code>references.bib</code> : bibliographie, citée avec <code>[@cle]</code> ;</li>
+<li>
+<code>images/logo-inrae.png</code> et <code>images/favicon-inrae.png</code> : logo et sigle INRAE.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="templates-livrés-par-un-autre-package">Templates livrés par un autre package<a class="anchor" aria-label="anchor" href="#templates-livr%C3%A9s-par-un-autre-package"></a>
+</h3>
+<p>Un package (par exemple une charte d’unité) peut livrer ses templates dans <code>inst/templates/&lt;nom&gt;/</code> :</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Depuis la racine de ce package</span></span>
-<span><span class="fu"><a href="reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"inrae"</span>, from <span class="op">=</span> <span class="st">"default"</span>, dir <span class="op">=</span> <span class="st">"inst/templates"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"charte"</span>, from <span class="op">=</span> <span class="st">"inrae"</span>, dir <span class="op">=</span> <span class="st">"inst/templates"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Utilisation</span></span>
-<span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"kquarto.r.inrae::inrae"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/list_templates_book.html">list_templates_book</a></span><span class="op">(</span>packages <span class="op">=</span> <span class="st">"kquarto.r.inrae"</span><span class="op">)</span></span></code></pre></div>
-<p>Pour en faire le template par défaut, le package peut envelopper les fonctions (<code>template = "kquarto.r.inrae::inrae"</code> par défaut) ou définir <code>options(kquarto.r.template = "kquarto.r.inrae::inrae")</code>.</p>
+<span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"monpkg::charte"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/list_templates_book.html">list_templates_book</a></span><span class="op">(</span>packages <span class="op">=</span> <span class="st">"monpkg"</span><span class="op">)</span></span></code></pre></div>
+<p>Pour en faire le template par défaut : <code>options(kquarto.r.template = "monpkg::charte")</code>.</p>
 </div>
 </div>
 </div>

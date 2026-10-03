@@ -58,8 +58,9 @@ create_book(
 
   Template used to initialise the reports: the name of a template (see
   [`list_templates_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_templates_book.md)),
-  a template shipped by another package as `"pkg::name"`, or the path to
-  a folder that contains a `_quarto.yml`. Defaults to the option
+  e.g. `"default"` or `"inrae"` (INRAE graphic charter), a template
+  shipped by another package as `"pkg::name"`, or the path to a folder
+  that contains a `_quarto.yml`. Defaults to the option
   `kquarto.r.template`, or `"default"`.
 
 - output_dir:

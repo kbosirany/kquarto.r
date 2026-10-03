@@ -1,5 +1,8 @@
 # kquarto.r (development version)
 
+* Nouveau : `kable()` met en forme un tableau pour un book : tableau stylé
+  et défilant en HTML, tableau `booktabs` en LaTeX. Elle vient du package
+  `kutils`.
 * Nouveau : template `inrae` (charte graphique INRAE : couleurs, polices,
   logo, favicon, page de titre et bibliographie), utilisable avec
   `create_book(template = "inrae")`. Il remplace le package

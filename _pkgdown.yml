@@ -18,6 +18,9 @@ reference:
       - render_book
       - list_books
       - chapter_prefix
+  - title: Tableaux
+    contents:
+      - kable
   - title: Site pkgdown
     contents:
       - build_site

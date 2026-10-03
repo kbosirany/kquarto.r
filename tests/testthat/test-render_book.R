@@ -44,3 +44,15 @@ test_that("render_book renders a real book", {
   out <- render_book("a", path = dir, quiet = TRUE)
   expect_true(file.exists(file.path(out, "index.html")))
 })
+
+test_that("a book created with the INRAE template renders", {
+  skip_on_cran()
+  skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", path = dir, template = "inrae", chapters = "Introduction"
+  ))
+  out <- render_book("a", path = dir, quiet = TRUE)
+  expect_true(file.exists(file.path(out, "index.html")))
+  expect_true(file.exists(file.path(out, "chapitre-01-introduction.html")))
+})

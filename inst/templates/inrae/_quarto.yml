@@ -1,0 +1,33 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Titre du rapport"
+  subtitle: "Sous-titre du rapport"
+  date: today
+  date-format: long
+  chapters:
+    - index.qmd
+  favicon: images/favicon-inrae.png
+  sidebar:
+    logo: images/logo-inrae.png
+    style: docked
+  page-footer:
+    left: "INRAE"
+    right: "Rapport rédigé avec [Quarto](https://quarto.org)"
+
+bibliography: references.bib
+link-citations: true
+
+lang: fr
+
+format:
+  html:
+    theme:
+      - cosmo
+      - inrae.scss
+    toc: true
+    number-sections: true
+    reference-location: margin
+    citation-location: document

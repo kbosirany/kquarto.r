@@ -1,5 +1,9 @@
 # kquarto.r (development version)
 
+* Nouveau : template `inrae` (charte graphique INRAE : couleurs, polices,
+  logo, favicon, page de titre et bibliographie), utilisable avec
+  `create_book(template = "inrae")`. Il remplace le package
+  `kquarto.r.inrae`.
 * Nouveau : `build_site()` rend les books dans le dossier d'un site
   pkgdown, les ajoute à la barre de navigation puis construit le site.
 * Nouveau : `update_pkgdown_yml()` ajoute les books (menus `reports_fr`,

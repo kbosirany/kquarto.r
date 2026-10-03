@@ -39,7 +39,8 @@ named by the report folders.}
 \code{"last-modified"}. \code{NULL} to leave the template value.}
 
 \item{template}{Template used to initialise the reports: the name of a
-template (see \code{\link[=list_templates_book]{list_templates_book()}}), a template shipped by another
+template (see \code{\link[=list_templates_book]{list_templates_book()}}), e.g. \code{"default"} or \code{"inrae"}
+(INRAE graphic charter), a template shipped by another
 package as \code{"pkg::name"}, or the path to a folder that contains a
 \verb{_quarto.yml}. Defaults to the option \code{kquarto.r.template}, or
 \code{"default"}.}

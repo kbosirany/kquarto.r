@@ -2,9 +2,12 @@
 #'
 #' Writes a menu entry for each book into the `_pkgdown.yml` file, so that
 #' [pkgdown::build_site()] links to the rendered books (see [build_site()]).
-#' Books are dispatched into language-specific navbar components
-#' (`reports_fr`, `reports_en`, ...) based on the `-fr`/`-en` suffix of their
-#' folder name. Books without a language suffix are grouped under `reports`.
+#' The books form one navbar menu, `reports`. When the books have several
+#' languages (the `-en`/`-fr` suffix of their folder name), the menu has a
+#' header by language (`English`, `Français`) followed by the titles of its
+#' books; with a single language, or without any suffix, the titles are listed
+#' without header. The components `reports_en` and `reports_fr` written by
+#' former versions are removed.
 #'
 #' @param dirname_reports Book folder names, relative to `path`. By default,
 #'   every book found in `path` (see [list_books()]).
@@ -61,31 +64,30 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
     sub(".*-(fr|en)$", "\\1", dirname_reports),
     ""
   )
-  components <- ifelse(nzchar(lang), paste0("reports_", lang), "reports")
+
+  # former components, one by language
+  old <- paste0("reports_", c("en", "fr"))
+  config$navbar$components[old] <- NULL
+  if (length(config$navbar$components) == 0) {
+    config$navbar$components <- NULL
+  }
+  config$navbar$structure$left <- setdiff(config$navbar$structure$left, old)
 
   if (isTRUE(add_to_navbar)) {
     config$navbar$structure$left <- unique(c(
       config$navbar$structure$left,
-      components
+      "reports"
     ))
   }
 
-  for (component in unique(components)) {
-    idx <- which(components == component)
-    config$navbar$components[[component]] <- list(
-      text = if (component == "reports") {
-        "Reports"
-      } else {
-        sprintf("Reports [%s]", sub("^reports_", "", component))
-      },
-      menu = lapply(idx, function(i) {
-        list(
-          text = titles[[i]],
-          href = file.path(site_subdir, dirname_reports[[i]], "index.html")
-        )
-      })
+  config$navbar$components$reports <- list(
+    text = "Reports",
+    menu = reports_menu(
+      lang,
+      titles,
+      file.path(site_subdir, dirname_reports, "index.html")
     )
-  }
+  )
   yaml::write_yaml(config, pkgdown_file)
   invisible(config)
 }
@@ -161,4 +163,27 @@ pkgdown_init_site <- function(...) {
 
 pkgdown_build_site <- function(...) {
   pkgdown::build_site(...)
+}
+
+# The menu of the books: a header by language when there are several
+# languages (English, then French, then the books without language), none
+# otherwise.
+reports_menu <- function(lang, titles, hrefs) {
+  languages <- c("English", "Fran\u00e7ais", "Other")
+  names(languages) <- c("en", "fr", "")
+  present <- intersect(names(languages), unique(lang))
+  items <- function(i) {
+    lapply(i, function(k) list(text = titles[[k]], href = hrefs[[k]]))
+  }
+  if (length(present) == 1) {
+    return(items(seq_along(lang)))
+  }
+  menu <- list()
+  for (l in present) {
+    if (length(menu) > 0) {
+      menu <- c(menu, list(list(text = "---------")))
+    }
+    menu <- c(menu, list(list(text = languages[[l]])), items(which(lang == l)))
+  }
+  menu
 }

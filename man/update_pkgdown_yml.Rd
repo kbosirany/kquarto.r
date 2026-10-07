@@ -37,9 +37,12 @@ The YAML list written to \code{pkgdown_file}, invisibly.
 \description{
 Writes a menu entry for each book into the \verb{_pkgdown.yml} file, so that
 \code{\link[pkgdown:build_site]{pkgdown::build_site()}} links to the rendered books (see \code{\link[=build_site]{build_site()}}).
-Books are dispatched into language-specific navbar components
-(\code{reports_fr}, \code{reports_en}, ...) based on the \code{-fr}/\code{-en} suffix of their
-folder name. Books without a language suffix are grouped under \code{reports}.
+The books form one navbar menu, \code{reports}. When the books have several
+languages (the \code{-en}/\code{-fr} suffix of their folder name), the menu has a
+header by language (\code{English}, \code{Français}) followed by the titles of its
+books; with a single language, or without any suffix, the titles are listed
+without header. The components \code{reports_en} and \code{reports_fr} written by
+former versions are removed.
 }
 \examples{
 \dontrun{

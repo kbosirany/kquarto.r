@@ -4,10 +4,12 @@ Writes a menu entry for each book into the `_pkgdown.yml` file, so that
 [`pkgdown::build_site()`](https://pkgdown.r-lib.org/reference/build_site.html)
 links to the rendered books (see
 [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)).
-Books are dispatched into language-specific navbar components
-(`reports_fr`, `reports_en`, ...) based on the `-fr`/`-en` suffix of
-their folder name. Books without a language suffix are grouped under
-`reports`.
+The books form one navbar menu, `reports`. When the books have several
+languages (the `-en`/`-fr` suffix of their folder name), the menu has a
+header by language (`English`, `Français`) followed by the titles of its
+books; with a single language, or without any suffix, the titles are
+listed without header. The components `reports_en` and `reports_fr`
+written by former versions are removed.
 
 ## Usage
 

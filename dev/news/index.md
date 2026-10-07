@@ -16,8 +16,10 @@
   barre de navigation puis construit le site.
 - Nouveau :
   [`update_pkgdown_yml()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_pkgdown_yml.md)
-  ajoute les books (menus `reports_fr`, `reports_en`, …) à
-  `_pkgdown.yml`.
+  ajoute les books à `_pkgdown.yml`, dans un seul menu `Reports` : un
+  en-tête par langue (`English`, `Français`, d’après le suffixe
+  `-en`/`-fr` du dossier) quand il y a plusieurs langues, sans en-tête
+  sinon. Les composants `reports_en` et `reports_fr` sont supprimés.
 
 ## kquarto.r 0.1.1
 

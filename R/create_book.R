@@ -20,7 +20,8 @@
 #' @param date Book date (`book: date`), e.g. `"today"` or
 #'   `"last-modified"`. `NULL` to leave the template value.
 #' @param template Template used to initialise the reports: the name of a
-#'   template (see [list_templates_book()]), a template shipped by another
+#'   template (see [list_templates_book()]), e.g. `"default"` or `"inrae"`
+#'   (INRAE graphic charter), a template shipped by another
 #'   package as `"pkg::name"`, or the path to a folder that contains a
 #'   `_quarto.yml`. Defaults to the option `kquarto.r.template`, or
 #'   `"default"`.
@@ -98,7 +99,10 @@ create_book <- function(dirname_reports,
     report_dir <- report_dirs[[i]]
     old_chapters <- existing_chapters(report_dir)
     dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
-    copy_dir(template_path, report_dir, overwrite = overwrite, exclude = "_quarto.yml")
+    copy_dir(
+      template_path, report_dir,
+      overwrite = overwrite, exclude = "_quarto.yml"
+    )
 
     config <- template_config
     config$project$type <- "book"
@@ -111,11 +115,16 @@ create_book <- function(dirname_reports,
     config$book$chapters <- merge_chapters(config$book$chapters, old_chapters)
 
     write_quarto_yml(config, file.path(report_dir, "_quarto.yml"))
-    add_lines(file.path(report_dir, ".gitignore"), c("/.quarto/", paste0("/", output_dir, "/")))
+    add_lines(
+      file.path(report_dir, ".gitignore"),
+      c("/.quarto/", paste0("/", output_dir, "/"))
+    )
 
-    prefix <- if (is.null(chapter_prefix)) chapter_prefix(config$lang) else chapter_prefix
+    prefix <- chapter_prefix %||% chapter_prefix(config$lang)
     for (chapter in chapters) {
-      pattern <- paste0("^", escape_regex(prefix), "-[0-9]+-", slugify(chapter), "\\.qmd$")
+      pattern <- paste0(
+        "^", escape_regex(prefix), "-[0-9]+-", slugify(chapter), "\\.qmd$"
+      )
       if (length(list.files(report_dir, pattern = pattern)) > 0) next
       suppressMessages(create_book_chapter(
         dirname_reports[[i]], chapter, path = path, prefix = chapter_prefix
@@ -164,19 +173,26 @@ existing_chapters <- function(report_dir) {
     return(list())
   }
   chapters <- as.list(yaml::read_yaml(yml)$book$chapters)
-  Filter(function(x) !is.character(x) || file.exists(file.path(report_dir, x)), chapters)
+  is_kept <- function(x) {
+    !is.character(x) || file.exists(file.path(report_dir, x))
+  }
+  Filter(is_kept, chapters)
 }
 
 merge_chapters <- function(chapters, old_chapters) {
   chapters <- as.list(chapters)
-  new <- Filter(function(x) !any(vapply(chapters, identical, logical(1), x)), old_chapters)
+  is_new <- function(x) !any(vapply(chapters, identical, logical(1), x))
+  new <- Filter(is_new, old_chapters)
   c(chapters, new)
 }
 
 check_dirnames <- function(dirname_reports) {
   if (!is.character(dirname_reports) || length(dirname_reports) == 0 ||
       anyNA(dirname_reports) || any(dirname_reports == "")) {
-    stop("`dirname_reports` must be a non-empty character vector.", call. = FALSE)
+    stop(
+      "`dirname_reports` must be a non-empty character vector.",
+      call. = FALSE
+    )
   }
   if (anyDuplicated(dirname_reports)) {
     stop("`dirname_reports` contains duplicated names.", call. = FALSE)
@@ -226,7 +242,8 @@ write_quarto_yml <- function(config, file) {
 }
 
 add_lines <- function(file, lines) {
-  existing <- if (file.exists(file)) readLines(file, warn = FALSE) else character()
+  existing <- character()
+  if (file.exists(file)) existing <- readLines(file, warn = FALSE)
   new <- setdiff(lines, existing)
   if (length(new) > 0) {
     writeLines(c(existing, new), file)

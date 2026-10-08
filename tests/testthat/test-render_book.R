@@ -16,9 +16,14 @@ test_that("render_book calls quarto_render with the right arguments", {
   expect_equal(out[[1]], file.path(normalizePath(file.path(dir, "a")), "_book"))
 
   calls <- list()
-  out <- render_book("b", path = dir, output_dir = "../docs/b", output_format = "html",
-                     quarto_args = "--no-cache")
-  expect_equal(calls[[1]]$quarto_args, c("--no-cache", "--output-dir", "../docs/b"))
+  out <- render_book(
+    "b", path = dir, output_dir = "../docs/b", output_format = "html",
+    quarto_args = "--no-cache"
+  )
+  expect_equal(
+    calls[[1]]$quarto_args,
+    c("--no-cache", "--output-dir", "../docs/b")
+  )
   expect_equal(calls[[1]]$output_format, "html")
 })
 
@@ -38,4 +43,16 @@ test_that("render_book renders a real book", {
   suppressMessages(create_book("a", path = dir))
   out <- render_book("a", path = dir, quiet = TRUE)
   expect_true(file.exists(file.path(out, "index.html")))
+})
+
+test_that("a book created with the INRAE template renders", {
+  skip_on_cran()
+  skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", path = dir, template = "inrae", chapters = "Introduction"
+  ))
+  out <- render_book("a", path = dir, quiet = TRUE)
+  expect_true(file.exists(file.path(out, "index.html")))
+  expect_true(file.exists(file.path(out, "chapitre-01-introduction.html")))
 })

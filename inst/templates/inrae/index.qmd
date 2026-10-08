@@ -1,0 +1,9 @@
+# Préface {.unnumbered}
+
+Ce rapport a été initialisé avec le template INRAE du package
+`kquarto.r`.
+
+La page de titre reprend le titre, le sous-titre, les auteurs et la date
+définis dans `_quarto.yml`. Les références citées, par exemple
+[@quarto], sont listées à la fin de chaque chapitre ; elles sont à
+ajouter dans `references.bib`.

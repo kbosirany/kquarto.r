@@ -1,7 +1,7 @@
 Package: kquarto.r
 Type: Package
 Title: Create, Template and Render 'Quarto' Books
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: c(
     person(
       given = c("Kevin", "Bosirany"),
@@ -16,15 +16,20 @@ Description: Helpers to manage 'Quarto' book reports, either inside an R
     folders with a filled '_quarto.yml', reuse your own templates across
     projects and render the books with 'quarto'.
 License: MIT + file LICENSE
-URL: https://github.com/kbosirany/kquarto.r, https://kbosirany.github.io/kquarto.r/
+URL: https://github.com/kbosirany/kquarto.r,
+    https://kbosirany.github.io/kquarto.r/
 BugReports: https://github.com/kbosirany/kquarto.r/issues
 Encoding: UTF-8
 Imports:
+    kableExtra,
+    knitr,
     quarto,
     tools,
+    utils,
     yaml
 Suggests:
-    knitr,
+    devtools,
+    pkgdown,
     rmarkdown,
     testthat (>= 3.0.0),
     withr

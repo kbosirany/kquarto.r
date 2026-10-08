@@ -48,21 +48,64 @@ test_that("template names and folders are validated", {
 
 test_that("templates can come from another package with pkg::name", {
   dir <- local_book_env()
-  suppressMessages(create_book("r", path = dir, template = "kquarto.r::default"))
+  suppressMessages(
+    create_book("r", path = dir, template = "kquarto.r::default")
+  )
   expect_true(file.exists(file.path(dir, "r", "index.qmd")))
 
   templates <- list_templates_book(packages = "kquarto.r")
   expect_true("kquarto.r::default" %in% templates$name)
 
-  expect_error(create_book("s", path = dir, template = "pasdepackage123::x"), "not installed")
-  expect_error(create_book("s", path = dir, template = "kquarto.r::nope"), "no template")
+  expect_error(
+    create_book("s", path = dir, template = "pasdepackage123::x"),
+    "not installed"
+  )
+  expect_error(
+    create_book("s", path = dir, template = "kquarto.r::nope"),
+    "no template"
+  )
 })
 
 test_that("the default template can be set with an option", {
   dir <- local_book_env()
-  tpl <- suppressMessages(create_template_book("charte", dir = file.path(dir, "inst_templates")))
+  tpl <- suppressMessages(
+    create_template_book("charte", dir = file.path(dir, "inst_templates"))
+  )
   writeLines("# Charte", file.path(tpl, "charte.qmd"))
   withr::local_options(kquarto.r.template = tpl)
   suppressMessages(create_book("r", path = dir))
   expect_true(file.exists(file.path(dir, "r", "charte.qmd")))
+})
+
+test_that("the INRAE template is shipped with the package", {
+  dir <- local_book_env()
+  templates <- list_templates_book()
+  expect_true("inrae" %in% templates$name[templates$source == "package"])
+
+  suppressMessages(create_book(
+    "rapport",
+    path = dir,
+    title = "Rapport technique",
+    author = "Kevin Orlando",
+    template = "inrae",
+    chapters = "Introduction"
+  ))
+  book <- file.path(dir, "rapport")
+  expect_true(file.exists(file.path(book, "inrae.scss")))
+  expect_true(file.exists(file.path(book, "references.bib")))
+  expect_true(file.exists(file.path(book, "images", "logo-inrae.png")))
+  expect_true(file.exists(file.path(book, "images", "favicon-inrae.png")))
+  expect_true(file.exists(file.path(book, "chapitre-01-introduction.qmd")))
+
+  config <- read_config(dir, "rapport")
+  expect_equal(config$book$title, "Rapport technique")
+  expect_equal(config$bibliography, "references.bib")
+  expect_true("inrae.scss" %in% unlist(config$format$html$theme))
+  expect_equal(
+    unlist(config$book$chapters),
+    c("index.qmd", "chapitre-01-introduction.qmd")
+  )
+
+  path <- suppressMessages(create_template_book("unite", from = "inrae"))
+  expect_true(file.exists(file.path(path, "images", "logo-inrae.png")))
 })

@@ -6,3 +6,7 @@ local_book_env <- function(env = parent.frame()) {
   )
   dir
 }
+
+read_config <- function(dir, book) {
+  yaml::read_yaml(file.path(dir, book, "_quarto.yml"))
+}

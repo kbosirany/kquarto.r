@@ -44,7 +44,8 @@ create_template_book <- function(name, from = "default", overwrite = FALSE,
   if (dir.exists(target)) {
     if (!overwrite) {
       stop(
-        "Template '", name, "' already exists. Use `overwrite = TRUE` to replace it.",
+        "Template '", name, "' already exists. ",
+        "Use `overwrite = TRUE` to replace it.",
         call. = FALSE
       )
     }
@@ -68,17 +69,19 @@ create_template_book <- function(name, from = "default", overwrite = FALSE,
 #' containing a `_quarto.yml`). They are used with
 #' `create_book(template = "pkg::name")`.
 #'
-#' A package such as `kquarto.r.inrae` can also make its template the
-#' default, either by wrapping the functions:
+#' Such a package can also make its template the default, either by
+#' wrapping the functions:
 #'
 #' ```r
-#' create_book <- function(dirname_reports, ..., template = "kquarto.r.inrae::inrae") {
+#' create_book <- function(dirname_reports, ...,
+#'                         template = "monpkg::charte") {
 #'   kquarto.r::create_book(dirname_reports, ..., template = template)
 #' }
 #' ```
 #'
 #' or by setting the option `kquarto.r.template` (e.g. in its `.onLoad()` or
-#' in a user's `.Rprofile`): `options(kquarto.r.template = "kquarto.r.inrae::inrae")`.
+#' in a user's `.Rprofile`):
+#' `options(kquarto.r.template = "monpkg::charte")`.
 #'
 #' @param packages Names of other packages whose templates are listed too.
 #'
@@ -151,19 +154,28 @@ resolve_template <- function(template) {
   }
   if (dir.exists(template)) {
     if (!file.exists(file.path(template, "_quarto.yml"))) {
-      stop("The template folder must contain a `_quarto.yml`: ", template, call. = FALSE)
+      stop(
+        "The template folder must contain a `_quarto.yml`: ", template,
+        call. = FALSE
+      )
     }
     return(normalizePath(template))
   }
   if (grepl("::", template, fixed = TRUE)) {
     parts <- strsplit(template, "::", fixed = TRUE)[[1]]
     if (length(parts) != 2 || !requireNamespace(parts[[1]], quietly = TRUE)) {
-      stop("Package '", parts[[1]], "' of template '", template, "' is not installed.",
-           call. = FALSE)
+      stop(
+        "Package '", parts[[1]], "' of template '", template,
+        "' is not installed.",
+        call. = FALSE
+      )
     }
     path <- system.file("templates", parts[[2]], package = parts[[1]])
     if (!nzchar(path) || !file.exists(file.path(path, "_quarto.yml"))) {
-      stop("Package '", parts[[1]], "' has no template '", parts[[2]], "'.", call. = FALSE)
+      stop(
+        "Package '", parts[[1]], "' has no template '", parts[[2]], "'.",
+        call. = FALSE
+      )
     }
     return(path)
   }
@@ -192,7 +204,8 @@ check_template_name <- function(name) {
   if (!is.character(name) || length(name) != 1 || is.na(name) ||
       !grepl("^[A-Za-z0-9._-]+$", name)) {
     stop(
-      "`name` must be a single string made of letters, digits, '.', '_' or '-'.",
+      "`name` must be a single string made of letters, digits, ",
+      "'.', '_' or '-'.",
       call. = FALSE
     )
   }

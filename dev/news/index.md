@@ -1,5 +1,7 @@
 # Changelog
 
+## kquarto.r (development version)
+
 ## kquarto.r 0.2.0
 
 Cette version ajoute la construction d’un site pkgdown avec ses rapports

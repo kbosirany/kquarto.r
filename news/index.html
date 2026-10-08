@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kquarto.r</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,9 +33,17 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/kbosirany/kquarto.r/blob/v0.1.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/kbosirany/kquarto.r/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="kquartor-020">kquarto.r 0.2.0<a class="anchor" aria-label="anchor" href="#kquartor-020"></a></h2>
+<p>Cette version ajoute la construction d’un site pkgdown avec ses rapports Quarto, le template INRAE et la mise en forme des tableaux.</p>
+<ul><li>Nouveau : <code><a href="../reference/kable.html">kable()</a></code> met en forme un tableau pour un book : tableau stylé et défilant en HTML, tableau <code>booktabs</code> en LaTeX. Elle vient du package <code>kutils</code>.</li>
+<li>Nouveau : template <code>inrae</code> (charte graphique INRAE : couleurs, polices, logo, favicon, page de titre et bibliographie), utilisable avec <code>create_book(template = "inrae")</code>. Il remplace le package <code>kquarto.r.inrae</code>.</li>
+<li>Nouveau : <code><a href="../reference/build_site.html">build_site()</a></code> rend les books dans le dossier d’un site pkgdown, les ajoute à la barre de navigation puis construit le site.</li>
+<li>Nouveau : <code><a href="../reference/update_pkgdown_yml.html">update_pkgdown_yml()</a></code> ajoute les books à <code>_pkgdown.yml</code>, dans un seul menu <code>Reports</code> : un en-tête par langue (<code>English</code>, <code>Français</code>, d’après le suffixe <code>-en</code>/<code>-fr</code> du dossier) quand il y a plusieurs langues, sans en-tête sinon. Les composants <code>reports_en</code> et <code>reports_fr</code> sont supprimés.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="kquartor-011">kquarto.r 0.1.1<a class="anchor" aria-label="anchor" href="#kquartor-011"></a></h2>
 <ul><li>Correction du nom de l’auteur (Kevin Bosirany Orlando) et ajout de son ORCID.</li>

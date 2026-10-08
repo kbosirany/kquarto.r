@@ -34,7 +34,8 @@ create_book(
 list.files(file.path(projet, "rapport_technique"))
 #> [1] "_quarto.yml"                  "chapitre-01-introduction.qmd"
 #> [3] "chapitre-02-methodes.qmd"     "index.qmd"
-cat(readLines(file.path(projet, "rapport_technique", "_quarto.yml")), sep = "\n")
+yml <- file.path(projet, "rapport_technique", "_quarto.yml")
+cat(readLines(yml), sep = "\n")
 #> project:
 #>   type: book
 #>   output-dir: _book
@@ -78,7 +79,7 @@ create_book_chapter("rapport_technique", "Résultats", path = projet)
 #> Chapter created: rapport_technique/chapitre-03-resultats.qmd
 list_books(projet)
 #> [1] "note_synthese"     "rapport_technique"
-yaml::read_yaml(file.path(projet, "rapport_technique", "_quarto.yml"))$book$chapters
+yaml::read_yaml(yml)$book$chapters
 #> [1] "index.qmd"                    "chapitre-01-introduction.qmd"
 #> [3] "chapitre-02-methodes.qmd"     "chapitre-03-resultats.qmd"
 ```
@@ -114,18 +115,31 @@ create_book("nouveau_rapport", template = "mon_template")
 
 Les templates utilisateur sont stockés dans
 [`template_dir()`](https://kbosirany.github.io/kquarto.r/reference/template_dir.md).
-Un package peut aussi livrer ses propres templates dans
-`inst/templates/<nom>/`, par exemple pour une charte graphique
-institutionnelle :
+
+### Template INRAE
+
+Le package livre aussi le template `inrae`, conforme à la charte
+graphique INRAE (couleurs, polices, logo, favicon, page de titre et
+bibliographie) :
 
 ``` r
 
-# Depuis la racine du package kquarto.r.inrae
-create_template_book("inrae", dir = "inst/templates")
-
-# Puis, partout
-create_book("rapport", template = "kquarto.r.inrae::inrae")
+create_book("rapport", template = "inrae")
 
 # Ou comme template par défaut
-options(kquarto.r.template = "kquarto.r.inrae::inrae")
+options(kquarto.r.template = "inrae")
+```
+
+### Templates d’autres packages
+
+Un package peut aussi livrer ses propres templates dans
+`inst/templates/<nom>/`, par exemple pour la charte d’une unité :
+
+``` r
+
+# Depuis la racine du package monpkg
+create_template_book("charte", from = "inrae", dir = "inst/templates")
+
+# Puis, partout
+create_book("rapport", template = "monpkg::charte")
 ```

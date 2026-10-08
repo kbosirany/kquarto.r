@@ -11,13 +11,13 @@ Source:
 [`DESCRIPTION`](https://github.com/kbosirany/kquarto.r/blob/dev/DESCRIPTION)
 
 Orlando KB (2026). *kquarto.r: Create, Template and Render 'Quarto'
-Books*. R package version 0.1.1.9000,
+Books*. R package version 0.2.0,
 <https://github.com/kbosirany/kquarto.r>.
 
     @Manual{,
       title = {kquarto.r: Create, Template and Render 'Quarto' Books},
       author = {Kevin Bosirany Orlando},
       year = {2026},
-      note = {R package version 0.1.1.9000},
+      note = {R package version 0.2.0},
       url = {https://github.com/kbosirany/kquarto.r},
     }

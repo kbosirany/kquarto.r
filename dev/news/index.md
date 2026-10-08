@@ -1,6 +1,9 @@
 # Changelog
 
-## kquarto.r (development version)
+## kquarto.r 0.2.0
+
+Cette version ajoute la construction d’un site pkgdown avec ses rapports
+Quarto, le template INRAE et la mise en forme des tableaux.
 
 - Nouveau :
   [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)

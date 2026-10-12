@@ -111,12 +111,20 @@ render_presentation("seminaire")
 list_presentations()
 list_templates_presentation()
 
+# PDF avec LaTeX (Beamer) en plus du HTML
+create_presentation("seminaire", formats = c("revealjs", "beamer"))
+render_presentation("seminaire", output_format = "beamer")
+
 # Template par défaut, par exemple dans le .Rprofile
 options(kquarto.r.presentation.template = "inrae-presentation")
 
 # Dériver un template (autre logo, diapositives types...)
 create_template_presentation("mon_unite", from = "inrae-presentation")
 ```
+
+Le PDF d'une présentation passe par Beamer (LaTeX) : Quarto n'a pas de
+diapositives Typst, et un export PDF de reveal.js demanderait un navigateur
+(impression depuis Chrome avec `?print-pdf`).
 
 Un template de présentation contient un `template.yml`
 (`type: presentation`), un `slides.qmd` (en-tête YAML et diapositives) et

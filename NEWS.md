@@ -4,7 +4,9 @@
   `render_presentation()` et `list_presentations()`, et leurs templates
   (`create_template_presentation()`, `list_templates_presentation()`,
   `remove_template_presentation()`). Templates livrés :
-  `default-presentation` et `inrae-presentation`.
+  `default-presentation` et `inrae-presentation`. `formats = "beamer"`
+  ajoute une sortie PDF LaTeX (Beamer) ; pas de Typst, Quarto n'ayant pas
+  de diapositives Typst.
 * Les templates ont un type, déclaré dans un `template.yml` (`book` par
   défaut) : les listes de books et de présentations ne se mélangent pas.
   Un template peut réutiliser des fichiers partagés (`shared:`) ; le

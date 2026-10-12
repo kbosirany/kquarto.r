@@ -13,6 +13,7 @@ create_presentation(
   date = NULL,
   lang = "fr",
   template = getOption("kquarto.r.presentation.template", "default-presentation"),
+  formats = NULL,
   overwrite = FALSE
 )
 }
@@ -36,6 +37,12 @@ presentation template (see \code{\link[=list_templates_presentation]{list_templa
 charter), a template of another package (\code{"pkg::name"}) or the path to
 a template folder. Defaults to the option
 \code{kquarto.r.presentation.template}, or \code{"default-presentation"}.}
+
+\item{formats}{Formats of the slides. \code{NULL} keeps those of the
+template (\code{"revealjs"}, HTML). Add \code{"beamer"} to get a PDF made with
+LaTeX (needs a LaTeX distribution, e.g. \verb{quarto install tinytex}),
+rendered with \code{render_presentation(output_format = "beamer")}.
+Typst is not available: Quarto has no Typst slides.}
 
 \item{overwrite}{Whether to replace the slides of an existing
 presentation.}

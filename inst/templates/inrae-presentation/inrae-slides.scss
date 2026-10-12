@@ -10,13 +10,23 @@
   color: $inrae-gris;
 }
 
-// Logo : zone de protection et taille minimale (charte INRAE)
+// Logo en haut à droite ; numéro de diapositive en bas à droite, pour
+// qu'ils ne se chevauchent pas (zone de protection de la charte INRAE)
 .reveal .slide-logo {
-  max-height: none;
-  height: 60px;
-  right: 90px;
-  top: 16px;
-  left: auto;
+  position: absolute !important;
+  top: 16px !important;
+  right: 24px !important;
+  left: auto !important;
+  bottom: auto !important;
+  height: 40px !important;
+  max-height: none !important;
+  width: auto !important;
+}
+
+.reveal .slide-number {
+  top: auto !important;
+  bottom: 8px !important;
+  right: 8px !important;
 }
 
 .reveal .footer {

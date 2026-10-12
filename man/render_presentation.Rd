@@ -19,14 +19,15 @@ every presentation found in \code{path} (see \code{\link[=list_presentations]{li
 \item{path}{Folder containing the presentation folders.}
 
 \item{output_format}{Output format passed to Quarto, e.g. \code{"revealjs"} or
-\code{"pdf"}. \code{NULL} renders the formats of the slides.}
+\code{"beamer"} (PDF, see the \code{formats} argument of \code{\link[=create_presentation]{create_presentation()}}). \code{NULL} renders the formats of the slides.}
 
 \item{quiet}{Whether to suppress Quarto output.}
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
 }
 \value{
-The paths of the rendered HTML files, invisibly.
+The paths of the rendered files (\code{.html}, or \code{.pdf} for
+\code{output_format = "beamer"}), invisibly.
 }
 \description{
 Calls \code{\link[quarto:quarto_render]{quarto::quarto_render()}} on the slides of each presentation. The

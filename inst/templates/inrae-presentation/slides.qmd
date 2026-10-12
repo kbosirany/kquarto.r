@@ -17,9 +17,9 @@ format:
     embed-resources: true
 ---
 
-## Introduction {background-color="#00a3a6"}
+## Introduction
 
-Diapositive de section sur fond vert INRAE.
+Titre vert, logo en haut à droite, pied de page INRAE.
 
 ## Plan
 
@@ -34,9 +34,7 @@ Diapositive de section sur fond vert INRAE.
 plot(cars, col = "#00a3a6", pch = 19)
 ```
 
-::: {.callout-note}
-Les couleurs et polices viennent de la charte INRAE partagée.
-:::
+> Les couleurs et polices viennent de la charte INRAE partagée.
 
 ## Conclusion
 

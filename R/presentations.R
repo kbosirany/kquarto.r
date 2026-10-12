@@ -20,6 +20,11 @@
 #'   charter), a template of another package (`"pkg::name"`) or the path to
 #'   a template folder. Defaults to the option
 #'   `kquarto.r.presentation.template`, or `"default-presentation"`.
+#' @param formats Formats of the slides. `NULL` keeps those of the
+#'   template (`"revealjs"`, HTML). Add `"beamer"` to get a PDF made with
+#'   LaTeX (needs a LaTeX distribution, e.g. `quarto install tinytex`),
+#'   rendered with `render_presentation(output_format = "beamer")`.
+#'   Typst is not available: Quarto has no Typst slides.
 #' @param overwrite Whether to replace the slides of an existing
 #'   presentation.
 #'
@@ -48,8 +53,10 @@ create_presentation <- function(name,
                                   "kquarto.r.presentation.template",
                                   "default-presentation"
                                 ),
+                                formats = NULL,
                                 overwrite = FALSE) {
   check_dirnames(name)
+  check_presentation_formats(formats)
   if (!dir.exists(path)) {
     stop("`path` does not exist: ", path, call. = FALSE)
   }
@@ -75,7 +82,8 @@ create_presentation <- function(name,
     dir.create(dirs[[i]], recursive = TRUE, showWarnings = FALSE)
     copy_dir(
       template_path, dirs[[i]],
-      overwrite = overwrite, exclude = c("slides.qmd", "template.yml")
+      overwrite = overwrite,
+      exclude = c("slides.qmd", "template.yml", "beamer.yml")
     )
     copy_shared(template_path, dirs[[i]], overwrite = overwrite)
 
@@ -85,10 +93,46 @@ create_presentation <- function(name,
     if (!is.null(author)) slides$header$author <- author
     if (!is.null(date)) slides$header$date <- date
     if (!is.null(lang)) slides$header$lang <- lang
+    slides$header$format <- set_presentation_formats(
+      slides$header$format, formats, template_path
+    )
     write_slides(slides, files[[i]])
     add_lines(file.path(dirs[[i]], ".gitignore"), "/.quarto/")
   }
   invisible(files)
+}
+
+check_presentation_formats <- function(formats) {
+  if (is.null(formats)) {
+    return(invisible(TRUE))
+  }
+  if (!is.character(formats) || anyNA(formats) ||
+      !all(formats %in% c("revealjs", "beamer"))) {
+    stop(
+      "`formats` must be a subset of \"revealjs\" and \"beamer\" ",
+      "(Typst has no slides in Quarto).",
+      call. = FALSE
+    )
+  }
+  invisible(TRUE)
+}
+
+# `beamer.yml` of the template gives the beamer options; the default is a
+# 16:9 slide deck.
+set_presentation_formats <- function(format, formats, template_path) {
+  if (is.null(formats)) {
+    return(format)
+  }
+  if (!"revealjs" %in% formats) format$revealjs <- NULL
+  if ("beamer" %in% formats) {
+    file <- file.path(template_path, "beamer.yml")
+    format$beamer <- if (file.exists(file)) {
+      yaml::read_yaml(file)
+    } else {
+      list(aspectratio = 169L)
+    }
+  }
+  format
 }
 
 #' List the presentations of a folder
@@ -126,11 +170,12 @@ list_presentations <- function(path = ".") {
 #'   every presentation found in `path` (see [list_presentations()]).
 #' @param path Folder containing the presentation folders.
 #' @param output_format Output format passed to Quarto, e.g. `"revealjs"` or
-#'   `"pdf"`. `NULL` renders the formats of the slides.
+#'   `"beamer"` (PDF, see the `formats` argument of [create_presentation()]). `NULL` renders the formats of the slides.
 #' @param quiet Whether to suppress Quarto output.
 #' @param ... Other arguments passed to [quarto::quarto_render()].
 #'
-#' @return The paths of the rendered HTML files, invisibly.
+#' @return The paths of the rendered files (`.html`, or `.pdf` for
+#'   `output_format = "beamer"`), invisibly.
 #' @export
 #'
 #' @examples
@@ -173,7 +218,8 @@ render_presentation <- function(name = NULL,
       ...
     )
   }
-  invisible(sub("\\.qmd$", ".html", files))
+  ext <- if (identical(output_format, "beamer")) ".pdf" else ".html"
+  invisible(sub("\\.qmd$", ext, files))
 }
 
 # Slides = YAML header + body. Only the header is rewritten.

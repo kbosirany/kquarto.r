@@ -98,3 +98,45 @@ test_that("an INRAE presentation renders", {
   render_presentation("seminaire", path = dir, quiet = TRUE)
   expect_true(file.exists(file.path(dir, "seminaire", "seminaire.html")))
 })
+
+test_that("create_presentation can add the beamer (LaTeX PDF) format", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation(
+    c("a", "b"), path = dir, template = "inrae-presentation",
+    formats = c("revealjs", "beamer")
+  ))
+  expect_true(file.exists(file.path(dir, "a", "inrae-beamer.tex")))
+  expect_false(file.exists(file.path(dir, "a", "beamer.yml")))
+  format <- read_slides(file.path(dir, "a", "a.qmd"))$header$format
+  expect_named(format, c("revealjs", "beamer"))
+  expect_equal(format$beamer$`include-in-header`, "inrae-beamer.tex")
+
+  suppressMessages(create_presentation(
+    "c", path = dir, formats = "beamer"
+  ))
+  format <- read_slides(file.path(dir, "c", "c.qmd"))$header$format
+  expect_named(format, "beamer")
+  expect_equal(format$beamer$aspectratio, 169)
+
+  expect_error(
+    create_presentation("d", path = dir, formats = "typst"), "no slides"
+  )
+  expect_equal(list_presentations(dir), c("a", "b"))
+})
+
+test_that("an INRAE presentation renders to PDF with beamer", {
+  skip_on_cran()
+  skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  skip_if(
+    !any(nzchar(Sys.which(c("lualatex", "xelatex", "pdflatex")))),
+    "No LaTeX installation found"
+  )
+  dir <- local_book_env()
+  suppressMessages(create_presentation(
+    "s", path = dir, template = "inrae-presentation", formats = "beamer"
+  ))
+  out <- render_presentation("s", path = dir, output_format = "beamer",
+                             quiet = TRUE)
+  expect_equal(basename(out), "s.pdf")
+  expect_true(file.exists(out))
+})

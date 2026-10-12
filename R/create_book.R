@@ -119,8 +119,10 @@ create_book <- function(dirname_reports,
     dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
     copy_dir(
       template_path, report_dir,
-      overwrite = overwrite, exclude = c("_quarto.yml", "pdf.yml", "typst.yml")
+      overwrite = overwrite,
+      exclude = c("_quarto.yml", "pdf.yml", "typst.yml", "template.yml")
     )
+    copy_shared(template_path, report_dir, overwrite = overwrite)
 
     config <- template_config
     config$project$type <- "book"

@@ -75,6 +75,6 @@ test_that("a book renders to PDF with Typst", {
     file = file.path(dir, "a", "chapitre-01-introduction.qmd"),
     append = TRUE
   )
-  out <- render_book("a", path = dir, output_format = "typst", quiet = TRUE)
+  out <- render_book("a", path = dir, output_format = "typst", quiet = FALSE)
   expect_length(list.files(out, pattern = "[.]pdf$"), 1)
 })

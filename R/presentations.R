@@ -170,7 +170,8 @@ list_presentations <- function(path = ".") {
 #'   every presentation found in `path` (see [list_presentations()]).
 #' @param path Folder containing the presentation folders.
 #' @param output_format Output format passed to Quarto, e.g. `"revealjs"` or
-#'   `"beamer"` (PDF, see the `formats` argument of [create_presentation()]). `NULL` renders the formats of the slides.
+#'   `"beamer"` (PDF, see the `formats` argument of
+#'   [create_presentation()]). `NULL` renders the formats of the slides.
 #' @param quiet Whether to suppress Quarto output.
 #' @param ... Other arguments passed to [quarto::quarto_render()].
 #'

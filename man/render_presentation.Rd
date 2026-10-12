@@ -19,7 +19,8 @@ every presentation found in \code{path} (see \code{\link[=list_presentations]{li
 \item{path}{Folder containing the presentation folders.}
 
 \item{output_format}{Output format passed to Quarto, e.g. \code{"revealjs"} or
-\code{"beamer"} (PDF, see the \code{formats} argument of \code{\link[=create_presentation]{create_presentation()}}). \code{NULL} renders the formats of the slides.}
+\code{"beamer"} (PDF, see the \code{formats} argument of
+\code{\link[=create_presentation]{create_presentation()}}). \code{NULL} renders the formats of the slides.}
 
 \item{quiet}{Whether to suppress Quarto output.}
 

@@ -38,10 +38,12 @@
 #'   `book = list(chapters = c("index.qmd", "methodes.qmd"))`.
 #' @param formats Output formats of the book. `NULL` (the default) keeps
 #'   those of the template (HTML for the shipped templates). `"typst"` adds
-#'   a PDF format built with Typst (bundled with Quarto, no LaTeX needed),
-#'   styled like the template if it has a `typst.yml`; `"html"` keeps the
-#'   HTML format. E.g. `c("html", "typst")` or `"typst"`. Render a PDF with
-#'   `render_book(output_format = "typst")`. The PDF needs an `author`.
+#'   a PDF built with Typst (bundled with Quarto, nothing to install) and
+#'   `"pdf"` a PDF built with LaTeX (needs a LaTeX distribution, e.g.
+#'   TinyTeX: `quarto install tinytex`). Both are styled like the template
+#'   if it has a `typst.yml` / `pdf.yml`. `"html"` keeps the HTML format.
+#'   E.g. `c("html", "pdf")`. Render with `render_book(output_format =
+#'   "pdf")` or `"typst"`. The Typst PDF needs an `author`.
 #' @param overwrite If `FALSE` (the default), an error is raised when a
 #'   report folder already contains a `_quarto.yml`. If `TRUE`, the
 #'   `_quarto.yml` and the template files are overwritten; chapters already
@@ -117,7 +119,7 @@ create_book <- function(dirname_reports,
     dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
     copy_dir(
       template_path, report_dir,
-      overwrite = overwrite, exclude = c("_quarto.yml", "typst.yml")
+      overwrite = overwrite, exclude = c("_quarto.yml", "pdf.yml", "typst.yml")
     )
 
     config <- template_config
@@ -205,9 +207,12 @@ merge_chapters <- function(chapters, old_chapters) {
 
 check_formats <- function(formats) {
   valid <- is.null(formats) ||
-    (is.character(formats) && all(formats %in% c("html", "typst")))
+    (is.character(formats) && all(formats %in% c("html", "pdf", "typst")))
   if (!valid) {
-    stop("`formats` must be NULL or a subset of: html, typst.", call. = FALSE)
+    stop(
+      "`formats` must be NULL or a subset of: html, pdf, typst.",
+      call. = FALSE
+    )
   }
   invisible(TRUE)
 }
@@ -217,9 +222,9 @@ set_formats <- function(config, formats, template_path) {
     return(config)
   }
   if (!"html" %in% formats) config$format$html <- NULL
-  if ("typst" %in% formats) {
-    file <- file.path(template_path, "typst.yml")
-    config$format$typst <- if (file.exists(file)) {
+  for (format in intersect(c("pdf", "typst"), formats)) {
+    file <- file.path(template_path, paste0(format, ".yml"))
+    config$format[[format]] <- if (file.exists(file)) {
       yaml::read_yaml(file)
     } else {
       list(toc = TRUE, `number-sections` = TRUE, papersize = "a4")

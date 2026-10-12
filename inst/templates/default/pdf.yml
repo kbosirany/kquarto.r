@@ -1,0 +1,5 @@
+documentclass: scrbook
+papersize: a4
+toc: true
+number-sections: true
+colorlinks: true

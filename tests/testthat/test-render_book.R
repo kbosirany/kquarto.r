@@ -78,3 +78,19 @@ test_that("a book renders to PDF with Typst", {
   out <- render_book("a", path = dir, output_format = "typst", quiet = FALSE)
   expect_length(list.files(out, pattern = "[.]pdf$"), 1)
 })
+
+test_that("a book renders to PDF with LaTeX", {
+  skip_on_cran()
+  skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  skip_if(
+    !any(nzchar(Sys.which(c("lualatex", "xelatex", "pdflatex")))),
+    "No LaTeX installation found"
+  )
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", path = dir, template = "inrae", formats = "pdf",
+    chapters = "Introduction"
+  ))
+  out <- render_book("a", path = dir, output_format = "pdf", quiet = TRUE)
+  expect_length(list.files(out, pattern = "[.]pdf$"), 1)
+})

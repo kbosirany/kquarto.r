@@ -77,14 +77,19 @@ render_book("rapport_technique", output_dir = "../docs/rapport_technique")
 render_book() # tous les books du dossier courant
 ```
 
-## Sortie PDF (Typst)
+## Sortie PDF (Typst ou LaTeX)
 
-Les templates produisent du HTML. Le format `typst` ajoute un PDF, sans
-LaTeX (Typst est fourni avec Quarto >= 1.4) :
+Les templates produisent du HTML. L'argument `formats` ajoute un PDF :
+`"typst"` (fourni avec Quarto, rien à installer, auteur obligatoire) ou
+`"pdf"` (LaTeX, qui nécessite une distribution comme TinyTeX, installée
+avec `quarto install tinytex`). `kquarto.r` ne dépend d'aucune distribution
+LaTeX.
 
 ```{r, eval = FALSE}
-create_book("rapport", template = "inrae", formats = c("html", "typst"))
+create_book("rapport", template = "inrae", author = "Kevin Orlando",
+            formats = c("html", "typst", "pdf"))
 render_book("rapport", output_format = "typst")
+render_book("rapport", output_format = "pdf")
 ```
 
 Dans le PDF, `kable()` écrit le tableau complet à la place du tableau

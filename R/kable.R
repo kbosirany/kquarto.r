@@ -27,9 +27,10 @@ kable <- function(
 ) {
   if (!is_html_output) {
     if (knitr::is_latex_output()) {
-      return(
-        knitr::kable(x, format = "latex", booktabs = TRUE, caption = title)
-      )
+      return(knitr::kable(
+        x, format = "latex", booktabs = TRUE, longtable = TRUE,
+        caption = title
+      ))
     }
     return(knitr::kable(x, format = "pipe", caption = title))
   }

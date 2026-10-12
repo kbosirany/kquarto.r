@@ -60,8 +60,9 @@ test_that("a book created with the INRAE template renders", {
 test_that("a book renders to PDF with Typst", {
   skip_on_cran()
   skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  version <- system2(quarto::quarto_path(), "--version", stdout = TRUE)
   skip_if(
-    package_version(quarto::quarto_version()) < "1.4",
+    package_version(trimws(version[[1]])) < "1.4",
     "Typst books need Quarto >= 1.4"
   )
   dir <- local_book_env()

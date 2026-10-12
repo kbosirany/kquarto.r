@@ -66,7 +66,7 @@ those of the template (HTML for the shipped templates). \code{"typst"} adds
 a PDF format built with Typst (bundled with Quarto, no LaTeX needed),
 styled like the template if it has a \code{typst.yml}; \code{"html"} keeps the
 HTML format. E.g. \code{c("html", "typst")} or \code{"typst"}. Render a PDF with
-\code{render_book(output_format = "typst")}.}
+\code{render_book(output_format = "typst")}. The PDF needs an \code{author}.}
 
 \item{overwrite}{If \code{FALSE} (the default), an error is raised when a
 report folder already contains a \verb{_quarto.yml}. If \code{TRUE}, the

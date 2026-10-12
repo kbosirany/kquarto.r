@@ -41,7 +41,7 @@
 #'   a PDF format built with Typst (bundled with Quarto, no LaTeX needed),
 #'   styled like the template if it has a `typst.yml`; `"html"` keeps the
 #'   HTML format. E.g. `c("html", "typst")` or `"typst"`. Render a PDF with
-#'   `render_book(output_format = "typst")`.
+#'   `render_book(output_format = "typst")`. The PDF needs an `author`.
 #' @param overwrite If `FALSE` (the default), an error is raised when a
 #'   report folder already contains a `_quarto.yml`. If `TRUE`, the
 #'   `_quarto.yml` and the template files are overwritten; chapters already
@@ -102,6 +102,14 @@ create_book <- function(dirname_reports,
   }
 
   template_config <- yaml::read_yaml(file.path(template_path, "_quarto.yml"))
+  if ("typst" %in% formats && is.null(author) &&
+      is.null(template_config$book$author)) {
+    warning(
+      "The Typst (PDF) format of a book needs an author: ",
+      "set `author`, or rendering will fail.",
+      call. = FALSE
+    )
+  }
 
   for (i in seq_along(report_dirs)) {
     report_dir <- report_dirs[[i]]

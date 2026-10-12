@@ -68,7 +68,7 @@ test_that("a book renders to PDF with Typst", {
   dir <- local_book_env()
   suppressMessages(create_book(
     "a", path = dir, template = "inrae", formats = "typst",
-    chapters = "Introduction"
+    author = "Kevin Orlando", chapters = "Introduction"
   ))
   cat(
     "\n```{r}\nknitr::kable(head(iris))\n```\n",

@@ -15,7 +15,7 @@ kable(
 \item{x}{A data frame or a matrix.}
 
 \item{is_html_output}{Whether the output is HTML. By default, detected
-with \code{\link[knitr:is_html_output]{knitr::is_html_output()}} (or \code{TRUE} in an interactive session).}
+with \code{\link[knitr:output_type]{knitr::is_html_output()}} (or \code{TRUE} in an interactive session).}
 
 \item{title}{Optional caption of the table.}
 
@@ -25,13 +25,14 @@ with \code{\link[knitr:is_html_output]{knitr::is_html_output()}} (or \code{TRUE}
 A \code{knitr_kable} object.
 }
 \description{
-Renders a data frame as a styled, scrollable table in HTML output and as
-a \code{booktabs} table in LaTeX/PDF output. It is meant to be called from the
-chunks of the chapters of a book.
+Renders a data frame as a styled, scrollable table in HTML output, and as
+a plain full table in PDF output (Typst, LaTeX) or any other format. It
+is meant to be called from the chunks of the chapters of a book.
 }
 \details{
-In LaTeX output, only the first rows of \code{x} are kept
-(see \code{\link[utils:head]{utils::head()}}), as a long table does not fit in a page.
+Outside HTML the whole table is written: a Markdown table
+(converted by Quarto, so it works with Typst, Word, ...) or, in LaTeX
+output, a \code{booktabs} table.
 }
 \examples{
 kable(head(iris), is_html_output = TRUE, title = "Iris")

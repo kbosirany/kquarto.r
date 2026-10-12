@@ -109,3 +109,49 @@ test_that("list_books finds book folders", {
   expect_setequal(list_books(dir), c("a", "b"))
   expect_setequal(list_books(dir, recursive = TRUE), c("a", "b", "sub/c"))
 })
+
+test_that("formats = 'typst' adds a PDF format to the book", {
+  dir <- local_book_env()
+  expect_warning(
+    suppressMessages(
+      create_book("a", path = dir, formats = c("html", "typst"))
+    ),
+    "needs an author"
+  )
+  config <- read_config(dir, "a")
+  expect_named(config$format, c("html", "typst"))
+  expect_true(config$format$typst$toc)
+  expect_false(file.exists(file.path(dir, "a", "typst.yml")))
+
+  suppressMessages(
+    create_book("b", path = dir, formats = "typst", author = "Kevin")
+  )
+  expect_named(read_config(dir, "b")$format, "typst")
+
+  suppressMessages(create_book("c", path = dir))
+  expect_named(read_config(dir, "c")$format, "html")
+
+  suppressMessages(
+    create_book("e", path = dir, formats = c("html", "pdf"))
+  )
+  config <- read_config(dir, "e")
+  expect_named(config$format, c("html", "pdf"))
+  expect_equal(config$format$pdf$documentclass, "scrbook")
+  expect_false(file.exists(file.path(dir, "e", "pdf.yml")))
+
+  expect_error(create_book("d", path = dir, formats = "docx"), "formats")
+})
+
+test_that("the INRAE template has its own Typst style", {
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", path = dir, template = "inrae", author = "Kevin",
+    formats = c("html", "pdf", "typst")
+  ))
+  config <- read_config(dir, "a")
+  expect_equal(config$format$typst$`include-in-header`, "inrae.typ")
+  expect_equal(config$format$pdf$`include-in-header`, "inrae.tex")
+  expect_true(file.exists(file.path(dir, "a", "inrae.tex")))
+  expect_true(file.exists(file.path(dir, "a", "inrae.typ")))
+  expect_true(file.exists(file.path(dir, "a", "_brand.yml")))
+})

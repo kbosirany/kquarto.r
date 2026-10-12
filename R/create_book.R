@@ -36,6 +36,14 @@
 #' @param ... Additional fields merged (recursively) into `_quarto.yml`, e.g.
 #'   `format = list(html = list(theme = "flatly"))` or
 #'   `book = list(chapters = c("index.qmd", "methodes.qmd"))`.
+#' @param formats Output formats of the book. `NULL` (the default) keeps
+#'   those of the template (HTML for the shipped templates). `"typst"` adds
+#'   a PDF built with Typst (bundled with Quarto, nothing to install) and
+#'   `"pdf"` a PDF built with LaTeX (needs a LaTeX distribution, e.g.
+#'   TinyTeX: `quarto install tinytex`). Both are styled like the template
+#'   if it has a `typst.yml` / `pdf.yml`. `"html"` keeps the HTML format.
+#'   E.g. `c("html", "pdf")`. Render with `render_book(output_format =
+#'   "pdf")` or `"typst"`. The Typst PDF needs an `author`.
 #' @param overwrite If `FALSE` (the default), an error is raised when a
 #'   report folder already contains a `_quarto.yml`. If `TRUE`, the
 #'   `_quarto.yml` and the template files are overwritten; chapters already
@@ -67,6 +75,7 @@ create_book <- function(dirname_reports,
                         chapters = NULL,
                         chapter_prefix = NULL,
                         ...,
+                        formats = NULL,
                         overwrite = FALSE) {
   check_dirnames(dirname_reports)
   if (!dir.exists(path)) {
@@ -76,6 +85,7 @@ create_book <- function(dirname_reports,
   if (!is.null(chapters) && (!is.character(chapters) || anyNA(chapters))) {
     stop("`chapters` must be a character vector.", call. = FALSE)
   }
+  check_formats(formats)
   template_path <- resolve_template(template)
   extra <- list(...)
   if (length(extra) > 0 && (is.null(names(extra)) || any(names(extra) == ""))) {
@@ -94,6 +104,14 @@ create_book <- function(dirname_reports,
   }
 
   template_config <- yaml::read_yaml(file.path(template_path, "_quarto.yml"))
+  if ("typst" %in% formats && is.null(author) &&
+      is.null(template_config$book$author)) {
+    warning(
+      "The Typst (PDF) format of a book needs an author: ",
+      "set `author`, or rendering will fail.",
+      call. = FALSE
+    )
+  }
 
   for (i in seq_along(report_dirs)) {
     report_dir <- report_dirs[[i]]
@@ -101,7 +119,7 @@ create_book <- function(dirname_reports,
     dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
     copy_dir(
       template_path, report_dir,
-      overwrite = overwrite, exclude = "_quarto.yml"
+      overwrite = overwrite, exclude = c("_quarto.yml", "pdf.yml", "typst.yml")
     )
 
     config <- template_config
@@ -111,6 +129,7 @@ create_book <- function(dirname_reports,
     if (!is.null(author)) config$book$author <- as.list(author)
     if (!is.null(date)) config$book$date <- date
     if (!is.null(lang)) config$lang <- lang
+    config <- set_formats(config, formats, template_path)
     if (length(extra) > 0) config <- utils::modifyList(config, extra)
     config$book$chapters <- merge_chapters(config$book$chapters, old_chapters)
 
@@ -184,6 +203,34 @@ merge_chapters <- function(chapters, old_chapters) {
   is_new <- function(x) !any(vapply(chapters, identical, logical(1), x))
   new <- Filter(is_new, old_chapters)
   c(chapters, new)
+}
+
+check_formats <- function(formats) {
+  valid <- is.null(formats) ||
+    (is.character(formats) && all(formats %in% c("html", "pdf", "typst")))
+  if (!valid) {
+    stop(
+      "`formats` must be NULL or a subset of: html, pdf, typst.",
+      call. = FALSE
+    )
+  }
+  invisible(TRUE)
+}
+
+set_formats <- function(config, formats, template_path) {
+  if (is.null(formats)) {
+    return(config)
+  }
+  if (!"html" %in% formats) config$format$html <- NULL
+  for (format in intersect(c("pdf", "typst"), formats)) {
+    file <- file.path(template_path, paste0(format, ".yml"))
+    config$format[[format]] <- if (file.exists(file)) {
+      yaml::read_yaml(file)
+    } else {
+      list(toc = TRUE, `number-sections` = TRUE, papersize = "a4")
+    }
+  }
+  config
 }
 
 check_dirnames <- function(dirname_reports) {

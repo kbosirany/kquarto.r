@@ -56,3 +56,41 @@ test_that("a book created with the INRAE template renders", {
   expect_true(file.exists(file.path(out, "index.html")))
   expect_true(file.exists(file.path(out, "chapitre-01-introduction.html")))
 })
+
+test_that("a book renders to PDF with Typst", {
+  skip_on_cran()
+  skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  version <- system2(quarto::quarto_path(), "--version", stdout = TRUE)
+  skip_if(
+    package_version(trimws(version[[1]])) < "1.4",
+    "Typst books need Quarto >= 1.4"
+  )
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", path = dir, template = "inrae", formats = "typst",
+    author = "Kevin Orlando", chapters = "Introduction"
+  ))
+  cat(
+    "\n```{r}\nknitr::kable(head(iris))\n```\n",
+    file = file.path(dir, "a", "chapitre-01-introduction.qmd"),
+    append = TRUE
+  )
+  out <- render_book("a", path = dir, output_format = "typst", quiet = FALSE)
+  expect_length(list.files(out, pattern = "[.]pdf$"), 1)
+})
+
+test_that("a book renders to PDF with LaTeX", {
+  skip_on_cran()
+  skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  skip_if(
+    !any(nzchar(Sys.which(c("lualatex", "xelatex", "pdflatex")))),
+    "No LaTeX installation found"
+  )
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", path = dir, template = "inrae", formats = "pdf",
+    chapters = "Introduction"
+  ))
+  out <- render_book("a", path = dir, output_format = "pdf", quiet = TRUE)
+  expect_length(list.files(out, pattern = "[.]pdf$"), 1)
+})

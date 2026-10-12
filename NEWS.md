@@ -1,5 +1,14 @@
 # kquarto.r (development version)
 
+* Nouveau : `create_book(formats = )` ajoute un format PDF aux books :
+  `"typst"` (fourni avec Quarto, auteur obligatoire) ou `"pdf"` (LaTeX, qui
+  nécessite une distribution LaTeX comme TinyTeX). Le template `inrae` a
+  son style pour chacun (couleur et logo, Quarto >= 1.9.17 pour Typst).
+  Le PDF se génère avec `render_book(output_format = "typst")` ou
+  `"pdf"`.
+* `kable()` écrit désormais le tableau complet hors HTML (tableau Markdown,
+  compatible Typst, ou `booktabs` en LaTeX) au lieu des premières lignes.
+
 # kquarto.r 0.2.0
 
 Cette version ajoute la construction d'un site pkgdown avec ses rapports

@@ -1,8 +1,9 @@
 # kquarto.r (development version)
 
 * Nouveau : `create_book(formats = )` ajoute un format PDF Typst
-  (`"typst"`) aux books, avec un style INRAE pour le template `inrae`. Le
-  PDF se génère avec `render_book(output_format = "typst")`.
+  (`"typst"`) aux books, avec un style INRAE pour le template `inrae`
+  (couleur et logo via `_brand.yml`, Quarto >= 1.9.17). Le PDF se génère
+  avec `render_book(output_format = "typst")`.
 * `kable()` écrit désormais le tableau complet hors HTML (tableau Markdown,
   compatible Typst, ou `booktabs` en LaTeX) au lieu des premières lignes.
 

@@ -143,4 +143,5 @@ test_that("the INRAE template has its own Typst style", {
   config <- read_config(dir, "a")
   expect_equal(config$format$typst$`include-in-header`, "inrae.typ")
   expect_true(file.exists(file.path(dir, "a", "inrae.typ")))
+  expect_true(file.exists(file.path(dir, "a", "_brand.yml")))
 })

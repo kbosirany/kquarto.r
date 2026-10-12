@@ -2,6 +2,23 @@
 
 ## kquarto.r (development version)
 
+- Nouveau : présentations reveal.js avec
+  [`create_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_presentation.md),
+  [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)
+  et
+  [`list_presentations()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_presentations.md),
+  et leurs templates
+  ([`create_template_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md),
+  [`list_templates_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md),
+  [`remove_template_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md)).
+  Templates livrés : `default-presentation` et `inrae-presentation`.
+  `formats = "beamer"` ajoute une sortie PDF LaTeX (Beamer) ; pas de
+  Typst, Quarto n’ayant pas de diapositives Typst.
+- Les templates ont un type, déclaré dans un `template.yml` (`book` par
+  défaut) : les listes de books et de présentations ne se mélangent pas.
+  Un template peut réutiliser des fichiers partagés (`shared:`) ; le
+  template `inrae` des books partage désormais sa charte (couleurs,
+  polices, logo) avec `inrae-presentation`.
 - Nouveau : `create_book(formats = )` ajoute un format PDF aux books :
   `"typst"` (fourni avec Quarto, auteur obligatoire) ou `"pdf"` (LaTeX,
   qui nécessite une distribution LaTeX comme TinyTeX). Le template

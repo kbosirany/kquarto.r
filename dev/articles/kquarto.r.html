@@ -174,6 +174,51 @@ format se place dans
 <code>::: {.content-visible when-format="html"}</code>.</p>
 </div>
 <div class="section level2">
+<h2 id="présentations">Présentations<a class="anchor" aria-label="anchor" href="#pr%C3%A9sentations"></a>
+</h2>
+<p>Une présentation (reveal.js) est un dossier avec un seul fichier
+<code>&lt;nom&gt;.qmd</code>, indépendant des books. Elle a ses propres
+templates, rangés dans les mêmes dossiers que ceux des books : un
+<code>template.yml</code> y déclare le <code>type</code>
+(<code>book</code> par défaut, ou <code>presentation</code>), et chaque
+fonction de liste ne montre que son type.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/create_presentation.html">create_presentation</a></span><span class="op">(</span></span>
+<span>  <span class="st">"seminaire"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Mon séminaire"</span>,</span>
+<span>  author <span class="op">=</span> <span class="st">"Kevin Orlando"</span>,</span>
+<span>  template <span class="op">=</span> <span class="st">"inrae-presentation"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co"># -&gt; seminaire/seminaire.qmd, charte et logo INRAE</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/render_presentation.html">render_presentation</a></span><span class="op">(</span><span class="st">"seminaire"</span><span class="op">)</span></span>
+<span><span class="co"># -&gt; seminaire/seminaire.html (un seul fichier autonome)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/list_presentations.html">list_presentations</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/create_template_presentation.html">list_templates_presentation</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># PDF avec LaTeX (Beamer) en plus du HTML</span></span>
+<span><span class="fu"><a href="../reference/create_presentation.html">create_presentation</a></span><span class="op">(</span><span class="st">"seminaire"</span>, formats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"revealjs"</span>, <span class="st">"beamer"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/render_presentation.html">render_presentation</a></span><span class="op">(</span><span class="st">"seminaire"</span>, output_format <span class="op">=</span> <span class="st">"beamer"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Template par défaut, par exemple dans le .Rprofile</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>kquarto.r.presentation.template <span class="op">=</span> <span class="st">"inrae-presentation"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Dériver un template (autre logo, diapositives types...)</span></span>
+<span><span class="fu"><a href="../reference/create_template_presentation.html">create_template_presentation</a></span><span class="op">(</span><span class="st">"mon_unite"</span>, from <span class="op">=</span> <span class="st">"inrae-presentation"</span><span class="op">)</span></span></code></pre></div>
+<p>Le PDF d’une présentation passe par Beamer (LaTeX) : Quarto n’a pas
+de diapositives Typst, et un export PDF de reveal.js demanderait un
+navigateur (impression depuis Chrome avec <code>?print-pdf</code>).</p>
+<p>Un template de présentation contient un <code>template.yml</code>
+(<code>type: presentation</code>), un <code>slides.qmd</code> (en-tête
+YAML et diapositives) et les fichiers dont il a besoin. Avec
+<code>shared: inrae</code> dans son <code>template.yml</code>, il
+réutilise la charte du dossier <code>inst/shared/inrae/</code>
+(couleurs, polices, logo) que partagent aussi les books : un template
+enregistré avec <code><a href="../reference/create_template_presentation.html">create_template_presentation()</a></code> en reçoit
+une copie et reste autonome.</p>
+</div>
+<div class="section level2">
 <h2 id="templates">Templates<a class="anchor" aria-label="anchor" href="#templates"></a>
 </h2>
 <p>Un template est un dossier contenant au moins un
@@ -181,7 +226,7 @@ format se place dans
 nouveau rapport (chapitres, <code>references.bib</code>,
 <code>styles.css</code>, logos…). Un rapport déjà mis en forme peut
 devenir un template :</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"mon_template"</span>, from <span class="op">=</span> <span class="st">"rapport_technique"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/list_templates_book.html">list_templates_book</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"nouveau_rapport"</span>, template <span class="op">=</span> <span class="st">"mon_template"</span><span class="op">)</span></span></code></pre></div>
@@ -193,7 +238,7 @@ devenir un template :</p>
 <p>Le package livre aussi le template <code>inrae</code>, conforme à la
 charte graphique INRAE (couleurs, polices, logo, favicon, page de titre
 et bibliographie) :</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Ou comme template par défaut</span></span>
@@ -205,7 +250,7 @@ et bibliographie) :</p>
 <p>Un package peut aussi livrer ses propres templates dans
 <code>inst/templates/&lt;nom&gt;/</code>, par exemple pour la charte
 d’une unité :</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Depuis la racine du package monpkg</span></span>
 <span><span class="fu"><a href="../reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"charte"</span>, from <span class="op">=</span> <span class="st">"inrae"</span>, dir <span class="op">=</span> <span class="st">"inst/templates"</span><span class="op">)</span></span>
 <span></span>

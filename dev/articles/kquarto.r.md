@@ -122,6 +122,54 @@ Dans le PDF,
 Chromium et `webshot2` nécessaires). Un contenu propre à un format se
 place dans `::: {.content-visible when-format="html"}`.
 
+## Présentations
+
+Une présentation (reveal.js) est un dossier avec un seul fichier
+`<nom>.qmd`, indépendant des books. Elle a ses propres templates, rangés
+dans les mêmes dossiers que ceux des books : un `template.yml` y déclare
+le `type` (`book` par défaut, ou `presentation`), et chaque fonction de
+liste ne montre que son type.
+
+``` r
+
+create_presentation(
+  "seminaire",
+  title = "Mon séminaire",
+  author = "Kevin Orlando",
+  template = "inrae-presentation"
+)
+# -> seminaire/seminaire.qmd, charte et logo INRAE
+
+render_presentation("seminaire")
+# -> seminaire/seminaire.html (un seul fichier autonome)
+
+list_presentations()
+list_templates_presentation()
+
+# PDF avec LaTeX (Beamer) en plus du HTML
+create_presentation("seminaire", formats = c("revealjs", "beamer"))
+render_presentation("seminaire", output_format = "beamer")
+
+# Template par défaut, par exemple dans le .Rprofile
+options(kquarto.r.presentation.template = "inrae-presentation")
+
+# Dériver un template (autre logo, diapositives types...)
+create_template_presentation("mon_unite", from = "inrae-presentation")
+```
+
+Le PDF d’une présentation passe par Beamer (LaTeX) : Quarto n’a pas de
+diapositives Typst, et un export PDF de reveal.js demanderait un
+navigateur (impression depuis Chrome avec `?print-pdf`).
+
+Un template de présentation contient un `template.yml`
+(`type: presentation`), un `slides.qmd` (en-tête YAML et diapositives)
+et les fichiers dont il a besoin. Avec `shared: inrae` dans son
+`template.yml`, il réutilise la charte du dossier `inst/shared/inrae/`
+(couleurs, polices, logo) que partagent aussi les books : un template
+enregistré avec
+[`create_template_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md)
+en reçoit une copie et reste autonome.
+
 ## Templates
 
 Un template est un dossier contenant au moins un `_quarto.yml`, plus

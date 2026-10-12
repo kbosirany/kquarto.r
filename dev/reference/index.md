@@ -13,6 +13,15 @@
 - [`chapter_prefix()`](https://kbosirany.github.io/kquarto.r/dev/reference/chapter_prefix.md)
   : Default chapter file prefix for a language
 
+## Présentations
+
+- [`create_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_presentation.md)
+  : Create Quarto presentations
+- [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)
+  : Render Quarto presentations
+- [`list_presentations()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_presentations.md)
+  : List the presentations of a folder
+
 ## Tableaux
 
 - [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)
@@ -33,5 +42,9 @@
   : List the available book templates
 - [`remove_template_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/remove_template_book.md)
   : Remove a user book template
+- [`create_template_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md)
+  [`list_templates_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md)
+  [`remove_template_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md)
+  : Manage presentation templates
 - [`template_dir()`](https://kbosirany.github.io/kquarto.r/dev/reference/template_dir.md)
   : Folder where user templates are stored

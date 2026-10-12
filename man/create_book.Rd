@@ -16,6 +16,7 @@ create_book(
   chapters = NULL,
   chapter_prefix = NULL,
   ...,
+  formats = NULL,
   overwrite = FALSE
 )
 }
@@ -59,6 +60,13 @@ chapter whose file already exists is not created again.}
 \item{...}{Additional fields merged (recursively) into \verb{_quarto.yml}, e.g.
 \code{format = list(html = list(theme = "flatly"))} or
 \code{book = list(chapters = c("index.qmd", "methodes.qmd"))}.}
+
+\item{formats}{Output formats of the book. \code{NULL} (the default) keeps
+those of the template (HTML for the shipped templates). \code{"typst"} adds
+a PDF format built with Typst (bundled with Quarto, no LaTeX needed),
+styled like the template if it has a \code{typst.yml}; \code{"html"} keeps the
+HTML format. E.g. \code{c("html", "typst")} or \code{"typst"}. Render a PDF with
+\code{render_book(output_format = "typst")}.}
 
 \item{overwrite}{If \code{FALSE} (the default), an error is raised when a
 report folder already contains a \verb{_quarto.yml}. If \code{TRUE}, the

@@ -12,10 +12,20 @@ test_that("kable() sets the height of the scroll box", {
   expect_match(as.character(tab), "123px", fixed = TRUE)
 })
 
-test_that("kable() makes a booktabs table of the first rows in LaTeX", {
+test_that("kable() writes the whole table as Markdown outside HTML", {
+  tab <- kable(iris, is_html_output = FALSE, title = "Iris")
+
+  expect_s3_class(tab, "knitr_kable")
+  expect_match(paste(tab, collapse = "\n"), "|setosa", fixed = TRUE)
+  expect_match(paste(tab, collapse = "\n"), "|virginica", fixed = TRUE)
+  expect_match(paste(tab, collapse = "\n"), "Iris", fixed = TRUE)
+  expect_equal(sum(grepl("^\\|", tab)), nrow(iris) + 2)
+})
+
+test_that("kable() makes a booktabs table in LaTeX output", {
+  local_mocked_bindings(is_latex_output = function() TRUE, .package = "knitr")
   tab <- kable(iris, is_html_output = FALSE, title = "Iris")
 
   expect_match(as.character(tab), "toprule", fixed = TRUE)
-  expect_equal(sum(grepl("setosa", as.character(tab))), 1)
-  expect_false(grepl("virginica", paste(tab, collapse = "")))
+  expect_match(paste(tab, collapse = ""), "virginica", fixed = TRUE)
 })

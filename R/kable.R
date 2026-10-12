@@ -1,8 +1,8 @@
 #' Format a table for a Quarto book
 #'
-#' Renders a data frame as a styled, scrollable table in HTML output and as
-#' a `booktabs` table in LaTeX/PDF output. It is meant to be called from the
-#' chunks of the chapters of a book.
+#' Renders a data frame as a styled, scrollable table in HTML output, and as
+#' a plain full table in PDF output (Typst, LaTeX) or any other format. It
+#' is meant to be called from the chunks of the chapters of a book.
 #'
 #' @param x A data frame or a matrix.
 #' @param is_html_output Whether the output is HTML. By default, detected
@@ -11,8 +11,9 @@
 #' @param height Height of the scroll box in HTML output, e.g. `"300px"`.
 #'
 #' @return A `knitr_kable` object.
-#' @details In LaTeX output, only the first rows of `x` are kept
-#'   (see [utils::head()]), as a long table does not fit in a page.
+#' @details Outside HTML the whole table is written: a Markdown table
+#'   (converted by Quarto, so it works with Typst, Word, ...) or, in LaTeX
+#'   output, a `booktabs` table.
 #' @export
 #'
 #' @examples
@@ -25,11 +26,12 @@ kable <- function(
   height = "100%"
 ) {
   if (!is_html_output) {
-    return(
-      knitr::kable(
-        utils::head(x), format = "latex", booktabs = TRUE, caption = title
+    if (knitr::is_latex_output()) {
+      return(
+        knitr::kable(x, format = "latex", booktabs = TRUE, caption = title)
       )
-    )
+    }
+    return(knitr::kable(x, format = "pipe", caption = title))
   }
 
   tab <- kableExtra::kable(x, format = "pipe", caption = title)

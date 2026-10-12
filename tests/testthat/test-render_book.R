@@ -56,3 +56,24 @@ test_that("a book created with the INRAE template renders", {
   expect_true(file.exists(file.path(out, "index.html")))
   expect_true(file.exists(file.path(out, "chapitre-01-introduction.html")))
 })
+
+test_that("a book renders to PDF with Typst", {
+  skip_on_cran()
+  skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
+  skip_if(
+    package_version(quarto::quarto_version()) < "1.4",
+    "Typst books need Quarto >= 1.4"
+  )
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", path = dir, template = "inrae", formats = "typst",
+    chapters = "Introduction"
+  ))
+  cat(
+    "\n```{r}\nknitr::kable(head(iris))\n```\n",
+    file = file.path(dir, "a", "chapitre-01-introduction.qmd"),
+    append = TRUE
+  )
+  out <- render_book("a", path = dir, output_format = "typst", quiet = TRUE)
+  expect_length(list.files(out, pattern = "[.]pdf$"), 1)
+})

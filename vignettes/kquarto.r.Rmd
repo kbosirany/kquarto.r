@@ -77,6 +77,22 @@ render_book("rapport_technique", output_dir = "../docs/rapport_technique")
 render_book() # tous les books du dossier courant
 ```
 
+## Sortie PDF (Typst)
+
+Les templates produisent du HTML. Le format `typst` ajoute un PDF, sans
+LaTeX (Typst est fourni avec Quarto >= 1.4) :
+
+```{r, eval = FALSE}
+create_book("rapport", template = "inrae", formats = c("html", "typst"))
+render_book("rapport", output_format = "typst")
+```
+
+Dans le PDF, `kable()` écrit le tableau complet à la place du tableau
+déroulant, et les widgets (`leaflet`, `plotly`...) sont remplacés par une
+capture d'écran (Chrome ou Chromium et `webshot2` nécessaires). Un contenu
+propre à un format se place dans
+`::: {.content-visible when-format="html"}`.
+
 ## Templates
 
 Un template est un dossier contenant au moins un `_quarto.yml`, plus tous

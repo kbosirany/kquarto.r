@@ -42,6 +42,27 @@ render_book("rapport_technique", output_dir = "../docs/rapport_technique")
 render_book()
 ```
 
+## Sortie PDF (Typst)
+
+Les templates produisent du HTML. Pour obtenir aussi un PDF, ajouter le
+format `typst` (fourni avec Quarto >= 1.4, sans installation de LaTeX) :
+
+```r
+create_book("rapport", template = "inrae", formats = c("html", "typst"))
+render_book("rapport", output_format = "typst")  # PDF
+render_book("rapport", output_format = "html")   # HTML
+```
+
+Les éléments interactifs doivent être pensés pour les deux formats :
+
+- `kable()` donne un tableau déroulant en HTML et le tableau complet dans
+  le PDF ;
+- les widgets (`leaflet`, `plotly`, `DT`...) sont remplacés dans le PDF par
+  une capture d'écran de leur état initial, ce qui demande Chrome ou
+  Chromium et le package `webshot2` ;
+- un contenu propre à un format s'écrit avec
+  `::: {.content-visible when-format="html"}` (ou `"typst"`).
+
 ## Site pkgdown
 
 ```r

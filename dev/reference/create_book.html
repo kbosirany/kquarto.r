@@ -61,6 +61,7 @@ filled with the given title, author, language, ...</p>
 <span>  chapters <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  chapter_prefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  formats <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -129,6 +130,16 @@ chapter whose file already exists is not created again.</p></dd>
 <dd><p>Additional fields merged (recursively) into <code>_quarto.yml</code>, e.g.
 <code>format = list(html = list(theme = "flatly"))</code> or
 <code>book = list(chapters = c("index.qmd", "methodes.qmd"))</code>.</p></dd>
+
+
+<dt id="arg-formats">formats<a class="anchor" aria-label="anchor" href="#arg-formats"></a></dt>
+<dd><p>Output formats of the book. <code>NULL</code> (the default) keeps
+those of the template (HTML for the shipped templates). <code>"typst"</code> adds
+a PDF built with Typst (bundled with Quarto, nothing to install) and
+<code>"pdf"</code> a PDF built with LaTeX (needs a LaTeX distribution, e.g.
+TinyTeX: <code>quarto install tinytex</code>). Both are styled like the template
+if it has a <code>typst.yml</code> / <code>pdf.yml</code>. <code>"html"</code> keeps the HTML format.
+E.g. <code>c("html", "pdf")</code>. Render with <code>render_book(output_format = "pdf")</code> or <code>"typst"</code>. The Typst PDF needs an <code>author</code>.</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>

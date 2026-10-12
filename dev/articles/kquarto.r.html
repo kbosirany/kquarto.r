@@ -153,6 +153,27 @@ dans <code>_book/</code> à l’intérieur de son dossier ;
 <span><span class="fu"><a href="../reference/render_book.html">render_book</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># tous les books du dossier courant</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="sortie-pdf-typst-ou-latex">Sortie PDF (Typst ou LaTeX)<a class="anchor" aria-label="anchor" href="#sortie-pdf-typst-ou-latex"></a>
+</h2>
+<p>Les templates produisent du HTML. L’argument <code>formats</code>
+ajoute un PDF : <code>"typst"</code> (fourni avec Quarto, rien à
+installer, auteur obligatoire) ou <code>"pdf"</code> (LaTeX, qui
+nécessite une distribution comme TinyTeX, installée avec
+<code>quarto install tinytex</code>). <code>kquarto.r</code> ne dépend
+d’aucune distribution LaTeX.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span>, author <span class="op">=</span> <span class="st">"Kevin Orlando"</span>,</span>
+<span>            formats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"html"</span>, <span class="st">"typst"</span>, <span class="st">"pdf"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/render_book.html">render_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, output_format <span class="op">=</span> <span class="st">"typst"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/render_book.html">render_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, output_format <span class="op">=</span> <span class="st">"pdf"</span><span class="op">)</span></span></code></pre></div>
+<p>Dans le PDF, <code><a href="../reference/kable.html">kable()</a></code> écrit le tableau complet à la place
+du tableau déroulant, et les widgets (<code>leaflet</code>,
+<code>plotly</code>…) sont remplacés par une capture d’écran (Chrome ou
+Chromium et <code>webshot2</code> nécessaires). Un contenu propre à un
+format se place dans
+<code>::: {.content-visible when-format="html"}</code>.</p>
+</div>
+<div class="section level2">
 <h2 id="templates">Templates<a class="anchor" aria-label="anchor" href="#templates"></a>
 </h2>
 <p>Un template est un dossier contenant au moins un
@@ -160,7 +181,7 @@ dans <code>_book/</code> à l’intérieur de son dossier ;
 nouveau rapport (chapitres, <code>references.bib</code>,
 <code>styles.css</code>, logos…). Un rapport déjà mis en forme peut
 devenir un template :</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"mon_template"</span>, from <span class="op">=</span> <span class="st">"rapport_technique"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/list_templates_book.html">list_templates_book</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"nouveau_rapport"</span>, template <span class="op">=</span> <span class="st">"mon_template"</span><span class="op">)</span></span></code></pre></div>
@@ -172,7 +193,7 @@ devenir un template :</p>
 <p>Le package livre aussi le template <code>inrae</code>, conforme à la
 charte graphique INRAE (couleurs, polices, logo, favicon, page de titre
 et bibliographie) :</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Ou comme template par défaut</span></span>
@@ -184,7 +205,7 @@ et bibliographie) :</p>
 <p>Un package peut aussi livrer ses propres templates dans
 <code>inst/templates/&lt;nom&gt;/</code>, par exemple pour la charte
 d’une unité :</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Depuis la racine du package monpkg</span></span>
 <span><span class="fu"><a href="../reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"charte"</span>, from <span class="op">=</span> <span class="st">"inrae"</span>, dir <span class="op">=</span> <span class="st">"inst/templates"</span><span class="op">)</span></span>
 <span></span>

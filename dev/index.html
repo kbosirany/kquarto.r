@@ -91,9 +91,60 @@
 <span><span class="fu"><a href="reference/render_book.html">render_book</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="sortie-pdf-typst-ou-latex">Sortie PDF (Typst ou LaTeX)<a class="anchor" aria-label="anchor" href="#sortie-pdf-typst-ou-latex"></a>
+</h2>
+<p>Les templates produisent du HTML. Pour obtenir aussi un PDF, ajouter un format avec <code>formats</code> :</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># PDF avec Typst (fourni avec Quarto, rien à installer)</span></span>
+<span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span>, author <span class="op">=</span> <span class="st">"Kevin Orlando"</span>,</span>
+<span>            formats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"html"</span>, <span class="st">"typst"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/render_book.html">render_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, output_format <span class="op">=</span> <span class="st">"typst"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># PDF avec LaTeX (nécessite une distribution LaTeX)</span></span>
+<span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span>, formats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"html"</span>, <span class="st">"pdf"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/render_book.html">render_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, output_format <span class="op">=</span> <span class="st">"pdf"</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th></th>
+<th>Typst (<code>"typst"</code>)</th>
+<th>LaTeX (<code>"pdf"</code>)</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Installation</td>
+<td>aucune (inclus dans Quarto)</td>
+<td>TinyTeX (<code>quarto install tinytex</code>) ou TeX Live</td>
+</tr>
+<tr>
+<td>Auteur</td>
+<td>obligatoire</td>
+<td>facultatif</td>
+</tr>
+<tr>
+<td>Style INRAE</td>
+<td>couleur, logo, pied de page</td>
+<td>couleurs, logo, pied de page</td>
+</tr>
+</tbody>
+</table>
+<p><code>kquarto.r</code> ne dépend d’aucune distribution LaTeX : elle n’est utile que si on demande le format <code>"pdf"</code>.</p>
+<p>Les éléments interactifs doivent être pensés pour les deux formats :</p>
+<ul>
+<li>
+<code><a href="reference/kable.html">kable()</a></code> donne un tableau déroulant en HTML et le tableau complet dans le PDF ;</li>
+<li>les widgets (<code>leaflet</code>, <code>plotly</code>, <code>DT</code>…) sont remplacés dans le PDF par une capture d’écran de leur état initial, ce qui demande Chrome ou Chromium et le package <code>webshot2</code> ;</li>
+<li>un contenu propre à un format s’écrit avec <code>::: {.content-visible when-format="html"}</code> (ou <code>"typst"</code>, <code>"pdf"</code>).</li>
+</ul>
+</div>
+<div class="section level2">
 <h2 id="site-pkgdown">Site pkgdown<a class="anchor" aria-label="anchor" href="#site-pkgdown"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Rendre les books de reports/ dans public/reports/, les ajouter à la</span></span>
 <span><span class="co"># barre de navigation (_pkgdown.yml) puis construire le site pkgdown</span></span>
 <span><span class="fu"><a href="reference/build_site.html">build_site</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -104,7 +155,7 @@
 <div class="section level2">
 <h2 id="templates">Templates<a class="anchor" aria-label="anchor" href="#templates"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Enregistrer un rapport déjà configuré comme template réutilisable</span></span>
 <span><span class="fu"><a href="reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"mon_template"</span>, from <span class="op">=</span> <span class="st">"rapport_technique"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/list_templates_book.html">list_templates_book</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -116,7 +167,7 @@
 <h3 id="template-inrae">Template INRAE<a class="anchor" aria-label="anchor" href="#template-inrae"></a>
 </h3>
 <p>Le template <code>inrae</code> est livré avec le package : couleurs et polices de la <a href="https://www.inrae.fr/charte-graphique-inrae" class="external-link">charte graphique INRAE</a>, logo, favicon, page de titre et bibliographie (<code>references.bib</code>).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span>, author <span class="op">=</span> <span class="st">"Kevin Orlando"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Ou comme template par défaut, par exemple dans le .Rprofile</span></span>
@@ -140,7 +191,7 @@
 <h3 id="templates-livrés-par-un-autre-package">Templates livrés par un autre package<a class="anchor" aria-label="anchor" href="#templates-livr%C3%A9s-par-un-autre-package"></a>
 </h3>
 <p>Un package (par exemple une charte d’unité) peut livrer ses templates dans <code>inst/templates/&lt;nom&gt;/</code> :</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Depuis la racine de ce package</span></span>
 <span><span class="fu"><a href="reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"charte"</span>, from <span class="op">=</span> <span class="st">"inrae"</span>, dir <span class="op">=</span> <span class="st">"inst/templates"</span><span class="op">)</span></span>
 <span></span>

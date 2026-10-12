@@ -38,7 +38,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="kquartor-development-version">kquarto.r (development version)<a class="anchor" aria-label="anchor" href="#kquartor-development-version"></a></h2>
-</div>
+<ul><li>Nouveau : <code>create_book(formats = )</code> ajoute un format PDF aux books : <code>"typst"</code> (fourni avec Quarto, auteur obligatoire) ou <code>"pdf"</code> (LaTeX, qui nécessite une distribution LaTeX comme TinyTeX). Le template <code>inrae</code> a son style pour chacun (couleur et logo, Quarto &gt;= 1.9.17 pour Typst). Le PDF se génère avec <code>render_book(output_format = "typst")</code> ou <code>"pdf"</code>.</li>
+<li>
+<code><a href="../reference/kable.html">kable()</a></code> écrit désormais le tableau complet hors HTML (tableau Markdown, compatible Typst, ou <code>booktabs</code> en LaTeX) au lieu des premières lignes.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="kquartor-020">kquarto.r 0.2.0<a class="anchor" aria-label="anchor" href="#kquartor-020"></a></h2>
 <p>Cette version ajoute la construction d’un site pkgdown avec ses rapports Quarto, le template INRAE et la mise en forme des tableaux.</p>

@@ -19,6 +19,7 @@ create_book(
   chapters = NULL,
   chapter_prefix = NULL,
   ...,
+  formats = NULL,
   overwrite = FALSE
 )
 ```
@@ -86,6 +87,17 @@ create_book(
   Additional fields merged (recursively) into `_quarto.yml`, e.g.
   `format = list(html = list(theme = "flatly"))` or
   `book = list(chapters = c("index.qmd", "methodes.qmd"))`.
+
+- formats:
+
+  Output formats of the book. `NULL` (the default) keeps those of the
+  template (HTML for the shipped templates). `"typst"` adds a PDF built
+  with Typst (bundled with Quarto, nothing to install) and `"pdf"` a PDF
+  built with LaTeX (needs a LaTeX distribution, e.g. TinyTeX:
+  `quarto install tinytex`). Both are styled like the template if it has
+  a `typst.yml` / `pdf.yml`. `"html"` keeps the HTML format. E.g.
+  `c("html", "pdf")`. Render with `render_book(output_format = "pdf")`
+  or `"typst"`. The Typst PDF needs an `author`.
 
 - overwrite:
 

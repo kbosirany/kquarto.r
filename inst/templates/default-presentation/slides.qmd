@@ -1,0 +1,29 @@
+---
+title: "Titre de la présentation"
+subtitle: "Sous-titre"
+author: "Auteur"
+date: today
+date-format: long
+lang: fr
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    embed-resources: true
+---
+
+## Introduction
+
+- Premier point
+- Deuxième point
+
+## Un graphique
+
+```{r}
+#| echo: false
+plot(cars)
+```
+
+## Conclusion
+
+Merci pour votre attention.

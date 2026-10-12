@@ -1,0 +1,31 @@
+/*-- scss:rules --*/
+
+// Titre : filet vert sous le titre de la diapositive de titre
+#title-slide .title {
+  border-bottom: 4px solid $inrae-vert;
+  padding-bottom: 0.3em;
+}
+
+#title-slide .subtitle {
+  color: $inrae-gris;
+}
+
+// Logo : zone de protection et taille minimale (charte INRAE)
+.reveal .slide-logo {
+  max-height: none;
+  height: 60px;
+  right: 90px;
+  top: 16px;
+  left: auto;
+}
+
+.reveal .footer {
+  color: $inrae-gris;
+}
+
+.callout-note {
+  border-left-color: $inrae-vert !important;
+}
+.callout-note .callout-icon::before {
+  background-color: $inrae-vert !important;
+}

@@ -1,0 +1,43 @@
+---
+title: "Titre de la présentation"
+subtitle: "Sous-titre"
+author: "Auteur"
+date: today
+date-format: long
+lang: fr
+format:
+  revealjs:
+    theme:
+      - default
+      - inrae-charte.scss
+      - inrae-slides.scss
+    logo: images/logo-inrae.png
+    footer: "INRAE"
+    slide-number: true
+    embed-resources: true
+---
+
+## Introduction {background-color="#00a3a6"}
+
+Diapositive de section sur fond vert INRAE.
+
+## Plan
+
+- Contexte
+- Méthodes
+- Résultats
+
+## Un graphique
+
+```{r}
+#| echo: false
+plot(cars, col = "#00a3a6", pch = 19)
+```
+
+::: {.callout-note}
+Les couleurs et polices viennent de la charte INRAE partagée.
+:::
+
+## Conclusion
+
+Merci pour votre attention.

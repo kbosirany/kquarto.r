@@ -13,6 +13,7 @@ render_presentation(
   path = ".",
   output_format = NULL,
   quiet = FALSE,
+  output_dir = NULL,
   ...
 )
 ```
@@ -39,6 +40,14 @@ render_presentation(
 - quiet:
 
   Whether to suppress Quarto output.
+
+- output_dir:
+
+  Folder where the rendered files are copied, in a sub-folder per
+  presentation (`<output_dir>/<name>/`): the HTML slides as `index.html`
+  and the PDF, if there is one, as `<name>.pdf`. `NULL` leaves the files
+  next to the `.qmd`. Used by
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md).
 
 - ...:
 

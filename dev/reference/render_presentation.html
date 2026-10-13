@@ -51,6 +51,7 @@ HTML file is written next to the <code>.qmd</code>.</p>
 <span>  path <span class="op">=</span> <span class="st">"."</span>,</span>
 <span>  output_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  output_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -76,6 +77,13 @@ every presentation found in <code>path</code> (see <code><a href="list_presentat
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
 <dd><p>Whether to suppress Quarto output.</p></dd>
+
+
+<dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
+<dd><p>Folder where the rendered files are copied, in a
+sub-folder per presentation (<code>&lt;output_dir&gt;/&lt;name&gt;/</code>): the HTML slides
+as <code>index.html</code> and the PDF, if there is one, as <code>&lt;name&gt;.pdf</code>. <code>NULL</code>
+leaves the files next to the <code>.qmd</code>. Used by <code><a href="build_site.html">build_site()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -20,7 +20,10 @@ update_pkgdown_yml(
   titles = NULL,
   pkgdown_file = "_pkgdown.yml",
   site_subdir = "reports",
-  add_to_navbar = TRUE
+  add_to_navbar = TRUE,
+  presentations = NULL,
+  presentations_path = "presentations",
+  presentations_site_subdir = "presentations"
 )
 ```
 
@@ -54,6 +57,25 @@ update_pkgdown_yml(
 - add_to_navbar:
 
   Whether to add the components to `navbar: structure: left`.
+
+- presentations:
+
+  Presentation folder names, relative to `presentations_path`. By
+  default, every presentation found in `presentations_path` (see
+  [`list_presentations()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_presentations.md)).
+  They form the navbar menu `presentations`, titled after the `title` of
+  their slides, with a header by language as the books (the `-en`/`-fr`
+  suffix of the folder name); without any presentation, the menu is
+  removed.
+
+- presentations_path:
+
+  Folder containing the presentation folders.
+
+- presentations_site_subdir:
+
+  Folder of the pkgdown site (relative to its root) where the
+  presentations are rendered, used to build the links.
 
 ## Value
 

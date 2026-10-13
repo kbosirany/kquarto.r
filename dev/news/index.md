@@ -2,6 +2,17 @@
 
 ## kquarto.r (development version)
 
+- Nouveau : les présentations vont sur le site pkgdown.
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  rend chaque présentation de `presentations_path` (`"presentations"`
+  par défaut) dans `<dest>/presentations/<nom>/` (`index.html`, et le
+  PDF s’il y en a un) et
+  [`update_pkgdown_yml()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_pkgdown_yml.md)
+  ajoute le menu `Presentations` à la barre de navigation, avec le
+  `title` de chaque présentation. Un site peut avoir des présentations
+  sans books, et inversement.
+  [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)
+  a l’argument `output_dir` pour copier les fichiers rendus.
 - Nouveau : présentations reveal.js avec
   [`create_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_presentation.md),
   [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)

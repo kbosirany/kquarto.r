@@ -70,7 +70,10 @@ former versions are removed.</p>
 <span>  titles <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pkgdown_file <span class="op">=</span> <span class="st">"_pkgdown.yml"</span>,</span>
 <span>  site_subdir <span class="op">=</span> <span class="st">"reports"</span>,</span>
-<span>  add_to_navbar <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  add_to_navbar <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  presentations <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  presentations_path <span class="op">=</span> <span class="st">"presentations"</span>,</span>
+<span>  presentations_site_subdir <span class="op">=</span> <span class="st">"presentations"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -105,6 +108,24 @@ the books are rendered, used to build the links.</p></dd>
 <dt id="arg-add-to-navbar">add_to_navbar<a class="anchor" aria-label="anchor" href="#arg-add-to-navbar"></a></dt>
 <dd><p>Whether to add the components to
 <code>navbar: structure: left</code>.</p></dd>
+
+
+<dt id="arg-presentations">presentations<a class="anchor" aria-label="anchor" href="#arg-presentations"></a></dt>
+<dd><p>Presentation folder names, relative to
+<code>presentations_path</code>. By default, every presentation found in
+<code>presentations_path</code> (see <code><a href="list_presentations.html">list_presentations()</a></code>). They form the
+navbar menu <code>presentations</code>, titled after the <code>title</code> of their slides,
+with a header by language as the books (the <code>-en</code>/<code>-fr</code> suffix of the
+folder name); without any presentation, the menu is removed.</p></dd>
+
+
+<dt id="arg-presentations-path">presentations_path<a class="anchor" aria-label="anchor" href="#arg-presentations-path"></a></dt>
+<dd><p>Folder containing the presentation folders.</p></dd>
+
+
+<dt id="arg-presentations-site-subdir">presentations_site_subdir<a class="anchor" aria-label="anchor" href="#arg-presentations-site-subdir"></a></dt>
+<dd><p>Folder of the pkgdown site (relative to
+its root) where the presentations are rendered, used to build the links.</p></dd>
 
 </dl></div>
     <div class="section level2">

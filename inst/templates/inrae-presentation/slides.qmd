@@ -22,6 +22,8 @@ format:
     footer: "Titre de la présentation<br>[Date / information / nom de l'auteur]{.pied-info}"
     slide-number: c
     progress: false
+    # les graphiques gardent leur taille : le masque réserve le pied de page
+    auto-stretch: false
     menu: false
     title-slide-attributes:
       data-background-image: images/inrae-titre.png

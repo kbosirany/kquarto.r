@@ -1,5 +1,10 @@
 # kquarto.r (development version)
 
+* `render_presentation(output_format = "pptx")` rend un PowerPoint, qui peut
+  utiliser les masques d'un modèle (`pptx: reference-doc:` dans l'en-tête des
+  diapositives) ; `output_dir` copie aussi le `.pptx`. Le template
+  `inrae-presentation` désactive l'étirement automatique des graphiques de
+  reveal.js (`auto-stretch: false`), qui les faisait déborder des masques.
 * Le template `inrae-presentation` reprend les masques du modèle PowerPoint
   INRAE (4:3) : diapositive de titre avec le filigrane, le chevron et les
   logos République française et INRAE ; pages avec le motif et le logo en pied

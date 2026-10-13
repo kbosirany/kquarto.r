@@ -160,3 +160,22 @@ test_that("render_presentation copies the output of the slides", {
   expect_true(file.exists(file.path(out, "point", "index.html")))
   expect_false(file.exists(file.path(out, "point", "point.pdf")))
 })
+
+test_that("render_presentation gives the PowerPoint output", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation("point", path = dir))
+  local_mocked_bindings(
+    quarto_bin = function(...) "quarto",
+    quarto_render = function(input, ...) {
+      writeLines("x", sub("\\.qmd$", ".pptx", input))
+    },
+    .package = "kquarto.r"
+  )
+  out <- file.path(dir, "site")
+  rendered <- render_presentation(
+    "point", path = dir, output_format = "pptx", output_dir = out
+  )
+  expect_equal(basename(rendered), "point.pptx")
+  expect_true(file.exists(file.path(out, "point", "point.pptx")))
+  expect_false(file.exists(file.path(out, "point", "index.html")))
+})

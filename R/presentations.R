@@ -169,18 +169,23 @@ list_presentations <- function(path = ".") {
 #' @param name Presentation folder names, relative to `path`. By default,
 #'   every presentation found in `path` (see [list_presentations()]).
 #' @param path Folder containing the presentation folders.
-#' @param output_format Output format passed to Quarto, e.g. `"revealjs"` or
+#' @param output_format Output format passed to Quarto, e.g. `"revealjs"`,
 #'   `"beamer"` (PDF, see the `formats` argument of
-#'   [create_presentation()]). `NULL` renders the formats of the slides.
+#'   [create_presentation()]) or `"pptx"` (PowerPoint: add a `pptx:` format
+#'   with a `reference-doc` to the YAML header of the slides to use the
+#'   masks of a PowerPoint template). `NULL` renders the formats of the
+#'   slides.
 #' @param quiet Whether to suppress Quarto output.
 #' @param output_dir Folder where the rendered files are copied, in a
 #'   sub-folder per presentation (`<output_dir>/<name>/`): the HTML slides
-#'   as `index.html` and the PDF, if there is one, as `<name>.pdf`. `NULL`
+#'   as `index.html` and the PDF and PowerPoint files, if there are some, as
+#'   `<name>.pdf` and `<name>.pptx`. `NULL`
 #'   leaves the files next to the `.qmd`. Used by [build_site()].
 #' @param ... Other arguments passed to [quarto::quarto_render()].
 #'
-#' @return The paths of the rendered files (`.html`, or `.pdf` for
-#'   `output_format = "beamer"`), invisibly.
+#' @return The paths of the rendered files (`.html`, `.pdf` for
+#'   `output_format = "beamer"` or `.pptx` for `output_format = "pptx"`),
+#'   invisibly.
 #' @export
 #'
 #' @examples
@@ -224,7 +229,12 @@ render_presentation <- function(name = NULL,
       ...
     )
   }
-  ext <- if (identical(output_format, "beamer")) ".pdf" else ".html"
+  ext <- switch(
+    if (is.null(output_format)) "revealjs" else output_format,
+    beamer = ".pdf",
+    pptx = ".pptx",
+    ".html"
+  )
   rendered <- sub("\\.qmd$", ext, files)
   if (!is.null(output_dir)) {
     copy_presentation_outputs(name, file.path(path, name), output_dir)
@@ -240,14 +250,17 @@ copy_presentation_outputs <- function(name, dirs, output_dir) {
     dir.create(target, recursive = TRUE, showWarnings = FALSE)
     html <- file.path(dirs[[i]], paste0(name[[i]], ".html"))
     pdf <- file.path(dirs[[i]], paste0(name[[i]], ".pdf"))
-    if (!file.exists(html) && !file.exists(pdf)) {
+    pptx <- file.path(dirs[[i]], paste0(name[[i]], ".pptx"))
+    if (!any(file.exists(c(html, pdf, pptx)))) {
       stop("No rendered slides for: ", name[[i]], call. = FALSE)
     }
     if (file.exists(html)) {
       file.copy(html, file.path(target, "index.html"), overwrite = TRUE)
     }
-    if (file.exists(pdf)) {
-      file.copy(pdf, file.path(target, basename(pdf)), overwrite = TRUE)
+    for (file in c(pdf, pptx)) {
+      if (file.exists(file)) {
+        file.copy(file, file.path(target, basename(file)), overwrite = TRUE)
+      }
     }
   }
   invisible(output_dir)

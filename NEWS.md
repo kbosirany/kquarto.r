@@ -1,5 +1,17 @@
 # kquarto.r (development version)
 
+* `render_presentation(output_format = "pptx")` rend un PowerPoint, qui peut
+  utiliser les masques d'un modèle (`pptx: reference-doc:` dans l'en-tête des
+  diapositives) ; `output_dir` copie aussi le `.pptx`. Le template
+  `inrae-presentation` désactive l'étirement automatique des graphiques de
+  reveal.js (`auto-stretch: false`), qui les faisait déborder des masques.
+* Le template `inrae-presentation` reprend les masques du modèle PowerPoint
+  INRAE (4:3) : diapositive de titre avec le filigrane, le chevron et les
+  logos République française et INRAE ; pages avec le motif et le logo en pied
+  de page, le titre de la présentation, la ligne date / information / auteur
+  et le numéro `p. N` ; pages intermédiaires (`# Section`) ; diapositive de fin
+  sur fond vert (`{.fin-inrae}`). Les fichiers du masque sont dans
+  `images/`. La sortie PDF Beamer est inchangée.
 * Nouveau : les présentations vont sur le site pkgdown. `build_site()` rend
   chaque présentation de `presentations_path` (`"presentations"` par défaut)
   dans `<dest>/presentations/<nom>/` (`index.html`, et le PDF s'il y en a un)

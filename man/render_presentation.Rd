@@ -19,22 +19,27 @@ every presentation found in \code{path} (see \code{\link[=list_presentations]{li
 
 \item{path}{Folder containing the presentation folders.}
 
-\item{output_format}{Output format passed to Quarto, e.g. \code{"revealjs"} or
+\item{output_format}{Output format passed to Quarto, e.g. \code{"revealjs"},
 \code{"beamer"} (PDF, see the \code{formats} argument of
-\code{\link[=create_presentation]{create_presentation()}}). \code{NULL} renders the formats of the slides.}
+\code{\link[=create_presentation]{create_presentation()}}) or \code{"pptx"} (PowerPoint: add a \verb{pptx:} format
+with a \code{reference-doc} to the YAML header of the slides to use the
+masks of a PowerPoint template). \code{NULL} renders the formats of the
+slides.}
 
 \item{quiet}{Whether to suppress Quarto output.}
 
 \item{output_dir}{Folder where the rendered files are copied, in a
 sub-folder per presentation (\verb{<output_dir>/<name>/}): the HTML slides
-as \code{index.html} and the PDF, if there is one, as \verb{<name>.pdf}. \code{NULL}
+as \code{index.html} and the PDF and PowerPoint files, if there are some, as
+\verb{<name>.pdf} and \verb{<name>.pptx}. \code{NULL}
 leaves the files next to the \code{.qmd}. Used by \code{\link[=build_site]{build_site()}}.}
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
 }
 \value{
-The paths of the rendered files (\code{.html}, or \code{.pdf} for
-\code{output_format = "beamer"}), invisibly.
+The paths of the rendered files (\code{.html}, \code{.pdf} for
+\code{output_format = "beamer"} or \code{.pptx} for \code{output_format = "pptx"}),
+invisibly.
 }
 \description{
 Calls \code{\link[quarto:quarto_render]{quarto::quarto_render()}} on the slides of each presentation. The

@@ -32,6 +32,10 @@ test_that("create_presentation writes the slides and the template files", {
   expect_true(file.exists(file.path(dir, "b", "inrae-charte.scss")))
   expect_true(file.exists(file.path(dir, "b", "inrae-slides.scss")))
   expect_true(file.exists(file.path(dir, "b", "images", "logo-inrae.png")))
+  # the masks of the INRAE PowerPoint template
+  for (image in c("inrae-titre.png", "inrae-titre-vert.png", "inrae-pied.png")) {
+    expect_true(file.exists(file.path(dir, "b", "images", image)))
+  }
   expect_false(file.exists(file.path(dir, "b", "slides.qmd")))
   expect_false(file.exists(file.path(dir, "b", "template.yml")))
 
@@ -39,7 +43,7 @@ test_that("create_presentation writes the slides and the template files", {
   expect_equal(header$title, "Séminaire B")
   expect_equal(header$author, "Kevin Orlando")
   expect_equal(header$lang, "fr")
-  expect_true(header$format$revealjs$`slide-number`)
+  expect_equal(header$format$revealjs$`slide-number`, "c")
   expect_equal(read_slides(files[[1]])$header$title, "a")
   expect_true(any(grepl("^## ", read_slides(files[[1]])$body)))
 
@@ -155,4 +159,23 @@ test_that("render_presentation copies the output of the slides", {
   render_presentation("point", path = dir, output_dir = out)
   expect_true(file.exists(file.path(out, "point", "index.html")))
   expect_false(file.exists(file.path(out, "point", "point.pdf")))
+})
+
+test_that("render_presentation gives the PowerPoint output", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation("point", path = dir))
+  local_mocked_bindings(
+    quarto_bin = function(...) "quarto",
+    quarto_render = function(input, ...) {
+      writeLines("x", sub("\\.qmd$", ".pptx", input))
+    },
+    .package = "kquarto.r"
+  )
+  out <- file.path(dir, "site")
+  rendered <- render_presentation(
+    "point", path = dir, output_format = "pptx", output_dir = out
+  )
+  expect_equal(basename(rendered), "point.pptx")
+  expect_true(file.exists(file.path(out, "point", "point.pptx")))
+  expect_false(file.exists(file.path(out, "point", "index.html")))
 })

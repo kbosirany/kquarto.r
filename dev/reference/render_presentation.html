@@ -70,9 +70,12 @@ every presentation found in <code>path</code> (see <code><a href="list_presentat
 
 
 <dt id="arg-output-format">output_format<a class="anchor" aria-label="anchor" href="#arg-output-format"></a></dt>
-<dd><p>Output format passed to Quarto, e.g. <code>"revealjs"</code> or
+<dd><p>Output format passed to Quarto, e.g. <code>"revealjs"</code>,
 <code>"beamer"</code> (PDF, see the <code>formats</code> argument of
-<code><a href="create_presentation.html">create_presentation()</a></code>). <code>NULL</code> renders the formats of the slides.</p></dd>
+<code><a href="create_presentation.html">create_presentation()</a></code>) or <code>"pptx"</code> (PowerPoint: add a <code>pptx:</code> format
+with a <code>reference-doc</code> to the YAML header of the slides to use the
+masks of a PowerPoint template). <code>NULL</code> renders the formats of the
+slides.</p></dd>
 
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
@@ -82,7 +85,8 @@ every presentation found in <code>path</code> (see <code><a href="list_presentat
 <dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
 <dd><p>Folder where the rendered files are copied, in a
 sub-folder per presentation (<code>&lt;output_dir&gt;/&lt;name&gt;/</code>): the HTML slides
-as <code>index.html</code> and the PDF, if there is one, as <code>&lt;name&gt;.pdf</code>. <code>NULL</code>
+as <code>index.html</code> and the PDF and PowerPoint files, if there are some, as
+<code>&lt;name&gt;.pdf</code> and <code>&lt;name&gt;.pptx</code>. <code>NULL</code>
 leaves the files next to the <code>.qmd</code>. Used by <code><a href="build_site.html">build_site()</a></code>.</p></dd>
 
 
@@ -92,8 +96,9 @@ leaves the files next to the <code>.qmd</code>. Used by <code><a href="build_sit
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The paths of the rendered files (<code>.html</code>, or <code>.pdf</code> for
-<code>output_format = "beamer"</code>), invisibly.</p>
+    <p>The paths of the rendered files (<code>.html</code>, <code>.pdf</code> for
+<code>output_format = "beamer"</code> or <code>.pptx</code> for <code>output_format = "pptx"</code>),
+invisibly.</p>
     </div>
 
     <div class="section level2">

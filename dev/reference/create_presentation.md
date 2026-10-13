@@ -89,8 +89,14 @@ create_presentation(
   template = "inrae-presentation"
 )
 list.files(tmp, recursive = TRUE)
-#> [1] "seminaire/_brand.yml"               "seminaire/images/favicon-inrae.png"
-#> [3] "seminaire/images/logo-inrae.png"    "seminaire/inrae-beamer.tex"        
-#> [5] "seminaire/inrae-charte.scss"        "seminaire/inrae-slides.scss"       
-#> [7] "seminaire/seminaire.qmd"           
+#>  [1] "seminaire/_brand.yml"                 
+#>  [2] "seminaire/images/favicon-inrae.png"   
+#>  [3] "seminaire/images/inrae-pied.png"      
+#>  [4] "seminaire/images/inrae-titre-vert.png"
+#>  [5] "seminaire/images/inrae-titre.png"     
+#>  [6] "seminaire/images/logo-inrae.png"      
+#>  [7] "seminaire/inrae-beamer.tex"           
+#>  [8] "seminaire/inrae-charte.scss"          
+#>  [9] "seminaire/inrae-slides.scss"          
+#> [10] "seminaire/seminaire.qmd"              
 ```

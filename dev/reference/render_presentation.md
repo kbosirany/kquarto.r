@@ -32,10 +32,12 @@ render_presentation(
 
 - output_format:
 
-  Output format passed to Quarto, e.g. `"revealjs"` or `"beamer"` (PDF,
+  Output format passed to Quarto, e.g. `"revealjs"`, `"beamer"` (PDF,
   see the `formats` argument of
-  [`create_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_presentation.md)).
-  `NULL` renders the formats of the slides.
+  [`create_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_presentation.md))
+  or `"pptx"` (PowerPoint: add a `pptx:` format with a `reference-doc`
+  to the YAML header of the slides to use the masks of a PowerPoint
+  template). `NULL` renders the formats of the slides.
 
 - quiet:
 
@@ -45,8 +47,8 @@ render_presentation(
 
   Folder where the rendered files are copied, in a sub-folder per
   presentation (`<output_dir>/<name>/`): the HTML slides as `index.html`
-  and the PDF, if there is one, as `<name>.pdf`. `NULL` leaves the files
-  next to the `.qmd`. Used by
+  and the PDF and PowerPoint files, if there are some, as `<name>.pdf`
+  and `<name>.pptx`. `NULL` leaves the files next to the `.qmd`. Used by
   [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md).
 
 - ...:
@@ -56,8 +58,9 @@ render_presentation(
 
 ## Value
 
-The paths of the rendered files (`.html`, or `.pdf` for
-`output_format = "beamer"`), invisibly.
+The paths of the rendered files (`.html`, `.pdf` for
+`output_format = "beamer"` or `.pptx` for `output_format = "pptx"`),
+invisibly.
 
 ## Examples
 

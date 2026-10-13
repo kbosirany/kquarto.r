@@ -59,3 +59,114 @@ test_that("build_site renders the books then builds the site", {
   expect_match(calls[[1]][[2]], "public[/\\\\]reports[/\\\\]a-fr$")
   expect_true(file.exists("_pkgdown.yml"))
 })
+
+test_that("update_pkgdown_yml adds a menu for the presentations", {
+  dir <- local_book_env()
+  suppressMessages(create_book("a-fr", path = dir, title = "A"))
+  pres <- file.path(dir, "presentations")
+  dir.create(pres)
+  suppressMessages(create_presentation(
+    c("point", "bilan"),
+    path = pres,
+    title = c(point = "Point d'étape", bilan = "Bilan")
+  ))
+  file <- file.path(dir, "_pkgdown.yml")
+  writeLines(c("navbar:", "  structure:", "    left: [intro, news]"), file)
+
+  update_pkgdown_yml(
+    path = dir, pkgdown_file = file, presentations_path = pres
+  )
+  config <- yaml::read_yaml(file)
+  expect_equal(
+    config$navbar$structure$left, c("intro", "news", "reports", "presentations")
+  )
+  expect_equal(config$navbar$components$presentations$text, "Presentations")
+  menu <- config$navbar$components$presentations$menu
+  expect_equal(
+    vapply(menu, function(x) x$text, ""), c("Bilan", "Point d'étape")
+  )
+  expect_equal(menu[[1]]$href, "presentations/bilan/index.html")
+  expect_equal(config$navbar$components$reports$menu[[1]]$text, "A")
+
+  # idempotent
+  update_pkgdown_yml(
+    path = dir, pkgdown_file = file, presentations_path = pres
+  )
+  expect_equal(yaml::read_yaml(file), config)
+
+  # no more presentation: the menu is removed
+  unlink(pres, recursive = TRUE)
+  update_pkgdown_yml(
+    path = dir, pkgdown_file = file, presentations_path = pres
+  )
+  config <- yaml::read_yaml(file)
+  expect_null(config$navbar$components$presentations)
+  expect_false("presentations" %in% config$navbar$structure$left)
+})
+
+test_that("the presentations menu has a header by language", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation(
+    c("20261020-point-fr", "20261105-point-en", "20261020-bilan-fr"),
+    path = dir,
+    title = c("Point", "Review", "Bilan")
+  ))
+  file <- file.path(dir, "_pkgdown.yml")
+
+  update_pkgdown_yml(
+    path = file.path(dir, "none"), pkgdown_file = file,
+    presentations_path = dir
+  )
+  menu <- yaml::read_yaml(file)$navbar$components$presentations$menu
+  expect_equal(
+    vapply(menu, function(x) x$text, ""),
+    c("English", "Review", "---------", "Fran\u00e7ais", "Bilan", "Point")
+  )
+  expect_equal(menu[[2]]$href, "presentations/20261105-point-en/index.html")
+})
+
+test_that("update_pkgdown_yml works with presentations only", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation("point", path = dir, title = "Point"))
+  file <- file.path(dir, "_pkgdown.yml")
+  empty <- file.path(dir, "no-reports")
+
+  update_pkgdown_yml(
+    path = empty, pkgdown_file = file, presentations_path = dir
+  )
+  config <- yaml::read_yaml(file)
+  expect_null(config$navbar$components$reports)
+  expect_equal(config$navbar$structure$left, "presentations")
+})
+
+test_that("build_site renders the presentations in the site", {
+  dir <- local_book_env()
+  dir.create(file.path(dir, "reports"))
+  dir.create(file.path(dir, "presentations"))
+  suppressMessages(create_book("a-fr", path = file.path(dir, "reports")))
+  suppressMessages(create_presentation(
+    "point", path = file.path(dir, "presentations"), title = "Point"
+  ))
+  withr::local_dir(dir)
+  rendered <- list()
+  local_mocked_bindings(
+    render_book = function(...) NULL,
+    render_presentation = function(name, path, output_dir, ...) {
+      rendered[[length(rendered) + 1]] <<- list(name, path, output_dir)
+    },
+    .package = "kquarto.r"
+  )
+  local_mocked_bindings(
+    pkgdown_init_site = function(...) NULL,
+    pkgdown_build_site = function(...) "built"
+  )
+  expect_equal(build_site(path = "reports", dest = "public"), "built")
+  expect_length(rendered, 1)
+  expect_equal(rendered[[1]][[1]], "point")
+  expect_match(rendered[[1]][[3]], "public[/\\\\]presentations$")
+  config <- yaml::read_yaml("_pkgdown.yml")
+  expect_equal(
+    config$navbar$components$presentations$menu[[1]]$href,
+    "presentations/point/index.html"
+  )
+})

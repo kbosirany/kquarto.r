@@ -140,3 +140,19 @@ test_that("an INRAE presentation renders to PDF with beamer", {
   expect_equal(basename(out), "s.pdf")
   expect_true(file.exists(out))
 })
+
+test_that("render_presentation copies the output of the slides", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation("point", path = dir))
+  local_mocked_bindings(
+    quarto_bin = function(...) "quarto",
+    quarto_render = function(input, ...) {
+      writeLines("<html></html>", sub("\\.qmd$", ".html", input))
+    },
+    .package = "kquarto.r"
+  )
+  out <- file.path(dir, "site")
+  render_presentation("point", path = dir, output_dir = out)
+  expect_true(file.exists(file.path(out, "point", "index.html")))
+  expect_false(file.exists(file.path(out, "point", "point.pdf")))
+})

@@ -9,6 +9,7 @@ render_presentation(
   path = ".",
   output_format = NULL,
   quiet = FALSE,
+  output_dir = NULL,
   ...
 )
 }
@@ -23,6 +24,11 @@ every presentation found in \code{path} (see \code{\link[=list_presentations]{li
 \code{\link[=create_presentation]{create_presentation()}}). \code{NULL} renders the formats of the slides.}
 
 \item{quiet}{Whether to suppress Quarto output.}
+
+\item{output_dir}{Folder where the rendered files are copied, in a
+sub-folder per presentation (\verb{<output_dir>/<name>/}): the HTML slides
+as \code{index.html} and the PDF, if there is one, as \verb{<name>.pdf}. \code{NULL}
+leaves the files next to the \code{.qmd}. Used by \code{\link[=build_site]{build_site()}}.}
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
 }

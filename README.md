@@ -122,6 +122,11 @@ options(kquarto.r.presentation.template = "inrae-presentation")
 create_template_presentation("mon_unite", from = "inrae-presentation")
 ```
 
+Dans un projet avec un site pkgdown, les présentations sont rangées dans un
+dossier `presentations/` (comme les books dans `reports/`) :
+`build_site()` les rend dans `<dest>/presentations/<nom>/index.html` et le
+menu `Presentations` de la barre de navigation les liste.
+
 Le PDF d'une présentation passe par Beamer (LaTeX) : Quarto n'a pas de
 diapositives Typst, et un export PDF de reveal.js demanderait un navigateur
 (impression depuis Chrome avec `?print-pdf`).

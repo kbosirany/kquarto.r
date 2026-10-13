@@ -1,36 +1,199 @@
 /*-- scss:rules --*/
 
-// Titre : filet vert sous le titre de la diapositive de titre
-#title-slide .title {
-  border-bottom: 4px solid $inrae-vert;
-  padding-bottom: 0.3em;
+// Masques du PowerPoint INRAE (diapositives 4:3) : couleurs 00A3A6 (vert) et
+// 275662 (vert foncé), Raleway pour le numéro de page.
+$inrae-vert-fonce-texte: #275662;
+
+// La diapositive 4:3 est centrée dans la fenêtre : le fond, le pied de page
+// et le numéro suivent la diapositive, pas la fenêtre.
+html,
+body {
+  background-color: #ffffff;
 }
 
-#title-slide .subtitle {
-  color: $inrae-gris;
+.reveal {
+  max-width: calc(100vh * 4 / 3);
+  margin-left: auto;
+  margin-right: auto;
 }
 
-// Logo en haut à droite ; numéro de diapositive en bas à droite, pour
-// qu'ils ne se chevauchent pas (zone de protection de la charte INRAE)
-.reveal .slide-logo {
+// Fond des pages : le motif du pied de page, en bas à gauche (5,56 x 2,22 cm
+// sur 25,4 x 19,05 cm)
+.reveal .slide-background-content {
+  background-image: url("images/inrae-pied.png");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: auto 11.65%;
+}
+
+// Pied de page : titre de la présentation (10 pt, vert foncé), puis la
+// ligne date / information / auteur (10 pt, vert)
+.reveal .footer,
+.reveal .footer.footer-default {
   position: absolute !important;
-  top: 16px !important;
-  right: 24px !important;
-  left: auto !important;
-  bottom: auto !important;
-  height: 40px !important;
-  max-height: none !important;
-  width: auto !important;
+  left: 12.5% !important;
+  right: auto !important;
+  bottom: 3.6% !important;
+  width: 73% !important;
+  text-align: left !important;
+  font-size: 0.4em;
+  line-height: 1.5;
+  color: $inrae-vert-fonce-texte;
+  background: transparent;
 }
 
+// Ni pied de page ni numéro sur les diapositives de titre et de fin (le pied
+// et le numéro sont des éléments de la fenêtre : `!important`, car reveal.js
+// les affiche avec un style en ligne)
+body:has(#title-slide.present) .reveal .footer,
+body:has(section.fin-inrae.present) .reveal .footer,
+body:has(#title-slide.present) .reveal .slide-number,
+body:has(section.fin-inrae.present) .reveal .slide-number {
+  display: none !important;
+}
+
+.reveal .footer p {
+  margin: 0;
+}
+
+.reveal .footer .pied-info {
+  color: $inrae-vert;
+}
+
+// Numéro de page : « p. N », Raleway 12 pt, vert, en bas à droite
 .reveal .slide-number {
   top: auto !important;
-  bottom: 8px !important;
-  right: 8px !important;
+  right: 2% !important;
+  bottom: 3.2% !important;
+  font-family: Raleway, sans-serif;
+  font-size: 0.5em;
+  color: $inrae-vert;
+  background: transparent;
 }
 
-.reveal .footer {
-  color: $inrae-gris;
+.reveal .slide-number::before {
+  content: "p. ";
+}
+
+// Diapositive de titre : fond du masque « Version 1 », texte à droite du
+// filigrane (titre 36 pt vert gras, sous-titre 24 pt vert foncé)
+// (la diapositive fait 1280 x 960 : des pixels, pas des pourcentages, qui
+// se rapportent à la largeur)
+.reveal #title-slide {
+  text-align: left;
+  padding-left: 252px;
+  padding-right: 50px;
+  padding-top: 105px;
+}
+
+// (les règles de contenu des pages ne s'appliquent pas à la diapositive de
+// titre)
+.reveal #title-slide > p,
+.reveal #title-slide > div {
+  margin-left: 0;
+  width: auto;
+}
+
+.reveal #title-slide .quarto-title-authors,
+.reveal #title-slide .quarto-title-author {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.reveal #title-slide .quarto-title-meta,
+.reveal #title-slide .quarto-title-meta-heading {
+  text-align: left;
+}
+
+.reveal #title-slide .title {
+  color: $inrae-vert;
+  font-weight: 700;
+  font-size: 1.5em;
+  margin-bottom: 0.4em;
+}
+
+.reveal #title-slide .subtitle {
+  color: $inrae-vert-fonce-texte;
+  font-size: 1em;
+}
+
+.reveal #title-slide .quarto-title-author-name,
+.reveal #title-slide .date,
+.reveal #title-slide .author {
+  color: $inrae-vert-fonce-texte;
+  font-size: 0.6em;
+}
+
+// Pages : titre 30 pt gras vert, à 2,36 cm du bord ; le contenu est décalé de
+// 1,1 cm de plus (masque « Page classique », 1280 px pour 25,4 cm)
+.reveal .slides section.slide {
+  box-sizing: border-box;
+  padding-left: 119px;
+  padding-right: 60px;
+}
+
+// Texte un peu plus petit que le style de base, pour laisser la place au pied
+// de page ; les images ne dépassent pas la zone de contenu
+.reveal .slides section.slide:not(.fin-inrae) {
+  font-size: 0.88em;
+}
+
+.reveal .slides section img {
+  max-height: 480px;
+  object-fit: contain;
+}
+
+.reveal .slides section > h2 {
+  color: $inrae-vert;
+  font-weight: 700;
+  font-size: 1.35em;
+  text-align: left;
+  margin-top: 25px;
+  margin-bottom: 70px;
+}
+
+.reveal .slides section > p,
+.reveal .slides section > ul,
+.reveal .slides section > ol,
+.reveal .slides section > blockquote,
+.reveal .slides section > table,
+.reveal .slides section > .cell,
+.reveal .slides section > .quarto-figure {
+  margin-left: 55px;
+  width: calc(100% - 55px);
+  box-sizing: border-box;
+}
+
+// Listes : premier niveau vert, deuxième niveau noir (masque INRAE)
+.reveal .slides section ul > li {
+  color: $inrae-vert;
+}
+
+.reveal .slides section ul ul > li {
+  color: #000000;
+}
+
+// Pages intermédiaires (« # Section ») : titre centré, 40 pt
+.reveal .slides section.section-inrae,
+.reveal .slides section.level1:not(#title-slide) {
+  text-align: center;
+  padding-top: 330px;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.reveal .slides section.level1 > h1 {
+  color: $inrae-vert;
+  font-weight: 700;
+  font-size: 1.8em;
+}
+
+// Diapositive de fin, fond vert (masque « Version 2 ») : texte blanc
+.reveal .slides section.fin-inrae,
+.reveal .slides section.fin-inrae h2 {
+  color: #ffffff;
+  padding-top: 200px;
+  padding-left: 252px;
 }
 
 .callout-note {

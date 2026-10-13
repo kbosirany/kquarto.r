@@ -5,27 +5,54 @@ author: "Auteur"
 date: today
 date-format: long
 lang: fr
+# le logo de _brand.yml est celui du PDF Typst : le masque a son propre pied
+brand: false
 format:
   revealjs:
     theme:
       - default
       - inrae-charte.scss
       - inrae-slides.scss
-    logo: images/logo-inrae.png
-    footer: "INRAE"
-    slide-number: true
+    # diapositives 4:3 comme le masque PowerPoint INRAE
+    width: 1280
+    height: 960
+    margin: 0
+    center: false
+    # pied de page du masque : titre, puis date / information / auteur
+    footer: "Titre de la présentation<br>[Date / information / nom de l'auteur]{.pied-info}"
+    slide-number: c
+    progress: false
+    menu: false
+    title-slide-attributes:
+      data-background-image: images/inrae-titre.png
+      data-background-size: cover
     embed-resources: true
 ---
 
-## Introduction
+# Section {.section-inrae}
 
-Titre vert, logo en haut à droite, pied de page INRAE.
+## Page classique
 
-## Plan
+Titre vert, filigrane et logo INRAE en pied de page, numéro de page en
+bas à droite (masque « Page classique »).
 
-- Contexte
-- Méthodes
-- Résultats
+- Premier niveau de la liste, en vert
+  - deuxième niveau, en noir
+  - deuxième niveau
+
+## Deux contenus
+
+:::: {.columns}
+
+::: {.column width="48%"}
+Colonne de gauche.
+:::
+
+::: {.column width="48%"}
+Colonne de droite.
+:::
+
+::::
 
 ## Un graphique
 
@@ -36,6 +63,6 @@ plot(cars, col = "#00a3a6", pch = 19)
 
 > Les couleurs et polices viennent de la charte INRAE partagée.
 
-## Conclusion
+## Merci {.fin-inrae background-image="images/inrae-titre-vert.png" background-size="cover"}
 
-Merci pour votre attention.
+Diapositive de fin (masque « Diapositive de titre - Version 2 »).

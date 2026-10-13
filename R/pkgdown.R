@@ -23,8 +23,9 @@
 #' @param presentations Presentation folder names, relative to
 #'   `presentations_path`. By default, every presentation found in
 #'   `presentations_path` (see [list_presentations()]). They form the
-#'   navbar menu `presentations`, titled after the `title` of their slides;
-#'   without any presentation, the menu is removed.
+#'   navbar menu `presentations`, titled after the `title` of their slides,
+#'   with a header by language as the books (the `-en`/`-fr` suffix of the
+#'   folder name); without any presentation, the menu is removed.
 #' @param presentations_path Folder containing the presentation folders.
 #' @param presentations_site_subdir Folder of the pkgdown site (relative to
 #'   its root) where the presentations are rendered, used to build the links.
@@ -141,14 +142,19 @@ set_presentations_menu <- function(config, presentations, path, site_subdir,
       "presentations"
     ))
   }
+  # a header by language, as the books (suffix `-en`/`-fr` of the folder)
+  lang <- ifelse(
+    grepl("-(fr|en)$", presentations),
+    sub(".*-(fr|en)$", "\\1", presentations),
+    ""
+  )
   config$navbar$components$presentations <- list(
     text = "Presentations",
-    menu = lapply(seq_along(presentations), function(i) {
-      list(
-        text = unname(titles[[i]]),
-        href = file.path(site_subdir, presentations[[i]], "index.html")
-      )
-    })
+    menu = reports_menu(
+      lang,
+      unname(titles),
+      file.path(site_subdir, presentations, "index.html")
+    )
   )
   config
 }

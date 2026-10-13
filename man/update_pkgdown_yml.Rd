@@ -37,8 +37,9 @@ the books are rendered, used to build the links.}
 \item{presentations}{Presentation folder names, relative to
 \code{presentations_path}. By default, every presentation found in
 \code{presentations_path} (see \code{\link[=list_presentations]{list_presentations()}}). They form the
-navbar menu \code{presentations}, titled after the \code{title} of their slides;
-without any presentation, the menu is removed.}
+navbar menu \code{presentations}, titled after the \code{title} of their slides,
+with a header by language as the books (the \code{-en}/\code{-fr} suffix of the
+folder name); without any presentation, the menu is removed.}
 
 \item{presentations_path}{Folder containing the presentation folders.}
 

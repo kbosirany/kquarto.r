@@ -104,6 +104,27 @@ test_that("update_pkgdown_yml adds a menu for the presentations", {
   expect_false("presentations" %in% config$navbar$structure$left)
 })
 
+test_that("the presentations menu has a header by language", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation(
+    c("20261020-point-fr", "20261105-point-en", "20261020-bilan-fr"),
+    path = dir,
+    title = c("Point", "Review", "Bilan")
+  ))
+  file <- file.path(dir, "_pkgdown.yml")
+
+  update_pkgdown_yml(
+    path = file.path(dir, "none"), pkgdown_file = file,
+    presentations_path = dir
+  )
+  menu <- yaml::read_yaml(file)$navbar$components$presentations$menu
+  expect_equal(
+    vapply(menu, function(x) x$text, ""),
+    c("English", "Review", "---------", "Fran\u00e7ais", "Bilan", "Point")
+  )
+  expect_equal(menu[[2]]$href, "presentations/20261105-point-en/index.html")
+})
+
 test_that("update_pkgdown_yml works with presentations only", {
   dir <- local_book_env()
   suppressMessages(create_presentation("point", path = dir, title = "Point"))

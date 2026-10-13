@@ -10,7 +10,10 @@ update_pkgdown_yml(
   titles = NULL,
   pkgdown_file = "_pkgdown.yml",
   site_subdir = "reports",
-  add_to_navbar = TRUE
+  add_to_navbar = TRUE,
+  presentations = NULL,
+  presentations_path = "presentations",
+  presentations_site_subdir = "presentations"
 )
 }
 \arguments{
@@ -30,6 +33,17 @@ the books are rendered, used to build the links.}
 
 \item{add_to_navbar}{Whether to add the components to
 \code{navbar: structure: left}.}
+
+\item{presentations}{Presentation folder names, relative to
+\code{presentations_path}. By default, every presentation found in
+\code{presentations_path} (see \code{\link[=list_presentations]{list_presentations()}}). They form the
+navbar menu \code{presentations}, titled after the \code{title} of their slides;
+without any presentation, the menu is removed.}
+
+\item{presentations_path}{Folder containing the presentation folders.}
+
+\item{presentations_site_subdir}{Folder of the pkgdown site (relative to
+its root) where the presentations are rendered, used to build the links.}
 }
 \value{
 The YAML list written to \code{pkgdown_file}, invisibly.

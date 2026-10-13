@@ -173,6 +173,10 @@ list_presentations <- function(path = ".") {
 #'   `"beamer"` (PDF, see the `formats` argument of
 #'   [create_presentation()]). `NULL` renders the formats of the slides.
 #' @param quiet Whether to suppress Quarto output.
+#' @param output_dir Folder where the rendered files are copied, in a
+#'   sub-folder per presentation (`<output_dir>/<name>/`): the HTML slides
+#'   as `index.html` and the PDF, if there is one, as `<name>.pdf`. `NULL`
+#'   leaves the files next to the `.qmd`. Used by [build_site()].
 #' @param ... Other arguments passed to [quarto::quarto_render()].
 #'
 #' @return The paths of the rendered files (`.html`, or `.pdf` for
@@ -188,6 +192,7 @@ render_presentation <- function(name = NULL,
                                 path = ".",
                                 output_format = NULL,
                                 quiet = FALSE,
+                                output_dir = NULL,
                                 ...) {
   if (is.null(name)) {
     name <- list_presentations(path)
@@ -220,7 +225,32 @@ render_presentation <- function(name = NULL,
     )
   }
   ext <- if (identical(output_format, "beamer")) ".pdf" else ".html"
-  invisible(sub("\\.qmd$", ext, files))
+  rendered <- sub("\\.qmd$", ext, files)
+  if (!is.null(output_dir)) {
+    copy_presentation_outputs(name, file.path(path, name), output_dir)
+  }
+  invisible(rendered)
+}
+
+# Copies the rendered slides of presentation folders to
+# `<output_dir>/<name>/`: `index.html`, and the PDF when there is one.
+copy_presentation_outputs <- function(name, dirs, output_dir) {
+  for (i in seq_along(name)) {
+    target <- file.path(output_dir, name[[i]])
+    dir.create(target, recursive = TRUE, showWarnings = FALSE)
+    html <- file.path(dirs[[i]], paste0(name[[i]], ".html"))
+    pdf <- file.path(dirs[[i]], paste0(name[[i]], ".pdf"))
+    if (!file.exists(html) && !file.exists(pdf)) {
+      stop("No rendered slides for: ", name[[i]], call. = FALSE)
+    }
+    if (file.exists(html)) {
+      file.copy(html, file.path(target, "index.html"), overwrite = TRUE)
+    }
+    if (file.exists(pdf)) {
+      file.copy(pdf, file.path(target, basename(pdf)), overwrite = TRUE)
+    }
+  }
+  invisible(output_dir)
 }
 
 # Slides = YAML header + body. Only the header is rewritten.

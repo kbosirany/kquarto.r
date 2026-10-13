@@ -20,6 +20,14 @@
 #'   the books are rendered, used to build the links.
 #' @param add_to_navbar Whether to add the components to
 #'   `navbar: structure: left`.
+#' @param presentations Presentation folder names, relative to
+#'   `presentations_path`. By default, every presentation found in
+#'   `presentations_path` (see [list_presentations()]). They form the
+#'   navbar menu `presentations`, titled after the `title` of their slides;
+#'   without any presentation, the menu is removed.
+#' @param presentations_path Folder containing the presentation folders.
+#' @param presentations_site_subdir Folder of the pkgdown site (relative to
+#'   its root) where the presentations are rendered, used to build the links.
 #'
 #' @return The YAML list written to `pkgdown_file`, invisibly.
 #' @export
@@ -34,14 +42,21 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
                                titles = NULL,
                                pkgdown_file = "_pkgdown.yml",
                                site_subdir = "reports",
-                               add_to_navbar = TRUE) {
+                               add_to_navbar = TRUE,
+                               presentations = NULL,
+                               presentations_path = "presentations",
+                               presentations_site_subdir = "presentations") {
   if (is.null(dirname_reports)) {
     dirname_reports <- list_books(path)
   }
-  if (length(dirname_reports) == 0) {
+  if (is.null(presentations)) {
+    presentations <- list_presentations(presentations_path)
+  }
+  if (length(dirname_reports) == 0 && length(presentations) == 0) {
     stop("No Quarto book found in: ", path, call. = FALSE)
   }
-  check_dirnames(dirname_reports)
+  if (length(dirname_reports) > 0) check_dirnames(dirname_reports)
+  if (length(presentations) > 0) check_dirnames(presentations)
 
   titles <- if (is.null(titles)) {
     vapply(dirname_reports, function(d) {
@@ -73,37 +88,90 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
   }
   config$navbar$structure$left <- setdiff(config$navbar$structure$left, old)
 
-  if (isTRUE(add_to_navbar)) {
-    config$navbar$structure$left <- unique(c(
-      config$navbar$structure$left,
-      "reports"
-    ))
+  if (length(dirname_reports) > 0) {
+    if (isTRUE(add_to_navbar)) {
+      config$navbar$structure$left <- unique(c(
+        config$navbar$structure$left,
+        "reports"
+      ))
+    }
+
+    config$navbar$components$reports <- list(
+      text = "Reports",
+      menu = reports_menu(
+        lang,
+        titles,
+        file.path(site_subdir, dirname_reports, "index.html")
+      )
+    )
   }
 
-  config$navbar$components$reports <- list(
-    text = "Reports",
-    menu = reports_menu(
-      lang,
-      titles,
-      file.path(site_subdir, dirname_reports, "index.html")
-    )
+  config <- set_presentations_menu(
+    config, presentations, presentations_path, presentations_site_subdir,
+    add_to_navbar
   )
   yaml::write_yaml(config, pkgdown_file)
   invisible(config)
 }
 
+# The navbar menu of the presentations (titles from the YAML header of the
+# slides). Removed when there is no presentation.
+set_presentations_menu <- function(config, presentations, path, site_subdir,
+                                   add_to_navbar) {
+  if (length(presentations) == 0) {
+    config$navbar$components$presentations <- NULL
+    if (length(config$navbar$components) == 0) {
+      config$navbar$components <- NULL
+    }
+    config$navbar$structure$left <- setdiff(
+      config$navbar$structure$left, "presentations"
+    )
+    return(config)
+  }
+
+  titles <- vapply(presentations, function(d) {
+    file <- file.path(path, d, paste0(d, ".qmd"))
+    header <- tryCatch(read_slides(file)$header, error = function(e) list())
+    if (is.null(header$title)) d else as.character(header$title)
+  }, character(1))
+
+  if (isTRUE(add_to_navbar)) {
+    config$navbar$structure$left <- unique(c(
+      config$navbar$structure$left,
+      "presentations"
+    ))
+  }
+  config$navbar$components$presentations <- list(
+    text = "Presentations",
+    menu = lapply(seq_along(presentations), function(i) {
+      list(
+        text = unname(titles[[i]]),
+        href = file.path(site_subdir, presentations[[i]], "index.html")
+      )
+    })
+  )
+  config
+}
+
 #' Build a pkgdown site including the rendered books
 #'
-#' Renders the books into the pkgdown destination folder, adds them to the
-#' navbar (see [update_pkgdown_yml()]) and builds the site with
-#' [pkgdown::build_site()].
+#' Renders the books and the presentations into the pkgdown destination
+#' folder, adds them to the navbar (see [update_pkgdown_yml()]) and builds
+#' the site with [pkgdown::build_site()].
 #'
 #' @param path Folder containing the book folders.
 #' @param dest Destination folder of the pkgdown site (the `destination` of
 #'   `_pkgdown.yml`).
 #' @param site_subdir Folder of the site, relative to `dest`, where each book
 #'   is rendered in its own sub-folder.
-#' @param render_reports Whether to render the books and update the navbar.
+#' @param render_reports Whether to render the books and the presentations,
+#'   and update the navbar.
+#' @param presentations_path Folder containing the presentation folders (see
+#'   [create_presentation()]). Without this folder, or without any
+#'   presentation in it, there is no presentation on the site.
+#' @param presentations_subdir Folder of the site, relative to `dest`, where
+#'   each presentation is rendered in its own sub-folder (`index.html`, and
+#'   the PDF if the presentation has one).
 #' @param build_readme Whether to rebuild the README with
 #'   [devtools::build_readme()].
 #' @param clean Whether to remove a book's previous output before rendering.
@@ -120,6 +188,8 @@ build_site <- function(path = "reports",
                        dest = "public",
                        site_subdir = "reports",
                        render_reports = TRUE,
+                       presentations_path = "presentations",
+                       presentations_subdir = "presentations",
                        build_readme = FALSE,
                        clean = TRUE,
                        ...) {
@@ -133,7 +203,8 @@ build_site <- function(path = "reports",
   }
   if (render_reports) {
     books <- list_books(path)
-    if (length(books) == 0) {
+    presentations <- list_presentations(presentations_path)
+    if (length(books) == 0 && length(presentations) == 0) {
       stop("No Quarto book found in: ", path, call. = FALSE)
     }
     # init_site() creates the marker file that lets pkgdown recognise the
@@ -151,7 +222,24 @@ build_site <- function(path = "reports",
         output_dir = normalizePath(target, mustWork = FALSE)
       )
     }
-    update_pkgdown_yml(books, path = path, site_subdir = site_subdir)
+    for (presentation in presentations) {
+      target <- file.path(dest, presentations_subdir)
+      if (clean) unlink(file.path(target, presentation), recursive = TRUE)
+      dir.create(target, recursive = TRUE, showWarnings = FALSE)
+      render_presentation(
+        presentation,
+        path = presentations_path,
+        output_dir = normalizePath(target, mustWork = FALSE)
+      )
+    }
+    update_pkgdown_yml(
+      books,
+      path = path,
+      site_subdir = site_subdir,
+      presentations = presentations,
+      presentations_path = presentations_path,
+      presentations_site_subdir = presentations_subdir
+    )
   }
   invisible(pkgdown_build_site(...))
 }

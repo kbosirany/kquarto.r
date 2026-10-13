@@ -9,6 +9,8 @@ build_site(
   dest = "public",
   site_subdir = "reports",
   render_reports = TRUE,
+  presentations_path = "presentations",
+  presentations_subdir = "presentations",
   build_readme = FALSE,
   clean = TRUE,
   ...
@@ -23,7 +25,16 @@ build_site(
 \item{site_subdir}{Folder of the site, relative to \code{dest}, where each book
 is rendered in its own sub-folder.}
 
-\item{render_reports}{Whether to render the books and update the navbar.}
+\item{render_reports}{Whether to render the books and the presentations,
+and update the navbar.}
+
+\item{presentations_path}{Folder containing the presentation folders (see
+\code{\link[=create_presentation]{create_presentation()}}). Without this folder, or without any
+presentation in it, there is no presentation on the site.}
+
+\item{presentations_subdir}{Folder of the site, relative to \code{dest}, where
+each presentation is rendered in its own sub-folder (\code{index.html}, and
+the PDF if the presentation has one).}
 
 \item{build_readme}{Whether to rebuild the README with
 \code{\link[devtools:build_readme]{devtools::build_readme()}}.}
@@ -36,9 +47,9 @@ is rendered in its own sub-folder.}
 The result of \code{\link[pkgdown:build_site]{pkgdown::build_site()}}, invisibly.
 }
 \description{
-Renders the books into the pkgdown destination folder, adds them to the
-navbar (see \code{\link[=update_pkgdown_yml]{update_pkgdown_yml()}}) and builds the site with
-\code{\link[pkgdown:build_site]{pkgdown::build_site()}}.
+Renders the books and the presentations into the pkgdown destination
+folder, adds them to the navbar (see \code{\link[=update_pkgdown_yml]{update_pkgdown_yml()}}) and builds
+the site with \code{\link[pkgdown:build_site]{pkgdown::build_site()}}.
 }
 \examples{
 \dontrun{

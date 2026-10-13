@@ -1,5 +1,12 @@
 # kquarto.r (development version)
 
+* Nouveau : les présentations vont sur le site pkgdown. `build_site()` rend
+  chaque présentation de `presentations_path` (`"presentations"` par défaut)
+  dans `<dest>/presentations/<nom>/` (`index.html`, et le PDF s'il y en a un)
+  et `update_pkgdown_yml()` ajoute le menu `Presentations` à la barre de
+  navigation, avec le `title` de chaque présentation. Un site peut avoir des
+  présentations sans books, et inversement. `render_presentation()` a
+  l'argument `output_dir` pour copier les fichiers rendus.
 * Nouveau : présentations reveal.js avec `create_presentation()`,
   `render_presentation()` et `list_presentations()`, et leurs templates
   (`create_template_presentation()`, `list_templates_presentation()`,

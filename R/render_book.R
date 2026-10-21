@@ -83,9 +83,14 @@ book_output_dir <- function(report_dir) {
   config$project$`output-dir` %||% "_book"
 }
 
-# Wrappers around quarto, so that tests can mock them.
+# Wrappers around quarto, so that tests can mock them. The LD_LIBRARY_PATH
+# set by R makes Quarto crash (AssertionError); Quarto's R child process sets
+# its own anyway.
 quarto_render <- function(...) {
-  quarto::quarto_render(...)
+  withr::with_envvar(
+    c(LD_LIBRARY_PATH = NA),
+    quarto::quarto_render(...)
+  )
 }
 
 quarto_bin <- function() {

@@ -26,13 +26,13 @@ Imports:
     quarto,
     tools,
     utils,
+    withr,
     yaml
 Suggests:
     devtools,
     pkgdown,
     rmarkdown,
-    testthat (>= 3.0.0),
-    withr
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)

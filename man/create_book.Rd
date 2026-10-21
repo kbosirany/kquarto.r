@@ -67,7 +67,10 @@ a PDF built with Typst (bundled with Quarto, nothing to install) and
 \code{"pdf"} a PDF built with LaTeX (needs a LaTeX distribution, e.g.
 TinyTeX: \verb{quarto install tinytex}). Both are styled like the template
 if it has a \code{typst.yml} / \code{pdf.yml}. \code{"html"} keeps the HTML format.
-E.g. \code{c("html", "pdf")}. Render with \code{render_book(output_format = "pdf")} or \code{"typst"}. The Typst PDF needs an \code{author}.}
+E.g. \code{c("html", "pdf")}. Render with \code{render_book(output_format = "pdf")} or \code{"typst"}. The Typst PDF needs an \code{author}. When the HTML
+is combined with a PDF format, the HTML book gets a "Download PDF"
+icon in its sidebar (\verb{book: downloads: [pdf]}), which links to the PDF
+rendered with \code{render_book(output_format = "all")}.}
 
 \item{overwrite}{If \code{FALSE} (the default), an error is raised when a
 report folder already contains a \verb{_quarto.yml}. If \code{TRUE}, the

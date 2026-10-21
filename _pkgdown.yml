@@ -16,6 +16,7 @@ reference:
       - create_book
       - create_book_chapter
       - render_book
+      - add_pdf_download
       - list_books
       - chapter_prefix
   - title: Présentations

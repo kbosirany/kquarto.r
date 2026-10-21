@@ -120,6 +120,7 @@ test_that("formats = 'typst' adds a PDF format to the book", {
   )
   config <- read_config(dir, "a")
   expect_named(config$format, c("html", "typst"))
+  expect_equal(config$book$downloads, "pdf")
   expect_true(config$format$typst$toc)
   expect_false(file.exists(file.path(dir, "a", "typst.yml")))
 
@@ -128,8 +129,11 @@ test_that("formats = 'typst' adds a PDF format to the book", {
   )
   expect_named(read_config(dir, "b")$format, "typst")
 
+  expect_null(read_config(dir, "b")$book$downloads)
+
   suppressMessages(create_book("c", path = dir))
   expect_named(read_config(dir, "c")$format, "html")
+  expect_null(read_config(dir, "c")$book$downloads)
 
   suppressMessages(
     create_book("e", path = dir, formats = c("html", "pdf"))
@@ -154,4 +158,46 @@ test_that("the INRAE template has its own Typst style", {
   expect_true(file.exists(file.path(dir, "a", "inrae.tex")))
   expect_true(file.exists(file.path(dir, "a", "inrae.typ")))
   expect_true(file.exists(file.path(dir, "a", "_brand.yml")))
+})
+
+test_that("add_pdf_download adds a PDF format and a download icon", {
+  dir <- local_book_env()
+  suppressMessages(create_book(c("a", "b"), path = dir, author = "Kevin"))
+  suppressMessages(add_pdf_download("a", path = dir))
+  config <- read_config(dir, "a")
+  expect_named(config$format, c("html", "typst"))
+  expect_true(config$format$typst$toc)
+  expect_equal(config$book$downloads, "pdf")
+  expect_equal(config$book$author, "Kevin")
+  expect_equal(config$book$chapters, "index.qmd")
+  expect_match(
+    readLines(file.path(dir, "a", "_quarto.yml")), "^  - index.qmd$",
+    all = FALSE
+  )
+  expect_named(read_config(dir, "b")$format, "html")
+
+  # Idempotent
+  suppressMessages(add_pdf_download("a", path = dir))
+  expect_equal(read_config(dir, "a")$book$downloads, "pdf")
+
+  suppressMessages(add_pdf_download("b", path = dir, format = "pdf"))
+  expect_named(read_config(dir, "b")$format, c("html", "pdf"))
+
+  expect_error(add_pdf_download("zz", path = dir), "No `_quarto.yml`")
+})
+
+test_that("add_pdf_download copies the template style, keeps the book", {
+  dir <- local_book_env()
+  suppressMessages(create_book("a", path = dir, template = "inrae"))
+  index <- file.path(dir, "a", "index.qmd")
+  writeLines("# Mon index", index)
+  file.remove(file.path(dir, "a", "inrae.typ"))
+  expect_warning(
+    suppressMessages(add_pdf_download("a", path = dir, template = "inrae")),
+    "needs an author"
+  )
+  config <- read_config(dir, "a")
+  expect_equal(config$format$typst$`include-in-header`, "inrae.typ")
+  expect_true(file.exists(file.path(dir, "a", "inrae.typ")))
+  expect_equal(readLines(index), "# Mon index")
 })

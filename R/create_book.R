@@ -43,7 +43,10 @@
 #'   TinyTeX: `quarto install tinytex`). Both are styled like the template
 #'   if it has a `typst.yml` / `pdf.yml`. `"html"` keeps the HTML format.
 #'   E.g. `c("html", "pdf")`. Render with `render_book(output_format =
-#'   "pdf")` or `"typst"`. The Typst PDF needs an `author`.
+#'   "pdf")` or `"typst"`. The Typst PDF needs an `author`. When the HTML
+#'   is combined with a PDF format, the HTML book gets a "Download PDF"
+#'   icon in its sidebar (`book: downloads: [pdf]`), which links to the PDF
+#'   rendered with `render_book(output_format = "all")`.
 #' @param overwrite If `FALSE` (the default), an error is raised when a
 #'   report folder already contains a `_quarto.yml`. If `TRUE`, the
 #'   `_quarto.yml` and the template files are overwritten; chapters already
@@ -224,6 +227,10 @@ set_formats <- function(config, formats, template_path) {
     return(config)
   }
   if (!"html" %in% formats) config$format$html <- NULL
+  if ("html" %in% formats && any(c("pdf", "typst") %in% formats)) {
+    config$book$downloads <-
+      as.list(union(unlist(config$book$downloads), "pdf"))
+  }
   for (format in intersect(c("pdf", "typst"), formats)) {
     file <- file.path(template_path, paste0(format, ".yml"))
     config$format[[format]] <- if (file.exists(file)) {
@@ -233,6 +240,95 @@ set_formats <- function(config, formats, template_path) {
     }
   }
   config
+}
+
+#' Add a PDF download to existing Quarto books
+#'
+#' Adds a PDF format to the `_quarto.yml` of existing books and a
+#' "Download PDF" icon to the sidebar of their HTML version
+#' (`book: downloads: [pdf]`). The other fields of the `_quarto.yml` are
+#' kept. Render then all the formats with `render_book(output_format =
+#' "all")`: the icon links to the PDF of the output folder.
+#'
+#' Interactive content (leaflet, plotly, DT, ...) has no PDF rendering:
+#' show it only in the HTML with `::: {.content-visible when-format="html"}`
+#' and give a static version for the PDF.
+#'
+#' @inheritParams create_book
+#' @param dirname_reports Character vector of book folder names, relative to
+#'   `path`.
+#' @param format PDF engine: `"typst"` (the default, bundled with Quarto) or
+#'   `"pdf"` (LaTeX).
+#' @param template Optional template whose `typst.yml` / `pdf.yml` styles
+#'   the PDF (e.g. `"inrae"`). Its files missing from the book (e.g.
+#'   `inrae.typ`, `_brand.yml`) are copied; existing files are not
+#'   overwritten. `NULL` uses a plain style (table of contents, numbered
+#'   sections, A4).
+#'
+#' @return The paths of the book folders, invisibly.
+#' @export
+#'
+#' @examples
+#' tmp <- tempfile()
+#' dir.create(tmp)
+#' create_book("rapport", path = tmp, template = "inrae", author = "Kevin")
+#' add_pdf_download("rapport", path = tmp, template = "inrae")
+#' cat(readLines(file.path(tmp, "rapport", "_quarto.yml")), sep = "\n")
+add_pdf_download <- function(dirname_reports,
+                             path = ".",
+                             format = c("typst", "pdf"),
+                             template = NULL) {
+  check_dirnames(dirname_reports)
+  format <- match.arg(format)
+  template_path <- if (is.null(template)) {
+    file.path(tempfile(), "none")
+  } else {
+    resolve_template(template)
+  }
+  report_dirs <- file.path(path, dirname_reports)
+  ymls <- file.path(report_dirs, "_quarto.yml")
+  missing <- !file.exists(ymls)
+  if (any(missing)) {
+    stop(
+      "No `_quarto.yml` in: ", paste(dirname_reports[missing], collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  for (i in seq_along(report_dirs)) {
+    # Keep the one-element lists (e.g. `chapters: [index.qmd]`) as lists.
+    config <- yaml::read_yaml(ymls[[i]], handlers = list(seq = as.list))
+    if (!identical(config$project$type, "book")) {
+      stop("Not a Quarto book: ", dirname_reports[[i]], call. = FALSE)
+    }
+    if (format == "typst" && is.null(config$book$author)) {
+      warning(
+        "The Typst (PDF) format of a book needs an author: add ",
+        "`book: author` to ", dirname_reports[[i]], "/_quarto.yml.",
+        call. = FALSE
+      )
+    }
+    if (!is.null(template)) {
+      copy_dir(
+        template_path, report_dirs[[i]],
+        exclude = c(
+          "_quarto.yml", "pdf.yml", "typst.yml", "template.yml", "index.qmd"
+        )
+      )
+      copy_shared(template_path, report_dirs[[i]])
+    }
+    formats <- union(names(config$format) %||% "html", c("html", format))
+    if (is.null(config$format[[format]])) {
+      config <- set_formats(config, formats, template_path)
+    } else {
+      config$book$downloads <-
+        as.list(union(unlist(config$book$downloads), "pdf"))
+    }
+    write_quarto_yml(config, ymls[[i]])
+  }
+
+  message("PDF download added to: ", paste(dirname_reports, collapse = ", "))
+  invisible(normalizePath(report_dirs))
 }
 
 check_dirnames <- function(dirname_reports) {

@@ -8,6 +8,8 @@
   : Add a chapter to a Quarto book
 - [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md)
   : Render Quarto book reports
+- [`add_pdf_download()`](https://kbosirany.github.io/kquarto.r/dev/reference/add_pdf_download.md)
+  : Add a PDF download to existing Quarto books
 - [`list_books()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_books.md)
   : List the Quarto books of a folder
 - [`chapter_prefix()`](https://kbosirany.github.io/kquarto.r/dev/reference/chapter_prefix.md)

@@ -139,7 +139,10 @@ a PDF built with Typst (bundled with Quarto, nothing to install) and
 <code>"pdf"</code> a PDF built with LaTeX (needs a LaTeX distribution, e.g.
 TinyTeX: <code>quarto install tinytex</code>). Both are styled like the template
 if it has a <code>typst.yml</code> / <code>pdf.yml</code>. <code>"html"</code> keeps the HTML format.
-E.g. <code>c("html", "pdf")</code>. Render with <code>render_book(output_format = "pdf")</code> or <code>"typst"</code>. The Typst PDF needs an <code>author</code>.</p></dd>
+E.g. <code>c("html", "pdf")</code>. Render with <code>render_book(output_format = "pdf")</code> or <code>"typst"</code>. The Typst PDF needs an <code>author</code>. When the HTML
+is combined with a PDF format, the HTML book gets a "Download PDF"
+icon in its sidebar (<code>book: downloads: [pdf]</code>), which links to the PDF
+rendered with <code>render_book(output_format = "all")</code>.</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>

@@ -2,6 +2,15 @@
 
 ## kquarto.r (development version)
 
+- Nouveau :
+  [`add_pdf_download()`](https://kbosirany.github.io/kquarto.r/dev/reference/add_pdf_download.md)
+  ajoute à des books existants un format PDF (Typst par défaut) et une
+  icône « Download PDF » dans le volet gauche de la version HTML
+  (`book: downloads: [pdf]`), avec le style d’un template optionnel.
+  [`create_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_book.md)
+  ajoute aussi cette icône quand `formats` combine le HTML et un PDF.
+  Rendre avec `render_book(output_format = "all")`
+  ([\#15](https://github.com/kbosirany/kquarto.r/issues/15)).
 - `render_presentation(output_format = "pptx")` rend un PowerPoint, qui
   peut utiliser les masques d’un modèle (`pptx: reference-doc:` dans
   l’en-tête des diapositives) ; `output_dir` copie aussi le `.pptx`. Le

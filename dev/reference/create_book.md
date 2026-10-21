@@ -97,7 +97,10 @@ create_book(
   `quarto install tinytex`). Both are styled like the template if it has
   a `typst.yml` / `pdf.yml`. `"html"` keeps the HTML format. E.g.
   `c("html", "pdf")`. Render with `render_book(output_format = "pdf")`
-  or `"typst"`. The Typst PDF needs an `author`.
+  or `"typst"`. The Typst PDF needs an `author`. When the HTML is
+  combined with a PDF format, the HTML book gets a "Download PDF" icon
+  in its sidebar (`book: downloads: [pdf]`), which links to the PDF
+  rendered with `render_book(output_format = "all")`.
 
 - overwrite:
 

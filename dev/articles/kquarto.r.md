@@ -32,8 +32,8 @@ create_book(
 #> Book(s) created: rapport_technique, note_synthese
 
 list.files(file.path(projet, "rapport_technique"))
-#> [1] "_quarto.yml"                  "chapitre-01-introduction.qmd"
-#> [3] "chapitre-02-methodes.qmd"     "index.qmd"
+#> [1] "_quarto.yml"                  "chapitre_01_introduction.qmd"
+#> [3] "chapitre_02_methodes.qmd"     "index.qmd"
 yml <- file.path(projet, "rapport_technique", "_quarto.yml")
 cat(readLines(yml), sep = "\n")
 #> project:
@@ -43,8 +43,8 @@ cat(readLines(yml), sep = "\n")
 #>   title: rapport_technique
 #>   chapters:
 #>   - index.qmd
-#>   - chapitre-01-introduction.qmd
-#>   - chapitre-02-methodes.qmd
+#>   - chapitre_01_introduction.qmd
+#>   - chapitre_02_methodes.qmd
 #>   author:
 #>   - Kevin Orlando
 #>   - Camille Martin
@@ -76,12 +76,12 @@ prend le numéro suivant et met à jour `_quarto.yml` :
 ``` r
 
 create_book_chapter("rapport_technique", "Résultats", path = projet)
-#> Chapter created: rapport_technique/chapitre-03-resultats.qmd
+#> Chapter created: rapport_technique/chapitre_03_resultats.qmd
 list_books(projet)
 #> [1] "note_synthese"     "rapport_technique"
 yaml::read_yaml(yml)$book$chapters
-#> [1] "index.qmd"                    "chapitre-01-introduction.qmd"
-#> [3] "chapitre-02-methodes.qmd"     "chapitre-03-resultats.qmd"
+#> [1] "index.qmd"                    "chapitre_01_introduction.qmd"
+#> [3] "chapitre_02_methodes.qmd"     "chapitre_03_resultats.qmd"
 ```
 
 ## Générer les rapports

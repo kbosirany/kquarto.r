@@ -74,7 +74,7 @@ create_book(
   Optional character vector of chapter names. Each one creates a
   numbered chapter file after `index.qmd` with
   [`create_book_chapter()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_book_chapter.md),
-  e.g. `chapitre-01-introduction.qmd`. A chapter whose file already
+  e.g. `chapitre_01_introduction.qmd`. A chapter whose file already
   exists is not created again.
 
 - chapter_prefix:
@@ -134,13 +134,13 @@ create_book(
 #> Book(s) created: rapport_technique, note_synthese
 list.files(tmp, recursive = TRUE)
 #>  [1] "note_synthese/_quarto.yml"                     
-#>  [2] "note_synthese/chapitre-01-introduction.qmd"    
-#>  [3] "note_synthese/chapitre-02-methodes.qmd"        
-#>  [4] "note_synthese/chapitre-03-resultats.qmd"       
+#>  [2] "note_synthese/chapitre_01_introduction.qmd"    
+#>  [3] "note_synthese/chapitre_02_methodes.qmd"        
+#>  [4] "note_synthese/chapitre_03_resultats.qmd"       
 #>  [5] "note_synthese/index.qmd"                       
 #>  [6] "rapport_technique/_quarto.yml"                 
-#>  [7] "rapport_technique/chapitre-01-introduction.qmd"
-#>  [8] "rapport_technique/chapitre-02-methodes.qmd"    
-#>  [9] "rapport_technique/chapitre-03-resultats.qmd"   
+#>  [7] "rapport_technique/chapitre_01_introduction.qmd"
+#>  [8] "rapport_technique/chapitre_02_methodes.qmd"    
+#>  [9] "rapport_technique/chapitre_03_resultats.qmd"   
 #> [10] "rapport_technique/index.qmd"                   
 ```

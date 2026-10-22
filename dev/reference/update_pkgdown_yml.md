@@ -6,11 +6,11 @@ links to the rendered books (see
 [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)).
 The books form one navbar menu, `reports`. Each book has a category:
 `package` (the reference material about the package functions) when its
-folder name starts with a number (`01-...`), `others` otherwise (project
+folder name starts with a number (`01_...`), `others` otherwise (project
 report, meeting...); a `category: package` or `category: others` key in
 its `_quarto.yml` overrides it. With both categories, the menu has a
 header by category (`Package`, `Others`), suffixed by the language
-(`[en]`, `[fr]`, the `-en`/`-fr` suffix of the folder name) when there
+(`[en]`, `[fr]`, the `_en`/`_fr` suffix of the folder name) when there
 are several languages. With a single category, the menu has a header by
 language (`English`, `Français`) when there are several languages, none
 otherwise. The `package` items are sorted by folder name, the `others`
@@ -93,6 +93,6 @@ The YAML list written to `pkgdown_file`, invisibly.
 ``` r
 if (FALSE) { # \dontrun{
 update_pkgdown_yml()
-update_pkgdown_yml("rapport-fr", titles = "Mon rapport")
+update_pkgdown_yml("rapport_fr", titles = "Mon rapport")
 } # }
 ```

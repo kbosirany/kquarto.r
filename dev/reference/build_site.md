@@ -17,6 +17,7 @@ build_site(
   render_reports = TRUE,
   path_presentations = "presentations",
   subdir_presentations = "presentations",
+  render_presentations = TRUE,
   build_readme = FALSE,
   clean = TRUE,
   ...,
@@ -45,8 +46,7 @@ build_site(
 
 - render_reports:
 
-  Whether to render the books and the presentations, and update the
-  navbar.
+  Whether to render the books.
 
 - path_presentations:
 
@@ -59,6 +59,13 @@ build_site(
 
   Folder of the site where each presentation is rendered in its own
   sub-folder (`index.html`, and the PDF if the presentation has one).
+
+- render_presentations:
+
+  Whether to render the presentations. When one of `render_reports` and
+  `render_presentations` is `TRUE`, the navbar is updated with every
+  book and presentation found, rendered or not (the ones not rendered
+  keep their previous output in the site).
 
 - build_readme:
 

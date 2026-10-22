@@ -2,6 +2,14 @@
 
 ## kquarto.r (development version)
 
+- [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  a un argument `render_presentations` : `render_reports` ne concerne
+  plus que les livres et `render_presentations` les présentations, pour
+  n’en rendre qu’une partie. La barre de navigation liste toujours tous
+  les livres et présentations trouvés, ceux qui ne sont pas rendus
+  gardant leur sortie précédente. Avant, `render_reports = FALSE`
+  désactivait aussi les présentations.
+
 - Arguments renommés, nom générique puis qualificatif, comme
   `dirname_reports` : `path_reports` (dossier des livres, défaut
   `"reports"`) et `path_presentations` (dossier des présentations,

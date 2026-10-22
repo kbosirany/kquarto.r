@@ -14,11 +14,16 @@
 #' @details Outside HTML the whole table is written: a Markdown table
 #'   (converted by Quarto, so it works with Typst, Word, ...) or, in LaTeX
 #'   output, a `booktabs` table.
+#'
+#'   The HTML table needs the package kableExtra, which kquarto.r does not
+#'   install: add it to the dependencies of the project whose books call
+#'   `kable()`.
 #' @export
 #'
 #' @examples
-#' kable(head(iris), is_html_output = TRUE, title = "Iris")
 #' kable(head(iris), is_html_output = FALSE)
+#' @examplesIf requireNamespace("kableExtra", quietly = TRUE)
+#' kable(head(iris), is_html_output = TRUE, title = "Iris")
 kable <- function(
   x,
   is_html_output = knitr::is_html_output() || interactive(),
@@ -35,8 +40,20 @@ kable <- function(
     return(knitr::kable(x, format = "pipe", caption = title))
   }
 
+  if (!has_kableextra()) {
+    stop(
+      "Package 'kableExtra' is required for HTML tables: ",
+      "install it and add it to the dependencies of your project.",
+      call. = FALSE
+    )
+  }
   tab <- kableExtra::kable(x, format = "pipe", caption = title)
   tab <- kableExtra::kable_styling(tab, font_size = 12)
   tab <- kableExtra::column_spec(tab, seq_len(ncol(x)), width = "auto")
   kableExtra::scroll_box(tab, width = "100%", height = height)
+}
+
+# Wrapper, so that tests can mock it.
+has_kableextra <- function() {
+  requireNamespace("kableExtra", quietly = TRUE)
 }

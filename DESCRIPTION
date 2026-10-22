@@ -22,7 +22,6 @@ BugReports: https://github.com/kbosirany/kquarto.r/issues
 Encoding: UTF-8
 Imports:
     callr,
-    kableExtra,
     knitr,
     quarto,
     tools,
@@ -31,6 +30,7 @@ Imports:
     yaml
 Suggests:
     devtools,
+    kableExtra,
     pkgdown,
     rmarkdown,
     testthat (>= 3.0.0)

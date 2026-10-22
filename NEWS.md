@@ -8,6 +8,10 @@
   vont au bout et l'erreur liste ceux qui ont échoué. `build_site()` met les
   livres et les présentations dans la même file. Nouvelle dépendance :
   callr (déjà installé avec quarto, via processx).
+* kableExtra passe des Imports aux Suggests : il n'est plus installé avec
+  kquarto.r. `kable()` en a toujours besoin pour la sortie HTML et donne une
+  erreur claire sans lui : l'ajouter aux dépendances des projets dont les
+  livres appellent `kable()`. kquarto.r installe ainsi 15 paquets de moins.
 * `build_site(render_reports = FALSE, render_presentations = FALSE)` met
   quand même à jour la barre de navigation, avec les livres et les
   présentations rendus ailleurs (par exemple par d'autres jobs de CI).

@@ -28,6 +28,10 @@
 - `build_site(render_reports = FALSE, render_presentations = FALSE)` met
   quand même à jour la barre de navigation, avec les livres et les
   présentations rendus ailleurs (par exemple par d’autres jobs de CI).
+  Il initialise aussi le site pkgdown
+  ([`pkgdown::init_site()`](https://pkgdown.r-lib.org/reference/init_site.html)),
+  sans quoi pkgdown refuse d’écrire dans le dossier déjà rempli par ces
+  rendus.
 
 - [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
   a un argument `render_presentations` : `render_reports` ne concerne

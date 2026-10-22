@@ -208,8 +208,9 @@ test_that("build_site renders the books or the presentations only", {
     },
     .package = "kquarto.r"
   )
+  inits <- 0
   local_mocked_bindings(
-    pkgdown_init_site = function(...) NULL,
+    pkgdown_init_site = function(...) inits <<- inits + 1,
     pkgdown_build_site = function(...) "built",
     pkgdown_dst_path = function(override) override$destination
   )
@@ -238,6 +239,8 @@ test_that("build_site renders the books or the presentations only", {
   )
   expect_length(rendered, 0)
   expect_equal(yaml::read_yaml("_pkgdown.yml"), config)
+  # pkgdown recognises the site folder, filled by the other jobs
+  expect_equal(inits, 3)
 })
 
 test_that("the menus have a header by category, Package then Others", {

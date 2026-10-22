@@ -143,10 +143,7 @@ test_that("create_presentation can add the beamer (LaTeX PDF) format", {
 test_that("an INRAE presentation renders to PDF with beamer", {
   skip_on_cran()
   skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
-  skip_if(
-    !any(nzchar(Sys.which(c("lualatex", "xelatex", "pdflatex")))),
-    "No LaTeX installation found"
-  )
+  skip_if_no_lualatex()
   dir <- local_book_env()
   suppressMessages(create_presentation(
     "s", path_presentations = dir, template = "inrae-presentation",

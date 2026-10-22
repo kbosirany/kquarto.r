@@ -25,3 +25,15 @@ mock_render_slides <- function(renders) {
     }
   }
 }
+
+# Quarto compiles the PDF with LuaLaTeX by default. Its fonts need
+# luaotfload, which some distributions ship apart from the `lualatex` binary
+# (Debian: texlive-luatex).
+skip_if_no_lualatex <- function() {
+  skip_if(!nzchar(Sys.which("lualatex")), "LuaLaTeX not installed")
+  kpsewhich <- Sys.which("kpsewhich")
+  has_luaotfload <- nzchar(kpsewhich) && length(suppressWarnings(
+    system2(kpsewhich, "luaotfload.sty", stdout = TRUE, stderr = FALSE)
+  )) > 0
+  skip_if(!has_luaotfload, "luaotfload not installed (LuaLaTeX fonts)")
+}

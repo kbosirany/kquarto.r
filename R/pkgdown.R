@@ -2,12 +2,19 @@
 #'
 #' Writes a menu entry for each book into the `_pkgdown.yml` file, so that
 #' [pkgdown::build_site()] links to the rendered books (see [build_site()]).
-#' The books form one navbar menu, `reports`. When the books have several
-#' languages (the `-en`/`-fr` suffix of their folder name), the menu has a
-#' header by language (`English`, `Français`) followed by the titles of its
-#' books; with a single language, or without any suffix, the titles are listed
-#' without header. The components `reports_en` and `reports_fr` written by
-#' former versions are removed.
+#' The books form one navbar menu, `reports`. Each book has a category:
+#' `package` (the reference material about the package functions) when its
+#' folder name starts with a number (`01-...`), `others` otherwise (project
+#' report, meeting...); a `category: package` or `category: others` key in
+#' its `_quarto.yml` overrides it. With both categories, the menu has a
+#' header by category (`Package`, `Others`), suffixed by the language
+#' (`[en]`, `[fr]`, the `-en`/`-fr` suffix of the folder name) when there
+#' are several languages. With a single category, the menu has a header by
+#' language (`English`, `Français`) when there are several languages, none
+#' otherwise. The `package` items are sorted by folder name, the `others`
+#' items by date (folder name starting with `YYYYMMDD`), most recent first,
+#' then by folder name. The components `reports_en` and `reports_fr` written
+#' by former versions are removed.
 #'
 #' @param dirname_reports Book folder names, relative to `path`. By default,
 #'   every book found in `path` (see [list_books()]).
@@ -24,8 +31,9 @@
 #'   `presentations_path`. By default, every presentation found in
 #'   `presentations_path` (see [list_presentations()]). They form the
 #'   navbar menu `presentations`, titled after the `title` of their slides,
-#'   with a header by language as the books (the `-en`/`-fr` suffix of the
-#'   folder name); without any presentation, the menu is removed.
+#'   with headers by category and language as the books (the `category` key
+#'   overriding the category is in the YAML header of the slides); without
+#'   any presentation, the menu is removed.
 #' @param presentations_path Folder containing the presentation folders.
 #' @param presentations_site_subdir Folder of the pkgdown site (relative to
 #'   its root) where the presentations are rendered, used to build the links.
@@ -59,27 +67,29 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
   if (length(dirname_reports) > 0) check_dirnames(dirname_reports)
   if (length(presentations) > 0) check_dirnames(presentations)
 
+  configs <- lapply(dirname_reports, function(d) {
+    yml <- file.path(path, d, "_quarto.yml")
+    if (file.exists(yml)) yaml::read_yaml(yml) else list()
+  })
   titles <- if (is.null(titles)) {
-    vapply(dirname_reports, function(d) {
-      yml <- file.path(path, d, "_quarto.yml")
-      title <- if (file.exists(yml)) yaml::read_yaml(yml)$book$title
-      if (is.null(title)) d else as.character(title)
+    vapply(seq_along(dirname_reports), function(i) {
+      title <- configs[[i]]$book$title
+      if (is.null(title)) dirname_reports[[i]] else as.character(title)
     }, character(1))
   } else {
     resolve_titles(unlist(titles), dirname_reports)
   }
   titles <- unname(titles)
+  category <- menu_category(
+    dirname_reports, lapply(configs, function(x) x$category)
+  )
 
   config <- list()
   if (file.exists(pkgdown_file)) {
     config <- yaml::read_yaml(pkgdown_file)
   }
 
-  lang <- ifelse(
-    grepl("-(fr|en)$", dirname_reports),
-    sub(".*-(fr|en)$", "\\1", dirname_reports),
-    ""
-  )
+  lang <- menu_lang(dirname_reports)
 
   # former components, one by language
   old <- paste0("reports_", c("en", "fr"))
@@ -102,7 +112,9 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
       menu = reports_menu(
         lang,
         titles,
-        file.path(site_subdir, dirname_reports, "index.html")
+        file.path(site_subdir, dirname_reports, "index.html"),
+        category = category,
+        dirnames = dirname_reports
       )
     )
   }
@@ -130,11 +142,17 @@ set_presentations_menu <- function(config, presentations, path, site_subdir,
     return(config)
   }
 
-  titles <- vapply(presentations, function(d) {
+  headers <- lapply(presentations, function(d) {
     file <- file.path(path, d, paste0(d, ".qmd"))
-    header <- tryCatch(read_slides(file)$header, error = function(e) list())
-    if (is.null(header$title)) d else as.character(header$title)
+    tryCatch(read_slides(file)$header, error = function(e) list())
+  })
+  titles <- vapply(seq_along(presentations), function(i) {
+    title <- headers[[i]]$title
+    if (is.null(title)) presentations[[i]] else as.character(title)
   }, character(1))
+  category <- menu_category(
+    presentations, lapply(headers, function(x) x$category)
+  )
 
   if (isTRUE(add_to_navbar)) {
     config$navbar$structure$left <- unique(c(
@@ -142,18 +160,15 @@ set_presentations_menu <- function(config, presentations, path, site_subdir,
       "presentations"
     ))
   }
-  # a header by language, as the books (suffix `-en`/`-fr` of the folder)
-  lang <- ifelse(
-    grepl("-(fr|en)$", presentations),
-    sub(".*-(fr|en)$", "\\1", presentations),
-    ""
-  )
+  # headers by category and language, as the books
   config$navbar$components$presentations <- list(
     text = "Presentations",
     menu = reports_menu(
-      lang,
+      menu_lang(presentations),
       unname(titles),
-      file.path(site_subdir, presentations, "index.html")
+      file.path(site_subdir, presentations, "index.html"),
+      category = category,
+      dirnames = presentations
     )
   )
   config
@@ -259,25 +274,97 @@ pkgdown_build_site <- function(...) {
   pkgdown::build_site(...)
 }
 
-# The menu of the books: a header by language when there are several
-# languages (English, then French, then the books without language), none
+# The language of the books or presentations: the `-en`/`-fr` suffix of
+# their folder name, "" without suffix.
+menu_lang <- function(dirnames) {
+  ifelse(
+    grepl("-(fr|en)$", dirnames),
+    sub(".*-(fr|en)$", "\\1", dirnames),
+    ""
+  )
+}
+
+# The category of the books or presentations: `package` when the folder name
+# starts with a short number (`01-`), `others` otherwise, unless `values` (the `category`
+# key of each one, possibly NULL) says otherwise.
+menu_category <- function(dirnames, values = NULL) {
+  category <- ifelse(grepl("^[0-9]{1,4}-", dirnames), "package", "others")
+  for (i in seq_along(values)) {
+    value <- values[[i]]
+    if (is.null(value)) next
+    value <- tolower(as.character(value)[[1]])
+    if (!value %in% c("package", "others")) {
+      stop(
+        "The category must be 'package' or 'others', not '", value,
+        "': ", dirnames[[i]],
+        call. = FALSE
+      )
+    }
+    category[[i]] <- value
+  }
+  unname(category)
+}
+
+# The order of the items of a category: by folder name for `package`; by date
+# (folder name starting with `YYYYMMDD`), most recent first, then by folder
+# name for `others`.
+menu_order <- function(dirnames, category) {
+  if (category == "package") {
+    return(order(dirnames))
+  }
+  date <- ifelse(
+    grepl("^[0-9]{8}", dirnames), substr(dirnames, 1, 8), ""
+  )
+  order(date == "", -rank(date), dirnames)
+}
+
+# The menu of the books or presentations: with both categories (`package`,
+# `others`), a header by category, suffixed by the language when there are
+# several; with a single category, a header by language when there are
+# several languages (English, then French, then without language), none
 # otherwise.
-reports_menu <- function(lang, titles, hrefs) {
-  languages <- c("English", "Fran\u00e7ais", "Other")
-  names(languages) <- c("en", "fr", "")
-  present <- intersect(names(languages), unique(lang))
+reports_menu <- function(lang, titles, hrefs, category = NULL,
+                         dirnames = NULL) {
+  if (is.null(category)) category <- rep("others", length(lang))
+  if (is.null(dirnames)) dirnames <- as.character(seq_along(lang))
   items <- function(i) {
+    i <- i[menu_order(dirnames[i], category[[i[[1]]]])]
     lapply(i, function(k) list(text = titles[[k]], href = hrefs[[k]]))
   }
-  if (length(present) == 1) {
-    return(items(seq_along(lang)))
+  categories <- c(package = "Package", others = "Others")
+  languages <- c(en = "English", fr = "Fran\u00e7ais")
+  lang_order <- c("en", "fr", "")
+  present_lang <- intersect(lang_order, unique(lang))
+  present_cat <- intersect(names(categories), unique(category))
+
+  groups <- list()
+  if (length(present_cat) == 1) {
+    if (length(present_lang) == 1) {
+      return(items(seq_along(lang)))
+    }
+    for (l in present_lang) {
+      header <- if (l == "") "Other" else languages[[l]]
+      groups[[header]] <- which(lang == l)
+    }
+  } else {
+    for (cat in present_cat) {
+      for (l in present_lang) {
+        i <- which(category == cat & lang == l)
+        if (length(i) == 0) next
+        header <- categories[[cat]]
+        if (length(present_lang) > 1 && l != "") {
+          header <- paste0(header, " [", l, "]")
+        }
+        groups[[header]] <- i
+      }
+    }
   }
   menu <- list()
-  for (l in present) {
+  for (header in names(groups)) {
     if (length(menu) > 0) {
       menu <- c(menu, list(list(text = "---------")))
     }
-    menu <- c(menu, list(list(text = languages[[l]])), items(which(lang == l)))
+    menu <- c(menu, list(list(text = header)), items(groups[[header]]))
   }
   menu
 }

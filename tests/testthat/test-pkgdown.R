@@ -170,3 +170,70 @@ test_that("build_site renders the presentations in the site", {
     "presentations/point/index.html"
   )
 })
+
+test_that("the menus have a header by category, Package then Others", {
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    c("02-calib-fr", "01-data-fr", "rapport-fr", "01-data-en"),
+    path = dir,
+    title = c("Calib", "Data", "Rapport", "Data en")
+  ))
+  file <- file.path(dir, "_pkgdown.yml")
+
+  update_pkgdown_yml(path = dir, pkgdown_file = file)
+  menu <- yaml::read_yaml(file)$navbar$components$reports$menu
+  expect_equal(
+    vapply(menu, function(x) x$text, ""),
+    c("Package [en]", "Data en", "---------", "Package [fr]", "Data",
+      "Calib", "---------", "Others [fr]", "Rapport")
+  )
+
+  # the category key of _quarto.yml overrides the folder name
+  yml <- file.path(dir, "rapport-fr", "_quarto.yml")
+  base <- readLines(yml)
+  writeLines(c(base, "category: package"), yml)
+  update_pkgdown_yml(path = dir, pkgdown_file = file)
+  menu <- yaml::read_yaml(file)$navbar$components$reports$menu
+  expect_equal(
+    vapply(menu, function(x) x$text, ""),
+    c("English", "Data en", "---------", "Français", "Data", "Calib",
+      "Rapport")
+  )
+
+  writeLines(c(base, "category: meeting"), yml)
+  expect_error(
+    update_pkgdown_yml(path = dir, pkgdown_file = file),
+    "must be 'package' or 'others'"
+  )
+})
+
+test_that("the presentations menu has Package, then Others by date", {
+  dir <- local_book_env()
+  suppressMessages(create_presentation(
+    c("01-data-fr", "20260902-point-fr", "20261020-copil-fr", "atelier-fr"),
+    path = dir,
+    title = c("Data", "Point", "Copil", "Atelier")
+  ))
+  file <- file.path(dir, "_pkgdown.yml")
+
+  update_pkgdown_yml(
+    path = file.path(dir, "none"), pkgdown_file = file,
+    presentations_path = dir
+  )
+  menu <- yaml::read_yaml(file)$navbar$components$presentations$menu
+  expect_equal(
+    vapply(menu, function(x) x$text, ""),
+    c("Package", "Data", "---------", "Others", "Copil", "Point", "Atelier")
+  )
+})
+
+test_that("menu_category classifies by folder name", {
+  expect_equal(
+    menu_category(c("01-a", "20261020-b", "c", "1-d")),
+    c("package", "others", "others", "package")
+  )
+  expect_equal(
+    menu_category(c("01-a", "b"), list("Others", NULL)),
+    c("others", "others")
+  )
+})

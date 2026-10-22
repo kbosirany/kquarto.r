@@ -38,8 +38,9 @@ the books are rendered, used to build the links.}
 \code{presentations_path}. By default, every presentation found in
 \code{presentations_path} (see \code{\link[=list_presentations]{list_presentations()}}). They form the
 navbar menu \code{presentations}, titled after the \code{title} of their slides,
-with a header by language as the books (the \code{-en}/\code{-fr} suffix of the
-folder name); without any presentation, the menu is removed.}
+with headers by category and language as the books (the \code{category} key
+overriding the category is in the YAML header of the slides); without
+any presentation, the menu is removed.}
 
 \item{presentations_path}{Folder containing the presentation folders.}
 
@@ -52,12 +53,19 @@ The YAML list written to \code{pkgdown_file}, invisibly.
 \description{
 Writes a menu entry for each book into the \verb{_pkgdown.yml} file, so that
 \code{\link[pkgdown:build_site]{pkgdown::build_site()}} links to the rendered books (see \code{\link[=build_site]{build_site()}}).
-The books form one navbar menu, \code{reports}. When the books have several
-languages (the \code{-en}/\code{-fr} suffix of their folder name), the menu has a
-header by language (\code{English}, \code{Français}) followed by the titles of its
-books; with a single language, or without any suffix, the titles are listed
-without header. The components \code{reports_en} and \code{reports_fr} written by
-former versions are removed.
+The books form one navbar menu, \code{reports}. Each book has a category:
+\code{package} (the reference material about the package functions) when its
+folder name starts with a number (\code{01-...}), \code{others} otherwise (project
+report, meeting...); a \code{category: package} or \code{category: others} key in
+its \verb{_quarto.yml} overrides it. With both categories, the menu has a
+header by category (\code{Package}, \code{Others}), suffixed by the language
+(\verb{[en]}, \verb{[fr]}, the \code{-en}/\code{-fr} suffix of the folder name) when there
+are several languages. With a single category, the menu has a header by
+language (\code{English}, \code{Français}) when there are several languages, none
+otherwise. The \code{package} items are sorted by folder name, the \code{others}
+items by date (folder name starting with \code{YYYYMMDD}), most recent first,
+then by folder name. The components \code{reports_en} and \code{reports_fr} written
+by former versions are removed.
 }
 \examples{
 \dontrun{

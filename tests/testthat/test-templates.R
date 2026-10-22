@@ -95,7 +95,7 @@ test_that("the INRAE template is shipped with the package", {
   expect_true(file.exists(file.path(book, "references.bib")))
   expect_true(file.exists(file.path(book, "images", "logo-inrae.png")))
   expect_true(file.exists(file.path(book, "images", "favicon-inrae.png")))
-  expect_true(file.exists(file.path(book, "chapitre-01-introduction.qmd")))
+  expect_true(file.exists(file.path(book, "chapitre_01_introduction.qmd")))
 
   config <- read_config(dir, "rapport")
   expect_equal(config$book$title, "Rapport technique")
@@ -103,7 +103,7 @@ test_that("the INRAE template is shipped with the package", {
   expect_true("inrae.scss" %in% unlist(config$format$html$theme))
   expect_equal(
     unlist(config$book$chapters),
-    c("index.qmd", "chapitre-01-introduction.qmd")
+    c("index.qmd", "chapitre_01_introduction.qmd")
   )
 
   path <- suppressMessages(create_template_book("unite", from = "inrae"))

@@ -1,6 +1,6 @@
 #' Add a chapter to a Quarto book
 #'
-#' Creates a numbered chapter file (e.g. `chapitre-03-methodes.qmd`) in a
+#' Creates a numbered chapter file (e.g. `chapitre_03_methodes.qmd`) in a
 #' book folder and appends it to `book: chapters` in `_quarto.yml`. The
 #' number is the highest existing number for this prefix, plus one, so
 #' `index.qmd` is never touched and chapters start at `01`.
@@ -48,7 +48,7 @@ create_book_chapter <- function(book, name, path = ".", title = name,
   }
 
   number <- next_chapter_number(book_dir, prefix)
-  file <- sprintf("%s-%02d-%s.qmd", prefix, number, slug)
+  file <- sprintf("%s_%02d_%s.qmd", prefix, number, slug)
   writeLines(c(paste("#", title), ""), file.path(book_dir, file))
 
   config$book$chapters <- c(as.list(config$book$chapters), list(file))
@@ -73,7 +73,10 @@ chapter_prefix <- function(lang) {
 }
 
 next_chapter_number <- function(book_dir, prefix) {
-  pattern <- paste0("^", escape_regex(prefix), "-([0-9]+)-.*\\.qmd$")
+  # `_` separators, or `-` (former naming)
+  pattern <- paste0(
+    "^", escape_regex(prefix), "[-_]([0-9]+)[-_].*\\.qmd$"
+  )
   files <- list.files(book_dir, pattern = pattern)
   if (length(files) == 0) {
     return(1L)

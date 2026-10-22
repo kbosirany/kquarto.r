@@ -25,7 +25,7 @@ book's \verb{_quarto.yml}: \code{"chapitre"} for French, \code{"chapter"} otherw
 The path of the chapter file, invisibly.
 }
 \description{
-Creates a numbered chapter file (e.g. \code{chapitre-03-methodes.qmd}) in a
+Creates a numbered chapter file (e.g. \code{chapitre_03_methodes.qmd}) in a
 book folder and appends it to \code{book: chapters} in \verb{_quarto.yml}. The
 number is the highest existing number for this prefix, plus one, so
 \code{index.qmd} is never touched and chapters start at \code{01}.

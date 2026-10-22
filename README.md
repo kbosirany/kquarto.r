@@ -26,11 +26,11 @@ create_book(
   lang = "fr",
   chapters = c("Introduction", "Méthodes")
 )
-# -> rapport_technique/chapitre-01-introduction.qmd, chapitre-02-methodes.qmd
+# -> rapport_technique/chapitre_01_introduction.qmd, chapitre_02_methodes.qmd
 
 # Ajouter un chapitre : numéro suivant, ajouté au _quarto.yml
 create_book_chapter("rapport_technique", "Résultats")
-# -> chapitre-03-resultats.qmd ("chapter-03-..." si lang = "en")
+# -> chapitre_03_resultats.qmd ("chapter_03_..." si lang = "en")
 
 # Générer un rapport (par défaut dans rapport_technique/_book)
 render_book("rapport_technique")

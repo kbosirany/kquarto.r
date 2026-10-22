@@ -31,6 +31,8 @@ report folder. Otherwise a path relative to each report folder, e.g.
 \item{quiet}{Whether to suppress Quarto output.}
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
+
+\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The paths of the output folders, invisibly.

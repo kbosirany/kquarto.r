@@ -13,6 +13,7 @@
 #'   `"pdf"` or `"all"`. `NULL` renders the formats of the `_quarto.yml`.
 #' @param quiet Whether to suppress Quarto output.
 #' @param ... Other arguments passed to [quarto::quarto_render()].
+#' @param path Deprecated, use `path_reports`.
 #'
 #' @return The paths of the output folders, invisibly.
 #' @export

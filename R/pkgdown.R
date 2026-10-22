@@ -296,13 +296,17 @@ build_site <- function(path_reports = "reports",
   # rendered this time (their previous output stays in the site).
   books <- list_books(path)
   presentations <- list_presentations(presentations_path)
-  if (render_reports || render_presentations) {
-    if (length(books) == 0 && length(presentations) == 0) {
-      stop("No Quarto book found in: ", path, call. = FALSE)
-    }
+  if ((render_reports || render_presentations) &&
+      length(books) == 0 && length(presentations) == 0) {
+    stop("No Quarto book found in: ", path, call. = FALSE)
+  }
+  if (length(books) > 0 || length(presentations) > 0) {
     # init_site() creates the marker file that lets pkgdown recognise the
-    # destination folder once the books are written into it.
+    # destination folder once the books are written into it, here or before
+    # (e.g. by other CI jobs, without rendering here).
     pkgdown_init_site(override = args$override %||% list())
+  }
+  if (render_reports || render_presentations) {
     # the books and the presentations in a single queue, so that `workers`
     # renders them all at the same time
     renders <- list()

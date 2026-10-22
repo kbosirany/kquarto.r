@@ -14,7 +14,9 @@
   livres appellent `kable()`. kquarto.r installe ainsi 15 paquets de moins.
 * `build_site(render_reports = FALSE, render_presentations = FALSE)` met
   quand même à jour la barre de navigation, avec les livres et les
-  présentations rendus ailleurs (par exemple par d'autres jobs de CI).
+  présentations rendus ailleurs (par exemple par d'autres jobs de CI). Il
+  initialise aussi le site pkgdown (`pkgdown::init_site()`), sans quoi pkgdown
+  refuse d'écrire dans le dossier déjà rempli par ces rendus.
 * `build_site()` a un argument `render_presentations` : `render_reports`
   ne concerne plus que les livres et `render_presentations` les
   présentations, pour n'en rendre qu'une partie. La barre de navigation liste

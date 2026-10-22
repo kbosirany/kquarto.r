@@ -51,7 +51,7 @@ report folder (\code{project: output-dir}).}
 
 \item{chapters}{Optional character vector of chapter names. Each one
 creates a numbered chapter file after \code{index.qmd} with
-\code{\link[=create_book_chapter]{create_book_chapter()}}, e.g. \code{chapitre-01-introduction.qmd}. A
+\code{\link[=create_book_chapter]{create_book_chapter()}}, e.g. \code{chapitre_01_introduction.qmd}. A
 chapter whose file already exists is not created again.}
 
 \item{chapter_prefix}{Prefix of the chapter files. By default

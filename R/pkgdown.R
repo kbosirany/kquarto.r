@@ -4,11 +4,11 @@
 #' [pkgdown::build_site()] links to the rendered books (see [build_site()]).
 #' The books form one navbar menu, `reports`. Each book has a category:
 #' `package` (the reference material about the package functions) when its
-#' folder name starts with a number (`01-...`), `others` otherwise (project
+#' folder name starts with a number (`01_...`), `others` otherwise (project
 #' report, meeting...); a `category: package` or `category: others` key in
 #' its `_quarto.yml` overrides it. With both categories, the menu has a
 #' header by category (`Package`, `Others`), suffixed by the language
-#' (`[en]`, `[fr]`, the `-en`/`-fr` suffix of the folder name) when there
+#' (`[en]`, `[fr]`, the `_en`/`_fr` suffix of the folder name) when there
 #' are several languages. With a single category, the menu has a header by
 #' language (`English`, `Français`) when there are several languages, none
 #' otherwise. The `package` items are sorted by folder name, the `others`
@@ -44,7 +44,7 @@
 #' @examples
 #' \dontrun{
 #' update_pkgdown_yml()
-#' update_pkgdown_yml("rapport-fr", titles = "Mon rapport")
+#' update_pkgdown_yml("rapport_fr", titles = "Mon rapport")
 #' }
 update_pkgdown_yml <- function(dirname_reports = NULL,
                                path = "reports",
@@ -274,21 +274,23 @@ pkgdown_build_site <- function(...) {
   pkgdown::build_site(...)
 }
 
-# The language of the books or presentations: the `-en`/`-fr` suffix of
-# their folder name, "" without suffix.
+# The language of the books or presentations: the `_en`/`_fr` suffix of
+# their folder name (or `-en`/`-fr`, former naming), "" without suffix.
 menu_lang <- function(dirnames) {
   ifelse(
-    grepl("-(fr|en)$", dirnames),
-    sub(".*-(fr|en)$", "\\1", dirnames),
+    grepl("[-_](fr|en)$", dirnames),
+    sub(".*[-_](fr|en)$", "\\1", dirnames),
     ""
   )
 }
 
 # The category of the books or presentations: `package` when the folder name
-# starts with a short number (`01-`), `others` otherwise, unless `values` (the `category`
-# key of each one, possibly NULL) says otherwise.
+# starts with a short number (`01_`, or `01-`), `others` otherwise, unless
+# `values` (the `category` key of each one, possibly NULL) says otherwise.
 menu_category <- function(dirnames, values = NULL) {
-  category <- ifelse(grepl("^[0-9]{1,4}-", dirnames), "package", "others")
+  category <- ifelse(
+    grepl("^[0-9]{1,4}[-_]", dirnames), "package", "others"
+  )
   for (i in seq_along(values)) {
     value <- values[[i]]
     if (is.null(value)) next

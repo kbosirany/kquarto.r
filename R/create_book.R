@@ -27,7 +27,7 @@
 #'   `"default"`.
 #' @param chapters Optional character vector of chapter names. Each one
 #'   creates a numbered chapter file after `index.qmd` with
-#'   [create_book_chapter()], e.g. `chapitre-01-introduction.qmd`. A
+#'   [create_book_chapter()], e.g. `chapitre_01_introduction.qmd`. A
 #'   chapter whose file already exists is not created again.
 #' @param chapter_prefix Prefix of the chapter files. By default
 #'   `"chapitre"` when `lang` is French, `"chapter"` otherwise.
@@ -147,7 +147,8 @@ create_book <- function(dirname_reports,
     prefix <- chapter_prefix %||% chapter_prefix(config$lang)
     for (chapter in chapters) {
       pattern <- paste0(
-        "^", escape_regex(prefix), "-[0-9]+-", slugify(chapter), "\\.qmd$"
+        "^", escape_regex(prefix), "[-_][0-9]+[-_]", slugify(chapter),
+        "\\.qmd$"
       )
       if (length(list.files(report_dir, pattern = pattern)) > 0) next
       suppressMessages(create_book_chapter(

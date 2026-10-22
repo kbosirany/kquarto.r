@@ -54,7 +54,7 @@ test_that("a book created with the INRAE template renders", {
   ))
   out <- render_book("a", path = dir, quiet = TRUE)
   expect_true(file.exists(file.path(out, "index.html")))
-  expect_true(file.exists(file.path(out, "chapitre-01-introduction.html")))
+  expect_true(file.exists(file.path(out, "chapitre_01_introduction.html")))
 })
 
 test_that("a book renders to PDF with Typst", {
@@ -72,7 +72,7 @@ test_that("a book renders to PDF with Typst", {
   ))
   cat(
     "\n```{r}\nknitr::kable(head(iris))\n```\n",
-    file = file.path(dir, "a", "chapitre-01-introduction.qmd"),
+    file = file.path(dir, "a", "chapitre_01_introduction.qmd"),
     append = TRUE
   )
   out <- render_book("a", path = dir, output_format = "typst", quiet = FALSE)

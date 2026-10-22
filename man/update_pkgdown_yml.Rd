@@ -55,11 +55,11 @@ Writes a menu entry for each book into the \verb{_pkgdown.yml} file, so that
 \code{\link[pkgdown:build_site]{pkgdown::build_site()}} links to the rendered books (see \code{\link[=build_site]{build_site()}}).
 The books form one navbar menu, \code{reports}. Each book has a category:
 \code{package} (the reference material about the package functions) when its
-folder name starts with a number (\code{01-...}), \code{others} otherwise (project
+folder name starts with a number (\verb{01_...}), \code{others} otherwise (project
 report, meeting...); a \code{category: package} or \code{category: others} key in
 its \verb{_quarto.yml} overrides it. With both categories, the menu has a
 header by category (\code{Package}, \code{Others}), suffixed by the language
-(\verb{[en]}, \verb{[fr]}, the \code{-en}/\code{-fr} suffix of the folder name) when there
+(\verb{[en]}, \verb{[fr]}, the \verb{_en}/\verb{_fr} suffix of the folder name) when there
 are several languages. With a single category, the menu has a header by
 language (\code{English}, \code{Français}) when there are several languages, none
 otherwise. The \code{package} items are sorted by folder name, the \code{others}
@@ -70,6 +70,6 @@ by former versions are removed.
 \examples{
 \dontrun{
 update_pkgdown_yml()
-update_pkgdown_yml("rapport-fr", titles = "Mon rapport")
+update_pkgdown_yml("rapport_fr", titles = "Mon rapport")
 }
 }

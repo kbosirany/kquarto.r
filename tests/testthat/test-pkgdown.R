@@ -1,7 +1,7 @@
 test_that("update_pkgdown_yml writes one menu, a header by language", {
   dir <- local_book_env()
   suppressMessages(create_book(
-    c("a-fr", "b-fr", "a-en"),
+    c("a_fr", "b_fr", "a_en"),
     path = dir,
     title = c("A", "B", "A en")
   ))
@@ -19,14 +19,14 @@ test_that("update_pkgdown_yml writes one menu, a header by language", {
     vapply(menu, function(x) x$text, ""),
     c("English", "A en", "---------", "Fran\u00e7ais", "A", "B")
   )
-  expect_equal(menu[[6]]$href, "reports/b-fr/index.html")
+  expect_equal(menu[[6]]$href, "reports/b_fr/index.html")
   expect_null(menu[[1]]$href)
 
   # idempotent
   update_pkgdown_yml(path = dir, pkgdown_file = file)
   expect_equal(yaml::read_yaml(file), config)
 
-  update_pkgdown_yml("a-fr", path = dir, titles = "Mon A", pkgdown_file = file)
+  update_pkgdown_yml("a_fr", path = dir, titles = "Mon A", pkgdown_file = file)
   menu <- yaml::read_yaml(file)$navbar$components$reports$menu
   expect_length(menu, 1)
   expect_equal(menu[[1]]$text, "Mon A")
@@ -39,7 +39,7 @@ test_that("update_pkgdown_yml errors without book", {
 
 test_that("build_site renders the books then builds the site", {
   dir <- local_book_env()
-  suppressMessages(create_book("a-fr", path = dir))
+  suppressMessages(create_book("a_fr", path = dir))
   withr::local_dir(dir)
   calls <- list()
   local_mocked_bindings(
@@ -54,15 +54,15 @@ test_that("build_site renders the books then builds the site", {
   )
   build_site(path = ".", dest = "public")
   expect_length(calls, 1)
-  expect_equal(calls[[1]][[1]], "a-fr")
+  expect_equal(calls[[1]][[1]], "a_fr")
   # normalizePath() uses backslashes on Windows
-  expect_match(calls[[1]][[2]], "public[/\\\\]reports[/\\\\]a-fr$")
+  expect_match(calls[[1]][[2]], "public[/\\\\]reports[/\\\\]a_fr$")
   expect_true(file.exists("_pkgdown.yml"))
 })
 
 test_that("update_pkgdown_yml adds a menu for the presentations", {
   dir <- local_book_env()
-  suppressMessages(create_book("a-fr", path = dir, title = "A"))
+  suppressMessages(create_book("a_fr", path = dir, title = "A"))
   pres <- file.path(dir, "presentations")
   dir.create(pres)
   suppressMessages(create_presentation(
@@ -107,7 +107,7 @@ test_that("update_pkgdown_yml adds a menu for the presentations", {
 test_that("the presentations menu has a header by language", {
   dir <- local_book_env()
   suppressMessages(create_presentation(
-    c("20261020-point-fr", "20261105-point-en", "20261020-bilan-fr"),
+    c("20261020_point_fr", "20261105_point_en", "20261020_bilan_fr"),
     path = dir,
     title = c("Point", "Review", "Bilan")
   ))
@@ -122,7 +122,7 @@ test_that("the presentations menu has a header by language", {
     vapply(menu, function(x) x$text, ""),
     c("English", "Review", "---------", "Fran\u00e7ais", "Bilan", "Point")
   )
-  expect_equal(menu[[2]]$href, "presentations/20261105-point-en/index.html")
+  expect_equal(menu[[2]]$href, "presentations/20261105_point_en/index.html")
 })
 
 test_that("update_pkgdown_yml works with presentations only", {
@@ -143,7 +143,7 @@ test_that("build_site renders the presentations in the site", {
   dir <- local_book_env()
   dir.create(file.path(dir, "reports"))
   dir.create(file.path(dir, "presentations"))
-  suppressMessages(create_book("a-fr", path = file.path(dir, "reports")))
+  suppressMessages(create_book("a_fr", path = file.path(dir, "reports")))
   suppressMessages(create_presentation(
     "point", path = file.path(dir, "presentations"), title = "Point"
   ))
@@ -174,7 +174,7 @@ test_that("build_site renders the presentations in the site", {
 test_that("the menus have a header by category, Package then Others", {
   dir <- local_book_env()
   suppressMessages(create_book(
-    c("02-calib-fr", "01-data-fr", "rapport-fr", "01-data-en"),
+    c("02_calib_fr", "01_data_fr", "rapport_fr", "01_data_en"),
     path = dir,
     title = c("Calib", "Data", "Rapport", "Data en")
   ))
@@ -189,7 +189,7 @@ test_that("the menus have a header by category, Package then Others", {
   )
 
   # the category key of _quarto.yml overrides the folder name
-  yml <- file.path(dir, "rapport-fr", "_quarto.yml")
+  yml <- file.path(dir, "rapport_fr", "_quarto.yml")
   base <- readLines(yml)
   writeLines(c(base, "category: package"), yml)
   update_pkgdown_yml(path = dir, pkgdown_file = file)
@@ -210,7 +210,7 @@ test_that("the menus have a header by category, Package then Others", {
 test_that("the presentations menu has Package, then Others by date", {
   dir <- local_book_env()
   suppressMessages(create_presentation(
-    c("01-data-fr", "20260902-point-fr", "20261020-copil-fr", "atelier-fr"),
+    c("01_data_fr", "20260902_point_fr", "20261020_copil_fr", "atelier_fr"),
     path = dir,
     title = c("Data", "Point", "Copil", "Atelier")
   ))
@@ -229,11 +229,18 @@ test_that("the presentations menu has Package, then Others by date", {
 
 test_that("menu_category classifies by folder name", {
   expect_equal(
-    menu_category(c("01-a", "20261020-b", "c", "1-d")),
-    c("package", "others", "others", "package")
+    menu_category(c("01_a", "20261020_b", "c", "1_d", "02-former")),
+    c("package", "others", "others", "package", "package")
   )
   expect_equal(
-    menu_category(c("01-a", "b"), list("Others", NULL)),
+    menu_category(c("01_a", "b"), list("Others", NULL)),
     c("others", "others")
+  )
+})
+
+test_that("menu_lang reads the language suffix, former naming too", {
+  expect_equal(
+    menu_lang(c("01_a_fr", "b_en", "c-fr", "d")),
+    c("fr", "en", "fr", "")
   )
 })

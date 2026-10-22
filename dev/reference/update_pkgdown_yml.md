@@ -4,11 +4,18 @@ Writes a menu entry for each book into the `_pkgdown.yml` file, so that
 [`pkgdown::build_site()`](https://pkgdown.r-lib.org/reference/build_site.html)
 links to the rendered books (see
 [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)).
-The books form one navbar menu, `reports`. When the books have several
-languages (the `-en`/`-fr` suffix of their folder name), the menu has a
-header by language (`English`, `Français`) followed by the titles of its
-books; with a single language, or without any suffix, the titles are
-listed without header. The components `reports_en` and `reports_fr`
+The books form one navbar menu, `reports`. Each book has a category:
+`package` (the reference material about the package functions) when its
+folder name starts with a number (`01-...`), `others` otherwise (project
+report, meeting...); a `category: package` or `category: others` key in
+its `_quarto.yml` overrides it. With both categories, the menu has a
+header by category (`Package`, `Others`), suffixed by the language
+(`[en]`, `[fr]`, the `-en`/`-fr` suffix of the folder name) when there
+are several languages. With a single category, the menu has a header by
+language (`English`, `Français`) when there are several languages, none
+otherwise. The `package` items are sorted by folder name, the `others`
+items by date (folder name starting with `YYYYMMDD`), most recent first,
+then by folder name. The components `reports_en` and `reports_fr`
 written by former versions are removed.
 
 ## Usage
@@ -64,9 +71,9 @@ update_pkgdown_yml(
   default, every presentation found in `presentations_path` (see
   [`list_presentations()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_presentations.md)).
   They form the navbar menu `presentations`, titled after the `title` of
-  their slides, with a header by language as the books (the `-en`/`-fr`
-  suffix of the folder name); without any presentation, the menu is
-  removed.
+  their slides, with headers by category and language as the books (the
+  `category` key overriding the category is in the YAML header of the
+  slides); without any presentation, the menu is removed.
 
 - presentations_path:
 

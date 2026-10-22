@@ -11,6 +11,7 @@ render_presentation(
   quiet = FALSE,
   output_dir = NULL,
   ...,
+  workers = getOption("kquarto.r.workers", 1L),
   name = NULL,
   path = NULL
 )
@@ -38,6 +39,9 @@ as \code{index.html} and the PDF and PowerPoint files, if there are some, as
 leaves the files next to the \code{.qmd}. Used by \code{\link[=build_site]{build_site()}}.}
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
+
+\item{workers}{Number of presentations rendered at the same time, see
+\code{\link[=render_book]{render_book()}}.}
 
 \item{name, path}{Deprecated, use \code{dirname_presentations} and
 \code{path_presentations}.}

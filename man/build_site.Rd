@@ -14,6 +14,7 @@ build_site(
   render_presentations = TRUE,
   build_readme = FALSE,
   clean = TRUE,
+  workers = getOption("kquarto.r.workers", 1L),
   ...,
   path = NULL,
   dest = NULL,
@@ -42,15 +43,18 @@ presentation in it, there is no presentation on the site.}
 rendered in its own sub-folder (\code{index.html}, and the PDF if the
 presentation has one).}
 
-\item{render_presentations}{Whether to render the presentations. When one
-of \code{render_reports} and \code{render_presentations} is \code{TRUE}, the navbar is
-updated with every book and presentation found, rendered or not (the
-ones not rendered keep their previous output in the site).}
+\item{render_presentations}{Whether to render the presentations. The
+navbar is updated with every book and presentation found, rendered or
+not (the ones not rendered keep their previous output in the site, e.g.
+rendered by other CI jobs).}
 
 \item{build_readme}{Whether to rebuild the README with
 \code{\link[devtools:build_readme]{devtools::build_readme()}}.}
 
 \item{clean}{Whether to remove a book's previous output before rendering.}
+
+\item{workers}{Number of books and presentations rendered at the same
+time, see \code{\link[=render_book]{render_book()}}.}
 
 \item{...}{Other arguments passed to \code{\link[pkgdown:build_site]{pkgdown::build_site()}}.}
 

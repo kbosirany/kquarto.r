@@ -21,6 +21,7 @@ URL: https://github.com/kbosirany/kquarto.r,
 BugReports: https://github.com/kbosirany/kquarto.r/issues
 Encoding: UTF-8
 Imports:
+    callr,
     kableExtra,
     knitr,
     quarto,
@@ -36,4 +37,4 @@ Suggests:
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

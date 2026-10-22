@@ -203,6 +203,8 @@ list_presentations <- function(path_presentations = "presentations",
 #'   `<name>.pdf` and `<name>.pptx`. `NULL`
 #'   leaves the files next to the `.qmd`. Used by [build_site()].
 #' @param ... Other arguments passed to [quarto::quarto_render()].
+#' @param workers Number of presentations rendered at the same time, see
+#'   [render_book()].
 #' @param name,path Deprecated, use `dirname_presentations` and
 #'   `path_presentations`.
 #'
@@ -222,6 +224,7 @@ render_presentation <- function(dirname_presentations = NULL,
                                 quiet = FALSE,
                                 output_dir = NULL,
                                 ...,
+                                workers = getOption("kquarto.r.workers", 1L),
                                 name = NULL,
                                 path = NULL) {
   name <- renamed_arg(
@@ -230,6 +233,19 @@ render_presentation <- function(dirname_presentations = NULL,
   path <- renamed_arg(
     path_presentations, path, "path_presentations", "path"
   )
+  renders <- presentation_renders(name, path, output_format, quiet, ...)
+  run_renders(renders, workers)
+  if (!is.null(output_dir)) {
+    name <- vapply(renders, function(x) x$label, character(1))
+    copy_presentation_outputs(name, file.path(path, name), output_dir)
+  }
+  invisible(vapply(renders, function(x) x$output, character(1)))
+}
+
+# The renders of presentations, as book_renders(): `output` is the rendered
+# file, next to the `.qmd`.
+presentation_renders <- function(name, path, output_format = NULL,
+                                 quiet = FALSE, ...) {
   if (is.null(name)) {
     name <- list_presentations(path)
     if (length(name) == 0) {
@@ -248,31 +264,24 @@ render_presentation <- function(dirname_presentations = NULL,
       call. = FALSE
     )
   }
-  if (is.null(quarto_bin())) {
-    stop(
-      "The Quarto CLI was not found. Install it from https://quarto.org.",
-      call. = FALSE
-    )
-  }
-  for (file in files) {
-    quarto_render(
-      input = normalizePath(file),
-      output_format = output_format,
-      quiet = quiet,
-      ...
-    )
-  }
   ext <- switch(
     if (is.null(output_format)) "revealjs" else output_format,
     beamer = ".pdf",
     pptx = ".pptx",
     ".html"
   )
-  rendered <- sub("\\.qmd$", ext, files)
-  if (!is.null(output_dir)) {
-    copy_presentation_outputs(name, file.path(path, name), output_dir)
-  }
-  invisible(rendered)
+  lapply(seq_along(files), function(i) {
+    list(
+      label = name[[i]],
+      args = list(
+        input = normalizePath(files[[i]]),
+        output_format = output_format,
+        quiet = quiet,
+        ...
+      ),
+      output = sub("\\.qmd$", ext, files[[i]])
+    )
+  })
 }
 
 # Copies the rendered slides of presentation folders to

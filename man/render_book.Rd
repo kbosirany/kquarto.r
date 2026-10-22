@@ -11,6 +11,7 @@ render_book(
   output_format = NULL,
   quiet = FALSE,
   ...,
+  workers = getOption("kquarto.r.workers", 1L),
   path = NULL
 )
 }
@@ -32,6 +33,16 @@ report folder. Otherwise a path relative to each report folder, e.g.
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
 
+\item{workers}{Number of books rendered at the same time. With \code{1} (the
+default, or the option \code{kquarto.r.workers}), the books are rendered one
+after the other in the current session. With more, each book is
+rendered in a background R session (on every OS), its Quarto output
+going to a log file shown when it fails; every book is rendered even
+if one fails, and the error lists the failed ones. Each render needs
+its own memory (an R session, and Chrome for the PDF of interactive
+content), e.g. \code{workers = parallel::detectCores() - 1} on a machine
+with enough memory.}
+
 \item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
@@ -45,5 +56,6 @@ Calls \code{\link[quarto:quarto_render]{quarto::quarto_render()}} on each report
 create_book("rapport")
 render_book("rapport")
 render_book("rapport", output_dir = "../../docs/rapport")
+render_book(workers = 3)
 }
 }

@@ -9,11 +9,15 @@ test_that("presentation templates are typed and do not mix with books", {
     resolve_template("inrae-presentation", "book"), "Unknown template"
   )
   expect_error(
-    create_book("a", path = tempdir(), template = "default-presentation"),
+    create_book(
+      "a", path_reports = tempdir(), template = "default-presentation"
+    ),
     "Unknown template"
   )
   expect_error(
-    create_presentation("a", path = tempdir(), template = "inrae"),
+    create_presentation(
+      "a", path_presentations = tempdir(), template = "inrae"
+    ),
     "Unknown template"
   )
 })
@@ -22,7 +26,7 @@ test_that("create_presentation writes the slides and the template files", {
   dir <- local_book_env()
   files <- suppressMessages(create_presentation(
     c("a", "b"),
-    path = dir,
+    path_presentations = dir,
     title = c(b = "Séminaire B"),
     author = "Kevin Orlando",
     subtitle = "Sous-titre",
@@ -50,7 +54,9 @@ test_that("create_presentation writes the slides and the template files", {
   expect_equal(list_presentations(dir), c("a", "b"))
   expect_equal(list_books(dir), character())
   expect_error(
-    create_presentation("a", path = dir, template = "inrae-presentation"),
+    create_presentation(
+      "a", path_presentations = dir, template = "inrae-presentation"
+    ),
     "overwrite"
   )
 })
@@ -67,7 +73,9 @@ test_that("presentation templates can be saved and reused", {
   expect_true("unite" %in% list_templates_presentation()$name)
   expect_false("unite" %in% list_templates_book()$name)
 
-  suppressMessages(create_presentation("x", path = dir, template = "unite"))
+  suppressMessages(create_presentation(
+    "x", path_presentations = dir, template = "unite"
+  ))
   expect_true(file.exists(file.path(dir, "x", "images", "logo-inrae.png")))
 
   expect_error(remove_template_book("unite"), "No user template")
@@ -76,19 +84,21 @@ test_that("presentation templates can be saved and reused", {
 
 test_that("render_presentation calls quarto_render on the slides", {
   dir <- local_book_env()
-  suppressMessages(create_presentation(c("a", "b"), path = dir))
+  suppressMessages(create_presentation(c("a", "b"), path_presentations = dir))
   calls <- list()
   local_mocked_bindings(
     quarto_bin = function() "/usr/bin/quarto",
     quarto_render = function(...) calls[[length(calls) + 1]] <<- list(...)
   )
-  out <- render_presentation(path = dir, quiet = TRUE)
+  out <- render_presentation(path_presentations = dir, quiet = TRUE)
   expect_length(calls, 2)
   expect_equal(
     calls[[1]]$input, normalizePath(file.path(dir, "a", "a.qmd"))
   )
   expect_equal(basename(out), c("a.html", "b.html"))
-  expect_error(render_presentation("nope", path = dir), "create_presentation")
+  expect_error(render_presentation(
+    "nope", path_presentations = dir
+  ), "create_presentation")
 })
 
 test_that("an INRAE presentation renders", {
@@ -96,17 +106,17 @@ test_that("an INRAE presentation renders", {
   skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
   dir <- local_book_env()
   suppressMessages(create_presentation(
-    "seminaire", path = dir, author = "Kevin Orlando",
+    "seminaire", path_presentations = dir, author = "Kevin Orlando",
     template = "inrae-presentation"
   ))
-  render_presentation("seminaire", path = dir, quiet = TRUE)
+  render_presentation("seminaire", path_presentations = dir, quiet = TRUE)
   expect_true(file.exists(file.path(dir, "seminaire", "seminaire.html")))
 })
 
 test_that("create_presentation can add the beamer (LaTeX PDF) format", {
   dir <- local_book_env()
   suppressMessages(create_presentation(
-    c("a", "b"), path = dir, template = "inrae-presentation",
+    c("a", "b"), path_presentations = dir, template = "inrae-presentation",
     formats = c("revealjs", "beamer")
   ))
   expect_true(file.exists(file.path(dir, "a", "inrae-beamer.tex")))
@@ -116,14 +126,16 @@ test_that("create_presentation can add the beamer (LaTeX PDF) format", {
   expect_equal(format$beamer$`include-in-header`, "inrae-beamer.tex")
 
   suppressMessages(create_presentation(
-    "c", path = dir, formats = "beamer"
+    "c", path_presentations = dir, formats = "beamer"
   ))
   format <- read_slides(file.path(dir, "c", "c.qmd"))$header$format
   expect_named(format, "beamer")
   expect_equal(format$beamer$aspectratio, 169)
 
   expect_error(
-    create_presentation("d", path = dir, formats = "typst"), "no slides"
+    create_presentation(
+      "d", path_presentations = dir, formats = "typst"
+    ), "no slides"
   )
   expect_equal(list_presentations(dir), c("a", "b"))
 })
@@ -137,17 +149,19 @@ test_that("an INRAE presentation renders to PDF with beamer", {
   )
   dir <- local_book_env()
   suppressMessages(create_presentation(
-    "s", path = dir, template = "inrae-presentation", formats = "beamer"
+    "s", path_presentations = dir, template = "inrae-presentation",
+    formats = "beamer"
   ))
-  out <- render_presentation("s", path = dir, output_format = "beamer",
-                             quiet = TRUE)
+  out <- render_presentation(
+    "s", path_presentations = dir, output_format = "beamer", quiet = TRUE
+  )
   expect_equal(basename(out), "s.pdf")
   expect_true(file.exists(out))
 })
 
 test_that("render_presentation copies the output of the slides", {
   dir <- local_book_env()
-  suppressMessages(create_presentation("point", path = dir))
+  suppressMessages(create_presentation("point", path_presentations = dir))
   local_mocked_bindings(
     quarto_bin = function(...) "quarto",
     quarto_render = function(input, ...) {
@@ -156,14 +170,14 @@ test_that("render_presentation copies the output of the slides", {
     .package = "kquarto.r"
   )
   out <- file.path(dir, "site")
-  render_presentation("point", path = dir, output_dir = out)
+  render_presentation("point", path_presentations = dir, output_dir = out)
   expect_true(file.exists(file.path(out, "point", "index.html")))
   expect_false(file.exists(file.path(out, "point", "point.pdf")))
 })
 
 test_that("render_presentation gives the PowerPoint output", {
   dir <- local_book_env()
-  suppressMessages(create_presentation("point", path = dir))
+  suppressMessages(create_presentation("point", path_presentations = dir))
   local_mocked_bindings(
     quarto_bin = function(...) "quarto",
     quarto_render = function(input, ...) {
@@ -173,7 +187,7 @@ test_that("render_presentation gives the PowerPoint output", {
   )
   out <- file.path(dir, "site")
   rendered <- render_presentation(
-    "point", path = dir, output_format = "pptx", output_dir = out
+    "point", path_presentations = dir, output_format = "pptx", output_dir = out
   )
   expect_equal(basename(rendered), "point.pptx")
   expect_true(file.exists(file.path(out, "point", "point.pptx")))

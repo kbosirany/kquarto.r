@@ -2,9 +2,9 @@
 #'
 #' Calls [quarto::quarto_render()] on each report folder.
 #'
-#' @param dirname_reports Report folder names, relative to `path`. By
-#'   default, every book found in `path` (see [list_books()]).
-#' @param path Folder containing the report folders.
+#' @param dirname_reports Report folder names, relative to `path_reports`.
+#'   By default, every book found in `path_reports` (see [list_books()]).
+#' @param path_reports Folder containing the report folders.
 #' @param output_dir Where the rendered book is written. `NULL` (the default)
 #'   keeps the `output-dir` of the `_quarto.yml`, i.e. `_book/` inside the
 #'   report folder. Otherwise a path relative to each report folder, e.g.
@@ -21,22 +21,24 @@
 #' \dontrun{
 #' create_book("rapport")
 #' render_book("rapport")
-#' render_book("rapport", output_dir = "../docs/rapport")
+#' render_book("rapport", output_dir = "../../docs/rapport")
 #' }
 render_book <- function(dirname_reports = NULL,
-                        path = ".",
+                        path_reports = "reports",
                         output_dir = NULL,
                         output_format = NULL,
                         quiet = FALSE,
-                        ...) {
+                        ...,
+                        path = NULL) {
+  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
   if (is.null(dirname_reports)) {
-    dirname_reports <- list_books(path)
+    dirname_reports <- list_books(path_reports)
     if (length(dirname_reports) == 0) {
-      stop("No Quarto book found in: ", path, call. = FALSE)
+      stop("No Quarto book found in: ", path_reports, call. = FALSE)
     }
   }
   check_dirnames(dirname_reports)
-  report_dirs <- file.path(path, dirname_reports)
+  report_dirs <- file.path(path_reports, dirname_reports)
   missing <- !file.exists(file.path(report_dirs, "_quarto.yml"))
   if (any(missing)) {
     stop(

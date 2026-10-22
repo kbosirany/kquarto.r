@@ -4,13 +4,14 @@
 #' `template` into it and writes a `_quarto.yml` (project of type `book`)
 #' filled with the given title, author, language, ...
 #'
-#' When `path` is the root of an R package (it contains a `DESCRIPTION`
-#' file), the report folders are also added to `.Rbuildignore`.
+#' When `path_reports` is the root of an R package (it contains a
+#' `DESCRIPTION` file), the report folders are also added to `.Rbuildignore`;
+#' when it is a folder of the root of a package (e.g. `reports/`), this
+#' folder is added.
 #'
 #' @param dirname_reports Character vector of report folder names, relative
-#'   to `path`.
-#' @param path Folder in which the report folders are created. Defaults to
-#'   the working directory.
+#'   to `path_reports`.
+#' @param path_reports Folder in which the report folders are created.
 #' @param title Book title(s). By default the name of each report folder.
 #'   Otherwise either a single title (only when one report is created), an
 #'   unnamed vector of the same length as `dirname_reports`, or a vector
@@ -52,6 +53,7 @@
 #'   `_quarto.yml` and the template files are overwritten; chapters already
 #'   listed in the old `_quarto.yml` whose file still exists are kept in
 #'   `book: chapters`, after those of the template.
+#' @param path Deprecated, use `path_reports`.
 #'
 #' @return The paths of the report folders, invisibly.
 #' @export
@@ -61,14 +63,14 @@
 #' dir.create(tmp)
 #' create_book(
 #'   c("rapport_technique", "note_synthese"),
-#'   path = tmp,
+#'   path_reports = tmp,
 #'   title = c(note_synthese = "Note de synthèse"),
 #'   author = "Kevin Orlando",
 #'   chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")
 #' )
 #' list.files(tmp, recursive = TRUE)
 create_book <- function(dirname_reports,
-                        path = ".",
+                        path_reports = "reports",
                         title = NULL,
                         author = NULL,
                         lang = "fr",
@@ -79,10 +81,12 @@ create_book <- function(dirname_reports,
                         chapter_prefix = NULL,
                         ...,
                         formats = NULL,
-                        overwrite = FALSE) {
+                        overwrite = FALSE,
+                        path = NULL) {
+  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
   check_dirnames(dirname_reports)
-  if (!dir.exists(path)) {
-    stop("`path` does not exist: ", path, call. = FALSE)
+  if (!dir.exists(path_reports)) {
+    stop("`path_reports` does not exist: ", path_reports, call. = FALSE)
   }
   titles <- resolve_titles(title, dirname_reports)
   if (!is.null(chapters) && (!is.character(chapters) || anyNA(chapters))) {
@@ -95,7 +99,7 @@ create_book <- function(dirname_reports,
     stop("All arguments passed through `...` must be named.", call. = FALSE)
   }
 
-  report_dirs <- file.path(path, dirname_reports)
+  report_dirs <- file.path(path_reports, dirname_reports)
   existing <- file.exists(file.path(report_dirs, "_quarto.yml"))
   if (!overwrite && any(existing)) {
     stop(
@@ -152,15 +156,22 @@ create_book <- function(dirname_reports,
       )
       if (length(list.files(report_dir, pattern = pattern)) > 0) next
       suppressMessages(create_book_chapter(
-        dirname_reports[[i]], chapter, path = path, prefix = chapter_prefix
+        dirname_reports[[i]], chapter, path_reports = path_reports,
+        prefix = chapter_prefix
       ))
     }
   }
 
-  if (file.exists(file.path(path, "DESCRIPTION"))) {
+  root <- dirname(normalizePath(path_reports))
+  if (file.exists(file.path(path_reports, "DESCRIPTION"))) {
     add_lines(
-      file.path(path, ".Rbuildignore"),
+      file.path(path_reports, ".Rbuildignore"),
       paste0("^", escape_regex(dirname_reports), "$")
+    )
+  } else if (file.exists(file.path(root, "DESCRIPTION"))) {
+    add_lines(
+      file.path(root, ".Rbuildignore"),
+      paste0("^", escape_regex(basename(normalizePath(path_reports))), "$")
     )
   }
 
@@ -170,23 +181,28 @@ create_book <- function(dirname_reports,
 
 #' List the Quarto books of a folder
 #'
-#' @param path Folder to search in.
+#' @param path_reports Folder to search in.
 #' @param recursive Whether to search in subfolders.
+#' @param path Deprecated, use `path_reports`.
 #'
-#' @return The names (relative to `path`) of the folders containing a
+#' @return The names (relative to `path_reports`) of the folders containing a
 #'   `_quarto.yml` of type `book`.
 #' @export
 #'
 #' @examples
 #' tmp <- tempfile()
 #' dir.create(tmp)
-#' create_book(c("rapport_a", "rapport_b"), path = tmp)
+#' create_book(c("rapport_a", "rapport_b"), path_reports = tmp)
 #' list_books(tmp)
-list_books <- function(path = ".", recursive = FALSE) {
-  dirs <- list.dirs(path, full.names = FALSE, recursive = recursive)
-  dirs <- dirs[dirs != "" & file.exists(file.path(path, dirs, "_quarto.yml"))]
+list_books <- function(path_reports = "reports", recursive = FALSE,
+                       path = NULL) {
+  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
+  dirs <- list.dirs(path_reports, full.names = FALSE, recursive = recursive)
+  dirs <- dirs[
+    dirs != "" & file.exists(file.path(path_reports, dirs, "_quarto.yml"))
+  ]
   is_book <- vapply(dirs, function(d) {
-    config <- yaml::read_yaml(file.path(path, d, "_quarto.yml"))
+    config <- yaml::read_yaml(file.path(path_reports, d, "_quarto.yml"))
     identical(config$project$type, "book")
   }, logical(1))
   unname(dirs[is_book])
@@ -257,7 +273,7 @@ set_formats <- function(config, formats, template_path) {
 #'
 #' @inheritParams create_book
 #' @param dirname_reports Character vector of book folder names, relative to
-#'   `path`.
+#'   `path_reports`.
 #' @param format PDF engine: `"typst"` (the default, bundled with Quarto) or
 #'   `"pdf"` (LaTeX).
 #' @param template Optional template whose `typst.yml` / `pdf.yml` styles
@@ -272,13 +288,17 @@ set_formats <- function(config, formats, template_path) {
 #' @examples
 #' tmp <- tempfile()
 #' dir.create(tmp)
-#' create_book("rapport", path = tmp, template = "inrae", author = "Kevin")
-#' add_pdf_download("rapport", path = tmp, template = "inrae")
+#' create_book(
+#'   "rapport", path_reports = tmp, template = "inrae", author = "Kevin"
+#' )
+#' add_pdf_download("rapport", path_reports = tmp, template = "inrae")
 #' cat(readLines(file.path(tmp, "rapport", "_quarto.yml")), sep = "\n")
 add_pdf_download <- function(dirname_reports,
-                             path = ".",
+                             path_reports = "reports",
                              format = c("typst", "pdf"),
-                             template = NULL) {
+                             template = NULL,
+                             path = NULL) {
+  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
   check_dirnames(dirname_reports)
   format <- match.arg(format)
   template_path <- if (is.null(template)) {
@@ -286,7 +306,7 @@ add_pdf_download <- function(dirname_reports,
   } else {
     resolve_template(template)
   }
-  report_dirs <- file.path(path, dirname_reports)
+  report_dirs <- file.path(path_reports, dirname_reports)
   ymls <- file.path(report_dirs, "_quarto.yml")
   missing <- !file.exists(ymls)
   if (any(missing)) {

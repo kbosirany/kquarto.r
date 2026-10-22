@@ -4,15 +4,22 @@
 \alias{create_book_chapter}
 \title{Add a chapter to a Quarto book}
 \usage{
-create_book_chapter(book, name, path = ".", title = name, prefix = NULL)
+create_book_chapter(
+  book,
+  name,
+  path_reports = "reports",
+  title = name,
+  prefix = NULL,
+  path = NULL
+)
 }
 \arguments{
-\item{book}{Book folder name, relative to \code{path}.}
+\item{book}{Book folder name, relative to \code{path_reports}.}
 
 \item{name}{Chapter name, without prefix nor number. It is converted to a
 file name (lower case, no accents, words separated by \code{-}).}
 
-\item{path}{Folder containing the book folder.}
+\item{path_reports}{Folder containing the book folder.}
 
 \item{title}{Chapter title written as first heading of the file. By
 default \code{name}.}
@@ -20,6 +27,8 @@ default \code{name}.}
 \item{prefix}{File name prefix. By default derived from the \code{lang} of the
 book's \verb{_quarto.yml}: \code{"chapitre"} for French, \code{"chapter"} otherwise
 (see \code{\link[=chapter_prefix]{chapter_prefix()}}).}
+
+\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The path of the chapter file, invisibly.
@@ -33,8 +42,8 @@ number is the highest existing number for this prefix, plus one, so
 \examples{
 tmp <- tempfile()
 dir.create(tmp)
-create_book("rapport", path = tmp, lang = "fr")
-create_book_chapter("rapport", "Introduction", path = tmp)
-create_book_chapter("rapport", "Matériel et méthodes", path = tmp)
+create_book("rapport", path_reports = tmp, lang = "fr")
+create_book_chapter("rapport", "Introduction", path_reports = tmp)
+create_book_chapter("rapport", "Matériel et méthodes", path_reports = tmp)
 list.files(file.path(tmp, "rapport"))
 }

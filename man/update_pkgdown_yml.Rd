@@ -6,21 +6,26 @@
 \usage{
 update_pkgdown_yml(
   dirname_reports = NULL,
-  path = "reports",
+  path_reports = "reports",
   titles = NULL,
   pkgdown_file = "_pkgdown.yml",
-  site_subdir = "reports",
+  subdir_reports = "reports",
   add_to_navbar = TRUE,
+  dirname_presentations = NULL,
+  path_presentations = "presentations",
+  subdir_presentations = "presentations",
+  path = NULL,
+  site_subdir = NULL,
   presentations = NULL,
-  presentations_path = "presentations",
-  presentations_site_subdir = "presentations"
+  presentations_path = NULL,
+  presentations_site_subdir = NULL
 )
 }
 \arguments{
-\item{dirname_reports}{Book folder names, relative to \code{path}. By default,
-every book found in \code{path} (see \code{\link[=list_books]{list_books()}}).}
+\item{dirname_reports}{Book folder names, relative to \code{path_reports}. By
+default, every book found in \code{path_reports} (see \code{\link[=list_books]{list_books()}}).}
 
-\item{path}{Folder containing the book folders.}
+\item{path_reports}{Folder containing the book folders.}
 
 \item{titles}{Optional titles, as a character vector (or list) the same
 length as \code{dirname_reports}, possibly named by book folder. By default,
@@ -28,24 +33,34 @@ the \code{book: title} of each \verb{_quarto.yml}.}
 
 \item{pkgdown_file}{Path to the pkgdown configuration file.}
 
-\item{site_subdir}{Folder of the pkgdown site (relative to its root) where
-the books are rendered, used to build the links.}
+\item{subdir_reports}{Folder of the pkgdown site (relative to its root)
+where the books are rendered, used to build the links.}
 
 \item{add_to_navbar}{Whether to add the components to
 \code{navbar: structure: left}.}
 
-\item{presentations}{Presentation folder names, relative to
-\code{presentations_path}. By default, every presentation found in
-\code{presentations_path} (see \code{\link[=list_presentations]{list_presentations()}}). They form the
+\item{dirname_presentations}{Presentation folder names, relative to
+\code{path_presentations}. By default, every presentation found in
+\code{path_presentations} (see \code{\link[=list_presentations]{list_presentations()}}). They form the
 navbar menu \code{presentations}, titled after the \code{title} of their slides,
 with headers by category and language as the books (the \code{category} key
 overriding the category is in the YAML header of the slides); without
 any presentation, the menu is removed.}
 
-\item{presentations_path}{Folder containing the presentation folders.}
+\item{path_presentations}{Folder containing the presentation folders.}
 
-\item{presentations_site_subdir}{Folder of the pkgdown site (relative to
-its root) where the presentations are rendered, used to build the links.}
+\item{subdir_presentations}{Folder of the pkgdown site (relative to its
+root) where the presentations are rendered, used to build the links.}
+
+\item{path}{Deprecated, use \code{path_reports}.}
+
+\item{site_subdir}{Deprecated, use \code{subdir_reports}.}
+
+\item{presentations}{Deprecated, use \code{dirname_presentations}.}
+
+\item{presentations_path}{Deprecated, use \code{path_presentations}.}
+
+\item{presentations_site_subdir}{Deprecated, use \code{subdir_presentations}.}
 }
 \value{
 The YAML list written to \code{pkgdown_file}, invisibly.

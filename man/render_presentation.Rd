@@ -5,19 +5,22 @@
 \title{Render Quarto presentations}
 \usage{
 render_presentation(
-  name = NULL,
-  path = ".",
+  dirname_presentations = NULL,
+  path_presentations = "presentations",
   output_format = NULL,
   quiet = FALSE,
   output_dir = NULL,
-  ...
+  ...,
+  name = NULL,
+  path = NULL
 )
 }
 \arguments{
-\item{name}{Presentation folder names, relative to \code{path}. By default,
-every presentation found in \code{path} (see \code{\link[=list_presentations]{list_presentations()}}).}
+\item{dirname_presentations}{Presentation folder names, relative to
+\code{path_presentations}. By default, every presentation found in
+\code{path_presentations} (see \code{\link[=list_presentations]{list_presentations()}}).}
 
-\item{path}{Folder containing the presentation folders.}
+\item{path_presentations}{Folder containing the presentation folders.}
 
 \item{output_format}{Output format passed to Quarto, e.g. \code{"revealjs"},
 \code{"beamer"} (PDF, see the \code{formats} argument of
@@ -35,6 +38,9 @@ as \code{index.html} and the PDF and PowerPoint files, if there are some, as
 leaves the files next to the \code{.qmd}. Used by \code{\link[=build_site]{build_site()}}.}
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
+
+\item{name, path}{Deprecated, use \code{dirname_presentations} and
+\code{path_presentations}.}
 }
 \value{
 The paths of the rendered files (\code{.html}, \code{.pdf} for

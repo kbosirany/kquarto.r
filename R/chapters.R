@@ -5,15 +5,16 @@
 #' number is the highest existing number for this prefix, plus one, so
 #' `index.qmd` is never touched and chapters start at `01`.
 #'
-#' @param book Book folder name, relative to `path`.
+#' @param book Book folder name, relative to `path_reports`.
 #' @param name Chapter name, without prefix nor number. It is converted to a
 #'   file name (lower case, no accents, words separated by `-`).
-#' @param path Folder containing the book folder.
+#' @param path_reports Folder containing the book folder.
 #' @param title Chapter title written as first heading of the file. By
 #'   default `name`.
 #' @param prefix File name prefix. By default derived from the `lang` of the
 #'   book's `_quarto.yml`: `"chapitre"` for French, `"chapter"` otherwise
 #'   (see [chapter_prefix()]).
+#' @param path Deprecated, use `path_reports`.
 #'
 #' @return The path of the chapter file, invisibly.
 #' @export
@@ -21,17 +22,20 @@
 #' @examples
 #' tmp <- tempfile()
 #' dir.create(tmp)
-#' create_book("rapport", path = tmp, lang = "fr")
-#' create_book_chapter("rapport", "Introduction", path = tmp)
-#' create_book_chapter("rapport", "Matériel et méthodes", path = tmp)
+#' create_book("rapport", path_reports = tmp, lang = "fr")
+#' create_book_chapter("rapport", "Introduction", path_reports = tmp)
+#' create_book_chapter("rapport", "Matériel et méthodes", path_reports = tmp)
 #' list.files(file.path(tmp, "rapport"))
-create_book_chapter <- function(book, name, path = ".", title = name,
-                                prefix = NULL) {
+create_book_chapter <- function(book, name, path_reports = "reports",
+                                title = name,
+                                prefix = NULL,
+                                path = NULL) {
   if (!is.character(name) || length(name) != 1 || is.na(name) ||
       !nzchar(name)) {
     stop("`name` must be a single non-empty string.", call. = FALSE)
   }
-  book_dir <- file.path(path, book)
+  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
+  book_dir <- file.path(path_reports, book)
   yml <- file.path(book_dir, "_quarto.yml")
   if (!file.exists(yml)) {
     stop(

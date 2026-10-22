@@ -5,8 +5,8 @@
 \title{Create Quarto presentations}
 \usage{
 create_presentation(
-  name,
-  path = ".",
+  dirname_presentations,
+  path_presentations = "presentations",
   title = NULL,
   subtitle = NULL,
   author = NULL,
@@ -14,17 +14,22 @@ create_presentation(
   lang = "fr",
   template = getOption("kquarto.r.presentation.template", "default-presentation"),
   formats = NULL,
-  overwrite = FALSE
+  overwrite = FALSE,
+  name = NULL,
+  path = NULL
 )
 }
 \arguments{
-\item{name}{Presentation folder names, created in \code{path}. The slides are
+\item{dirname_presentations}{Presentation folder names, created in
+\code{path_presentations}. The slides are
 written in \verb{<name>/<name>.qmd}.}
 
-\item{path}{Folder where the presentation folders are created.}
+\item{path_presentations}{Folder where the presentation folders are
+created.}
 
 \item{title}{Presentation title. A character vector of the same length as
-\code{name}, or named by \code{name} to set only some titles. Defaults to \code{name}.}
+\code{dirname_presentations}, or named by \code{dirname_presentations} to set
+only some titles. Defaults to \code{dirname_presentations}.}
 
 \item{subtitle, author, date}{Values written in the YAML header of the
 slides. \code{NULL} leaves the template value.}
@@ -46,12 +51,16 @@ Typst is not available: Quarto has no Typst slides.}
 
 \item{overwrite}{Whether to replace the slides of an existing
 presentation.}
+
+\item{name, path}{Deprecated, use \code{dirname_presentations} and
+\code{path_presentations}.}
 }
 \value{
 The paths of the \code{.qmd} files, invisibly.
 }
 \description{
-Creates one folder per presentation in \code{path}, containing a single
+Creates one folder per presentation in \code{path_presentations}, containing a
+single
 \verb{<name>.qmd} (reveal.js slides) and the files of the template (theme,
 logos, ...). Presentations are independent of books: they have their own
 templates (see \code{\link[=list_templates_presentation]{list_templates_presentation()}}) and are rendered with
@@ -62,7 +71,7 @@ tmp <- tempfile()
 dir.create(tmp)
 create_presentation(
   "seminaire",
-  path = tmp,
+  path_presentations = tmp,
   title = "Mon séminaire",
   author = "Kevin Orlando",
   template = "inrae-presentation"

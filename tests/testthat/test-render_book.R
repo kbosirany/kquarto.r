@@ -1,6 +1,6 @@
 test_that("render_book calls quarto_render with the right arguments", {
   dir <- local_book_env()
-  suppressMessages(create_book(c("a", "b"), path = dir))
+  suppressMessages(create_book(c("a", "b"), path_reports = dir))
 
   calls <- list()
   local_mocked_bindings(
@@ -8,7 +8,7 @@ test_that("render_book calls quarto_render with the right arguments", {
     quarto_render = function(...) calls[[length(calls) + 1]] <<- list(...)
   )
 
-  out <- render_book(path = dir, quiet = TRUE)
+  out <- render_book(path_reports = dir, quiet = TRUE)
   expect_length(calls, 2)
   expect_equal(calls[[1]]$input, normalizePath(file.path(dir, "a")))
   expect_null(calls[[1]]$quarto_args)
@@ -17,7 +17,7 @@ test_that("render_book calls quarto_render with the right arguments", {
 
   calls <- list()
   out <- render_book(
-    "b", path = dir, output_dir = "../docs/b", output_format = "html",
+    "b", path_reports = dir, output_dir = "../docs/b", output_format = "html",
     quarto_args = "--no-cache"
   )
   expect_equal(
@@ -30,18 +30,18 @@ test_that("render_book calls quarto_render with the right arguments", {
 test_that("render_book errors clearly", {
   dir <- local_book_env()
   local_mocked_bindings(quarto_bin = function() NULL)
-  expect_error(render_book(path = dir), "No Quarto book")
-  expect_error(render_book("nope", path = dir), "create_book")
-  suppressMessages(create_book("a", path = dir))
-  expect_error(render_book("a", path = dir), "Quarto CLI")
+  expect_error(render_book(path_reports = dir), "No Quarto book")
+  expect_error(render_book("nope", path_reports = dir), "create_book")
+  suppressMessages(create_book("a", path_reports = dir))
+  expect_error(render_book("a", path_reports = dir), "Quarto CLI")
 })
 
 test_that("render_book renders a real book", {
   skip_on_cran()
   skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
   dir <- local_book_env()
-  suppressMessages(create_book("a", path = dir))
-  out <- render_book("a", path = dir, quiet = TRUE)
+  suppressMessages(create_book("a", path_reports = dir))
+  out <- render_book("a", path_reports = dir, quiet = TRUE)
   expect_true(file.exists(file.path(out, "index.html")))
 })
 
@@ -50,9 +50,9 @@ test_that("a book created with the INRAE template renders", {
   skip_if(is.null(quarto::quarto_path()), "Quarto CLI not installed")
   dir <- local_book_env()
   suppressMessages(create_book(
-    "a", path = dir, template = "inrae", chapters = "Introduction"
+    "a", path_reports = dir, template = "inrae", chapters = "Introduction"
   ))
-  out <- render_book("a", path = dir, quiet = TRUE)
+  out <- render_book("a", path_reports = dir, quiet = TRUE)
   expect_true(file.exists(file.path(out, "index.html")))
   expect_true(file.exists(file.path(out, "chapitre_01_introduction.html")))
 })
@@ -67,7 +67,7 @@ test_that("a book renders to PDF with Typst", {
   )
   dir <- local_book_env()
   suppressMessages(create_book(
-    "a", path = dir, template = "inrae", formats = "typst",
+    "a", path_reports = dir, template = "inrae", formats = "typst",
     author = "Kevin Orlando", chapters = "Introduction"
   ))
   cat(
@@ -75,7 +75,9 @@ test_that("a book renders to PDF with Typst", {
     file = file.path(dir, "a", "chapitre_01_introduction.qmd"),
     append = TRUE
   )
-  out <- render_book("a", path = dir, output_format = "typst", quiet = FALSE)
+  out <- render_book(
+    "a", path_reports = dir, output_format = "typst", quiet = FALSE
+  )
   expect_length(list.files(out, pattern = "[.]pdf$"), 1)
 })
 
@@ -88,9 +90,11 @@ test_that("a book renders to PDF with LaTeX", {
   )
   dir <- local_book_env()
   suppressMessages(create_book(
-    "a", path = dir, template = "inrae", formats = "pdf",
+    "a", path_reports = dir, template = "inrae", formats = "pdf",
     chapters = "Introduction"
   ))
-  out <- render_book("a", path = dir, output_format = "pdf", quiet = TRUE)
+  out <- render_book(
+    "a", path_reports = dir, output_format = "pdf", quiet = TRUE
+  )
   expect_length(list.files(out, pattern = "[.]pdf$"), 1)
 })

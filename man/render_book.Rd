@@ -6,18 +6,19 @@
 \usage{
 render_book(
   dirname_reports = NULL,
-  path = ".",
+  path_reports = "reports",
   output_dir = NULL,
   output_format = NULL,
   quiet = FALSE,
-  ...
+  ...,
+  path = NULL
 )
 }
 \arguments{
-\item{dirname_reports}{Report folder names, relative to \code{path}. By
-default, every book found in \code{path} (see \code{\link[=list_books]{list_books()}}).}
+\item{dirname_reports}{Report folder names, relative to \code{path_reports}.
+By default, every book found in \code{path_reports} (see \code{\link[=list_books]{list_books()}}).}
 
-\item{path}{Folder containing the report folders.}
+\item{path_reports}{Folder containing the report folders.}
 
 \item{output_dir}{Where the rendered book is written. \code{NULL} (the default)
 keeps the \code{output-dir} of the \verb{_quarto.yml}, i.e. \verb{_book/} inside the
@@ -41,6 +42,6 @@ Calls \code{\link[quarto:quarto_render]{quarto::quarto_render()}} on each report
 \dontrun{
 create_book("rapport")
 render_book("rapport")
-render_book("rapport", output_dir = "../docs/rapport")
+render_book("rapport", output_dir = "../../docs/rapport")
 }
 }

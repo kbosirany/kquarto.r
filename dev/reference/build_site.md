@@ -20,6 +20,7 @@ build_site(
   render_presentations = TRUE,
   build_readme = FALSE,
   clean = TRUE,
+  workers = getOption("kquarto.r.workers", 1L),
   ...,
   path = NULL,
   dest = NULL,
@@ -62,10 +63,10 @@ build_site(
 
 - render_presentations:
 
-  Whether to render the presentations. When one of `render_reports` and
-  `render_presentations` is `TRUE`, the navbar is updated with every
+  Whether to render the presentations. The navbar is updated with every
   book and presentation found, rendered or not (the ones not rendered
-  keep their previous output in the site).
+  keep their previous output in the site, e.g. rendered by other CI
+  jobs).
 
 - build_readme:
 
@@ -75,6 +76,11 @@ build_site(
 - clean:
 
   Whether to remove a book's previous output before rendering.
+
+- workers:
+
+  Number of books and presentations rendered at the same time, see
+  [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md).
 
 - ...:
 

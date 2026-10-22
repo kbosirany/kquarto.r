@@ -2,6 +2,33 @@
 
 ## kquarto.r (development version)
 
+- [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md),
+  [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)
+  et
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  ont un argument `workers` (défaut : option `kquarto.r.workers`, sinon
+  `1`) pour rendre plusieurs livres ou présentations en même temps,
+  chacun dans une session R en arrière-plan (callr, sur tous les OS). La
+  sortie de Quarto de chaque rendu va dans un fichier de log, affiché en
+  cas d’échec ; tous les rendus vont au bout et l’erreur liste ceux qui
+  ont échoué.
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  met les livres et les présentations dans la même file. Nouvelle
+  dépendance : callr (déjà installé avec quarto, via processx).
+
+- kableExtra passe des Imports aux Suggests : il n’est plus installé
+  avec kquarto.r.
+  [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)
+  en a toujours besoin pour la sortie HTML et donne une erreur claire
+  sans lui : l’ajouter aux dépendances des projets dont les livres
+  appellent
+  [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md).
+  kquarto.r installe ainsi 15 paquets de moins.
+
+- `build_site(render_reports = FALSE, render_presentations = FALSE)` met
+  quand même à jour la barre de navigation, avec les livres et les
+  présentations rendus ailleurs (par exemple par d’autres jobs de CI).
+
 - [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
   a un argument `render_presentations` : `render_reports` ne concerne
   plus que les livres et `render_presentations` les présentations, pour

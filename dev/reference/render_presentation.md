@@ -15,6 +15,7 @@ render_presentation(
   quiet = FALSE,
   output_dir = NULL,
   ...,
+  workers = getOption("kquarto.r.workers", 1L),
   name = NULL,
   path = NULL
 )
@@ -57,6 +58,11 @@ render_presentation(
 
   Other arguments passed to
   [`quarto::quarto_render()`](https://quarto-dev.github.io/quarto-r/reference/quarto_render.html).
+
+- workers:
+
+  Number of presentations rendered at the same time, see
+  [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md).
 
 - name, path:
 

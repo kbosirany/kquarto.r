@@ -59,6 +59,7 @@ to the navbar (see <code><a href="update_pkgdown_yml.html">update_pkgdown_yml()<
 <span>  render_presentations <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  build_readme <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  clean <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  workers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"kquarto.r.workers"</span>, <span class="fl">1L</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  path <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dest <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -104,10 +105,10 @@ presentation has one).</p></dd>
 
 
 <dt id="arg-render-presentations">render_presentations<a class="anchor" aria-label="anchor" href="#arg-render-presentations"></a></dt>
-<dd><p>Whether to render the presentations. When one
-of <code>render_reports</code> and <code>render_presentations</code> is <code>TRUE</code>, the navbar is
-updated with every book and presentation found, rendered or not (the
-ones not rendered keep their previous output in the site).</p></dd>
+<dd><p>Whether to render the presentations. The
+navbar is updated with every book and presentation found, rendered or
+not (the ones not rendered keep their previous output in the site, e.g.
+rendered by other CI jobs).</p></dd>
 
 
 <dt id="arg-build-readme">build_readme<a class="anchor" aria-label="anchor" href="#arg-build-readme"></a></dt>
@@ -117,6 +118,11 @@ ones not rendered keep their previous output in the site).</p></dd>
 
 <dt id="arg-clean">clean<a class="anchor" aria-label="anchor" href="#arg-clean"></a></dt>
 <dd><p>Whether to remove a book's previous output before rendering.</p></dd>
+
+
+<dt id="arg-workers">workers<a class="anchor" aria-label="anchor" href="#arg-workers"></a></dt>
+<dd><p>Number of books and presentations rendered at the same
+time, see <code><a href="render_book.html">render_book()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

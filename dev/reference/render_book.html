@@ -50,6 +50,7 @@
 <span>  output_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  workers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"kquarto.r.workers"</span>, <span class="fl">1L</span><span class="op">)</span>,</span>
 <span>  path <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -87,6 +88,18 @@ report folder. Otherwise a path relative to each report folder, e.g.
 <dd><p>Other arguments passed to <code><a href="https://quarto-dev.github.io/quarto-r/reference/quarto_render.html" class="external-link">quarto::quarto_render()</a></code>.</p></dd>
 
 
+<dt id="arg-workers">workers<a class="anchor" aria-label="anchor" href="#arg-workers"></a></dt>
+<dd><p>Number of books rendered at the same time. With <code>1</code> (the
+default, or the option <code>kquarto.r.workers</code>), the books are rendered one
+after the other in the current session. With more, each book is
+rendered in a background R session (on every OS), its Quarto output
+going to a log file shown when it fails; every book is rendered even
+if one fails, and the error lists the failed ones. Each render needs
+its own memory (an R session, and Chrome for the PDF of interactive
+content), e.g. <code>workers = parallel::detectCores() - 1</code> on a machine
+with enough memory.</p></dd>
+
+
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
 <dd><p>Deprecated, use <code>path_reports</code>.</p></dd>
 
@@ -102,6 +115,7 @@ report folder. Otherwise a path relative to each report folder, e.g.
 <span class="r-in"><span><span class="fu"><a href="create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">render_book</span><span class="op">(</span><span class="st">"rapport"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">render_book</span><span class="op">(</span><span class="st">"rapport"</span>, output_dir <span class="op">=</span> <span class="st">"../../docs/rapport"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">render_book</span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

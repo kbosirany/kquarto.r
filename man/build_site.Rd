@@ -5,36 +5,42 @@
 \title{Build a pkgdown site including the rendered books}
 \usage{
 build_site(
-  path = "reports",
-  dest = "public",
-  site_subdir = "reports",
+  path_reports = "reports",
+  path_site = "public",
+  subdir_reports = "reports",
   render_reports = TRUE,
-  presentations_path = "presentations",
-  presentations_subdir = "presentations",
+  path_presentations = "presentations",
+  subdir_presentations = "presentations",
   build_readme = FALSE,
   clean = TRUE,
-  ...
+  ...,
+  path = NULL,
+  dest = NULL,
+  site_subdir = NULL,
+  presentations_path = NULL,
+  presentations_subdir = NULL
 )
 }
 \arguments{
-\item{path}{Folder containing the book folders.}
+\item{path_reports}{Folder containing the book folders.}
 
-\item{dest}{Destination folder of the pkgdown site (the \code{destination} of
-\verb{_pkgdown.yml}).}
+\item{path_site}{Folder of the pkgdown site, e.g. \code{"public"} (GitLab
+Pages) or \code{"docs"} (GitHub Pages). It is given to pkgdown as its
+\code{destination}.}
 
-\item{site_subdir}{Folder of the site, relative to \code{dest}, where each book
-is rendered in its own sub-folder.}
+\item{subdir_reports}{Folder of the site where each book is rendered in
+its own sub-folder.}
 
 \item{render_reports}{Whether to render the books and the presentations,
 and update the navbar.}
 
-\item{presentations_path}{Folder containing the presentation folders (see
+\item{path_presentations}{Folder containing the presentation folders (see
 \code{\link[=create_presentation]{create_presentation()}}). Without this folder, or without any
 presentation in it, there is no presentation on the site.}
 
-\item{presentations_subdir}{Folder of the site, relative to \code{dest}, where
-each presentation is rendered in its own sub-folder (\code{index.html}, and
-the PDF if the presentation has one).}
+\item{subdir_presentations}{Folder of the site where each presentation is
+rendered in its own sub-folder (\code{index.html}, and the PDF if the
+presentation has one).}
 
 \item{build_readme}{Whether to rebuild the README with
 \code{\link[devtools:build_readme]{devtools::build_readme()}}.}
@@ -42,14 +48,27 @@ the PDF if the presentation has one).}
 \item{clean}{Whether to remove a book's previous output before rendering.}
 
 \item{...}{Other arguments passed to \code{\link[pkgdown:build_site]{pkgdown::build_site()}}.}
+
+\item{path, site_subdir, presentations_path, presentations_subdir}{Deprecated,
+use \code{path_reports}, \code{subdir_reports}, \code{path_presentations} and
+\code{subdir_presentations}.}
+
+\item{dest}{Deprecated, use \code{path_site}. With \code{dest}, the books and the
+presentations are rendered in \code{dest} (not in its \code{dev} folder) and
+pkgdown writes in the \code{destination} of \verb{_pkgdown.yml}, as before.}
 }
 \value{
 The result of \code{\link[pkgdown:build_site]{pkgdown::build_site()}}, invisibly.
 }
 \description{
-Renders the books and the presentations into the pkgdown destination
-folder, adds them to the navbar (see \code{\link[=update_pkgdown_yml]{update_pkgdown_yml()}}) and builds
-the site with \code{\link[pkgdown:build_site]{pkgdown::build_site()}}.
+Renders the books and the presentations into the pkgdown site, adds them
+to the navbar (see \code{\link[=update_pkgdown_yml]{update_pkgdown_yml()}}) and builds the site with
+\code{\link[pkgdown:build_site]{pkgdown::build_site()}} in \code{path_site}.
+}
+\details{
+The site of a development version (pkgdown \code{development: mode}) is
+written by pkgdown in \verb{<path_site>/dev}: the books and the presentations
+go there too, so that the links of its navbar work.
 }
 \examples{
 \dontrun{

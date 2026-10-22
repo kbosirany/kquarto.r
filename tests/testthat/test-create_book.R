@@ -3,7 +3,7 @@ test_that("create_book creates folders and a filled _quarto.yml", {
   expect_message(
     paths <- create_book(
       c("rapport_a", "rapport_b"),
-      path = dir, author = c("A", "B"), lang = "en"
+      path_reports = dir, author = c("A", "B"), lang = "en"
     ),
     "rapport_a, rapport_b"
   )
@@ -26,22 +26,28 @@ test_that("create_book creates folders and a filled _quarto.yml", {
 test_that("titles can be named, unnamed or default to folder names", {
   dir <- local_book_env()
   suppressMessages(create_book(
-    c("a", "b"), path = dir, title = c(b = "Titre B")
+    c("a", "b"), path_reports = dir, title = c(b = "Titre B")
   ))
   expect_equal(read_config(dir, "a")$book$title, "a")
   expect_equal(read_config(dir, "b")$book$title, "Titre B")
 
-  suppressMessages(create_book(c("c", "d"), path = dir, title = c("C", "D")))
+  suppressMessages(create_book(
+    c("c", "d"), path_reports = dir, title = c("C", "D")
+  ))
   expect_equal(read_config(dir, "d")$book$title, "D")
 
-  expect_error(create_book(c("e", "f"), path = dir, title = "E"), "same length")
-  expect_error(create_book("g", path = dir, title = c(zzz = "Z")), "zzz")
+  expect_error(create_book(
+    c("e", "f"), path_reports = dir, title = "E"
+  ), "same length")
+  expect_error(create_book(
+    "g", path_reports = dir, title = c(zzz = "Z")
+  ), "zzz")
 })
 
 test_that("extra fields are merged and booleans stay YAML 1.2", {
   dir <- local_book_env()
   suppressMessages(create_book(
-    "r", path = dir,
+    "r", path_reports = dir,
     format = list(html = list(theme = "flatly", `code-fold` = TRUE))
   ))
   lines <- readLines(file.path(dir, "r", "_quarto.yml"))
@@ -54,7 +60,7 @@ test_that("extra fields are merged and booleans stay YAML 1.2", {
 
   expect_error(
     create_book(
-      "s", path = dir, title = "S", author = NULL, lang = "fr",
+      "s", path_reports = dir, title = "S", author = NULL, lang = "fr",
       date = NULL, template = "default", output_dir = "_book",
       chapters = NULL, chapter_prefix = NULL, list(1)
     ),
@@ -64,14 +70,16 @@ test_that("extra fields are merged and booleans stay YAML 1.2", {
 
 test_that("existing _quarto.yml is protected unless overwrite = TRUE", {
   dir <- local_book_env()
-  suppressMessages(create_book("r", path = dir, title = "Ancien"))
+  suppressMessages(create_book("r", path_reports = dir, title = "Ancien"))
   writeLines("mon texte", file.path(dir, "r", "index.qmd"))
 
-  expect_error(create_book("r", path = dir, title = "Nouveau"), "overwrite")
+  expect_error(create_book(
+    "r", path_reports = dir, title = "Nouveau"
+  ), "overwrite")
   expect_equal(read_config(dir, "r")$book$title, "Ancien")
 
   suppressMessages(
-    create_book("r", path = dir, title = "Nouveau", overwrite = TRUE)
+    create_book("r", path_reports = dir, title = "Nouveau", overwrite = TRUE)
   )
   expect_equal(read_config(dir, "r")$book$title, "Nouveau")
 })
@@ -79,9 +87,11 @@ test_that("existing _quarto.yml is protected unless overwrite = TRUE", {
 test_that("report folders are added to .Rbuildignore in a package", {
   dir <- local_book_env()
   writeLines("Package: test", file.path(dir, "DESCRIPTION"))
-  suppressMessages(create_book(c("reports/rapport.v1", "note"), path = dir))
+  suppressMessages(create_book(
+    c("reports/rapport.v1", "note"), path_reports = dir
+  ))
   suppressMessages(
-    create_book("reports/rapport.v1", path = dir, overwrite = TRUE)
+    create_book("reports/rapport.v1", path_reports = dir, overwrite = TRUE)
   )
 
   ignore <- readLines(file.path(dir, ".Rbuildignore"))
@@ -90,21 +100,21 @@ test_that("report folders are added to .Rbuildignore in a package", {
 
 test_that("invalid inputs are rejected", {
   dir <- local_book_env()
-  expect_error(create_book(character(), path = dir), "non-empty")
-  expect_error(create_book(c("a", "a"), path = dir), "duplicated")
+  expect_error(create_book(character(), path_reports = dir), "non-empty")
+  expect_error(create_book(c("a", "a"), path_reports = dir), "duplicated")
   expect_error(
-    create_book("a", path = file.path(dir, "nope")),
+    create_book("a", path_reports = file.path(dir, "nope")),
     "does not exist"
   )
   expect_error(
-    create_book("a", path = dir, template = "nope"),
+    create_book("a", path_reports = dir, template = "nope"),
     "Unknown template"
   )
 })
 
 test_that("list_books finds book folders", {
   dir <- local_book_env()
-  suppressMessages(create_book(c("a", "b", "sub/c"), path = dir))
+  suppressMessages(create_book(c("a", "b", "sub/c"), path_reports = dir))
   dir.create(file.path(dir, "autre"))
   expect_setequal(list_books(dir), c("a", "b"))
   expect_setequal(list_books(dir, recursive = TRUE), c("a", "b", "sub/c"))
@@ -114,7 +124,7 @@ test_that("formats = 'typst' adds a PDF format to the book", {
   dir <- local_book_env()
   expect_warning(
     suppressMessages(
-      create_book("a", path = dir, formats = c("html", "typst"))
+      create_book("a", path_reports = dir, formats = c("html", "typst"))
     ),
     "needs an author"
   )
@@ -125,31 +135,33 @@ test_that("formats = 'typst' adds a PDF format to the book", {
   expect_false(file.exists(file.path(dir, "a", "typst.yml")))
 
   suppressMessages(
-    create_book("b", path = dir, formats = "typst", author = "Kevin")
+    create_book("b", path_reports = dir, formats = "typst", author = "Kevin")
   )
   expect_named(read_config(dir, "b")$format, "typst")
 
   expect_null(read_config(dir, "b")$book$downloads)
 
-  suppressMessages(create_book("c", path = dir))
+  suppressMessages(create_book("c", path_reports = dir))
   expect_named(read_config(dir, "c")$format, "html")
   expect_null(read_config(dir, "c")$book$downloads)
 
   suppressMessages(
-    create_book("e", path = dir, formats = c("html", "pdf"))
+    create_book("e", path_reports = dir, formats = c("html", "pdf"))
   )
   config <- read_config(dir, "e")
   expect_named(config$format, c("html", "pdf"))
   expect_equal(config$format$pdf$documentclass, "scrbook")
   expect_false(file.exists(file.path(dir, "e", "pdf.yml")))
 
-  expect_error(create_book("d", path = dir, formats = "docx"), "formats")
+  expect_error(create_book(
+    "d", path_reports = dir, formats = "docx"
+  ), "formats")
 })
 
 test_that("the INRAE template has its own Typst style", {
   dir <- local_book_env()
   suppressMessages(create_book(
-    "a", path = dir, template = "inrae", author = "Kevin",
+    "a", path_reports = dir, template = "inrae", author = "Kevin",
     formats = c("html", "pdf", "typst")
   ))
   config <- read_config(dir, "a")
@@ -162,8 +174,10 @@ test_that("the INRAE template has its own Typst style", {
 
 test_that("add_pdf_download adds a PDF format and a download icon", {
   dir <- local_book_env()
-  suppressMessages(create_book(c("a", "b"), path = dir, author = "Kevin"))
-  suppressMessages(add_pdf_download("a", path = dir))
+  suppressMessages(create_book(
+    c("a", "b"), path_reports = dir, author = "Kevin"
+  ))
+  suppressMessages(add_pdf_download("a", path_reports = dir))
   config <- read_config(dir, "a")
   expect_named(config$format, c("html", "typst"))
   expect_true(config$format$typst$toc)
@@ -177,27 +191,58 @@ test_that("add_pdf_download adds a PDF format and a download icon", {
   expect_named(read_config(dir, "b")$format, "html")
 
   # Idempotent
-  suppressMessages(add_pdf_download("a", path = dir))
+  suppressMessages(add_pdf_download("a", path_reports = dir))
   expect_equal(read_config(dir, "a")$book$downloads, "pdf")
 
-  suppressMessages(add_pdf_download("b", path = dir, format = "pdf"))
+  suppressMessages(add_pdf_download("b", path_reports = dir, format = "pdf"))
   expect_named(read_config(dir, "b")$format, c("html", "pdf"))
 
-  expect_error(add_pdf_download("zz", path = dir), "No `_quarto.yml`")
+  expect_error(add_pdf_download("zz", path_reports = dir), "No `_quarto.yml`")
 })
 
 test_that("add_pdf_download copies the template style, keeps the book", {
   dir <- local_book_env()
-  suppressMessages(create_book("a", path = dir, template = "inrae"))
+  suppressMessages(create_book("a", path_reports = dir, template = "inrae"))
   index <- file.path(dir, "a", "index.qmd")
   writeLines("# Mon index", index)
   file.remove(file.path(dir, "a", "inrae.typ"))
   expect_warning(
-    suppressMessages(add_pdf_download("a", path = dir, template = "inrae")),
+    suppressMessages(add_pdf_download(
+      "a", path_reports = dir, template = "inrae"
+    )),
     "needs an author"
   )
   config <- read_config(dir, "a")
   expect_equal(config$format$typst$`include-in-header`, "inrae.typ")
   expect_true(file.exists(file.path(dir, "a", "inrae.typ")))
   expect_equal(readLines(index), "# Mon index")
+})
+
+test_that("create_book ignores the reports folder of a package", {
+  dir <- local_book_env()
+  writeLines("Package: x", file.path(dir, "DESCRIPTION"))
+  reports <- file.path(dir, "reports")
+  dir.create(reports)
+  suppressMessages(create_book("a_fr", path_reports = reports))
+  expect_true("^reports$" %in% readLines(file.path(dir, ".Rbuildignore")))
+  expect_false(file.exists(file.path(reports, ".Rbuildignore")))
+})
+
+test_that("the former `path` argument still works, with a warning", {
+  dir <- local_book_env()
+  expect_warning(
+    suppressMessages(create_book("a_fr", path = dir)),
+    "`path` is deprecated, use `path_reports`"
+  )
+  expect_warning(
+    expect_equal(list_books(path = dir), "a_fr"),
+    "`path` is deprecated"
+  )
+  expect_warning(
+    expect_warning(
+      suppressMessages(create_presentation(name = "p", path = dir)),
+      "`name` is deprecated, use `dirname_presentations`"
+    ),
+    "`path` is deprecated, use `path_presentations`"
+  )
 })

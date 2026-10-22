@@ -1,16 +1,20 @@
 #' Create Quarto presentations
 #'
-#' Creates one folder per presentation in `path`, containing a single
+#' Creates one folder per presentation in `path_presentations`, containing a
+#' single
 #' `<name>.qmd` (reveal.js slides) and the files of the template (theme,
 #' logos, ...). Presentations are independent of books: they have their own
 #' templates (see [list_templates_presentation()]) and are rendered with
 #' [render_presentation()].
 #'
-#' @param name Presentation folder names, created in `path`. The slides are
+#' @param dirname_presentations Presentation folder names, created in
+#'   `path_presentations`. The slides are
 #'   written in `<name>/<name>.qmd`.
-#' @param path Folder where the presentation folders are created.
+#' @param path_presentations Folder where the presentation folders are
+#'   created.
 #' @param title Presentation title. A character vector of the same length as
-#'   `name`, or named by `name` to set only some titles. Defaults to `name`.
+#'   `dirname_presentations`, or named by `dirname_presentations` to set
+#'   only some titles. Defaults to `dirname_presentations`.
 #' @param subtitle,author,date Values written in the YAML header of the
 #'   slides. `NULL` leaves the template value.
 #' @param lang Language of the presentation.
@@ -27,6 +31,8 @@
 #'   Typst is not available: Quarto has no Typst slides.
 #' @param overwrite Whether to replace the slides of an existing
 #'   presentation.
+#' @param name,path Deprecated, use `dirname_presentations` and
+#'   `path_presentations`.
 #'
 #' @return The paths of the `.qmd` files, invisibly.
 #' @export
@@ -36,14 +42,14 @@
 #' dir.create(tmp)
 #' create_presentation(
 #'   "seminaire",
-#'   path = tmp,
+#'   path_presentations = tmp,
 #'   title = "Mon séminaire",
 #'   author = "Kevin Orlando",
 #'   template = "inrae-presentation"
 #' )
 #' list.files(tmp, recursive = TRUE)
-create_presentation <- function(name,
-                                path = ".",
+create_presentation <- function(dirname_presentations,
+                                path_presentations = "presentations",
                                 title = NULL,
                                 subtitle = NULL,
                                 author = NULL,
@@ -54,11 +60,20 @@ create_presentation <- function(name,
                                   "default-presentation"
                                 ),
                                 formats = NULL,
-                                overwrite = FALSE) {
+                                overwrite = FALSE,
+                                name = NULL,
+                                path = NULL) {
+  name <- renamed_arg(
+    if (missing(dirname_presentations)) NULL else dirname_presentations,
+    name, "dirname_presentations", "name"
+  )
+  path <- renamed_arg(
+    path_presentations, path, "path_presentations", "path"
+  )
   check_dirnames(name)
   check_presentation_formats(formats)
   if (!dir.exists(path)) {
-    stop("`path` does not exist: ", path, call. = FALSE)
+    stop("`path_presentations` does not exist: ", path, call. = FALSE)
   }
   titles <- resolve_titles(title, name)
   template_path <- resolve_template(template, "presentation")
@@ -140,7 +155,8 @@ set_presentation_formats <- function(format, formats, template_path) {
 #' A presentation is a folder `<name>/` containing a `<name>.qmd` whose
 #' format is `revealjs`.
 #'
-#' @param path Folder containing the presentation folders.
+#' @param path_presentations Folder containing the presentation folders.
+#' @param path Deprecated, use `path_presentations`.
 #'
 #' @return The names of the presentation folders.
 #' @export
@@ -148,9 +164,13 @@ set_presentation_formats <- function(format, formats, template_path) {
 #' @examples
 #' tmp <- tempfile()
 #' dir.create(tmp)
-#' create_presentation("seminaire", path = tmp)
+#' create_presentation("seminaire", path_presentations = tmp)
 #' list_presentations(tmp)
-list_presentations <- function(path = ".") {
+list_presentations <- function(path_presentations = "presentations",
+                               path = NULL) {
+  path <- renamed_arg(
+    path_presentations, path, "path_presentations", "path"
+  )
   dirs <- list.dirs(path, full.names = FALSE, recursive = FALSE)
   dirs <- dirs[file.exists(file.path(path, dirs, paste0(dirs, ".qmd")))]
   is_slides <- vapply(dirs, function(d) {
@@ -166,9 +186,10 @@ list_presentations <- function(path = ".") {
 #' Calls [quarto::quarto_render()] on the slides of each presentation. The
 #' HTML file is written next to the `.qmd`.
 #'
-#' @param name Presentation folder names, relative to `path`. By default,
-#'   every presentation found in `path` (see [list_presentations()]).
-#' @param path Folder containing the presentation folders.
+#' @param dirname_presentations Presentation folder names, relative to
+#'   `path_presentations`. By default, every presentation found in
+#'   `path_presentations` (see [list_presentations()]).
+#' @param path_presentations Folder containing the presentation folders.
 #' @param output_format Output format passed to Quarto, e.g. `"revealjs"`,
 #'   `"beamer"` (PDF, see the `formats` argument of
 #'   [create_presentation()]) or `"pptx"` (PowerPoint: add a `pptx:` format
@@ -182,6 +203,8 @@ list_presentations <- function(path = ".") {
 #'   `<name>.pdf` and `<name>.pptx`. `NULL`
 #'   leaves the files next to the `.qmd`. Used by [build_site()].
 #' @param ... Other arguments passed to [quarto::quarto_render()].
+#' @param name,path Deprecated, use `dirname_presentations` and
+#'   `path_presentations`.
 #'
 #' @return The paths of the rendered files (`.html`, `.pdf` for
 #'   `output_format = "beamer"` or `.pptx` for `output_format = "pptx"`),
@@ -193,16 +216,26 @@ list_presentations <- function(path = ".") {
 #' create_presentation("seminaire")
 #' render_presentation("seminaire")
 #' }
-render_presentation <- function(name = NULL,
-                                path = ".",
+render_presentation <- function(dirname_presentations = NULL,
+                                path_presentations = "presentations",
                                 output_format = NULL,
                                 quiet = FALSE,
                                 output_dir = NULL,
-                                ...) {
+                                ...,
+                                name = NULL,
+                                path = NULL) {
+  name <- renamed_arg(
+    dirname_presentations, name, "dirname_presentations", "name"
+  )
+  path <- renamed_arg(
+    path_presentations, path, "path_presentations", "path"
+  )
   if (is.null(name)) {
     name <- list_presentations(path)
     if (length(name) == 0) {
-      stop("No Quarto presentation found in: ", path, call. = FALSE)
+      stop(
+        "No Quarto presentation found in: ", path, call. = FALSE
+      )
     }
   }
   check_dirnames(name)

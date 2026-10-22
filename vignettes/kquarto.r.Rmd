@@ -31,7 +31,7 @@ dossier ; un vecteur nommé permet de ne changer que certains titres.
 ```{r}
 create_book(
   c("rapport_technique", "note_synthese"),
-  path = projet,
+  path_reports = projet,
   title = c(note_synthese = "Note de synthèse"),
   author = c("Kevin Orlando", "Camille Martin"),
   lang = "fr",
@@ -60,7 +60,7 @@ langue du book (`chapitre` en français, `chapter` sinon).
 `_quarto.yml` :
 
 ```{r}
-create_book_chapter("rapport_technique", "Résultats", path = projet)
+create_book_chapter("rapport_technique", "Résultats", path_reports = projet)
 list_books(projet)
 yaml::read_yaml(yml)$book$chapters
 ```

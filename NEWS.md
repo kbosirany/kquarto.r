@@ -1,5 +1,24 @@
 # kquarto.r (development version)
 
+* Arguments renommés, nom générique puis qualificatif, comme `dirname_reports` :
+  `path_reports` (dossier des livres, défaut `"reports"`) et
+  `path_presentations` (dossier des présentations, défaut `"presentations"`)
+  remplacent `path` ; `dirname_presentations` remplace `name` et
+  `presentations` ; dans `build_site()` et `update_pkgdown_yml()`,
+  `path_site` remplace `dest`, `subdir_reports` et `subdir_presentations`
+  remplacent `site_subdir`, `presentations_subdir` et
+  `presentations_site_subdir`. Les anciens noms restent acceptés, avec un
+  avertissement. Les défauts passent de `"."` à `"reports"` et
+  `"presentations"`.
+* `build_site(path_site = )` donne aussi ce dossier à pkgdown (`override:
+  destination`) et rend les livres et les présentations dans le dossier où
+  pkgdown écrit le site, `<path_site>/dev` pour une version de
+  développement. Avant, pkgdown écrivait dans la `destination` de
+  `_pkgdown.yml`, ce qui laissait un site sans ses pages pkgdown quand `dest`
+  était différent.
+* `create_book()` ajoute le dossier des livres (`reports/`) au
+  `.Rbuildignore` du package qui le contient.
+
 * Nouveau : `add_pdf_download()` ajoute à des books existants un format PDF
   (Typst par défaut) et une icône « Download PDF » dans le volet gauche de la
   version HTML (`book: downloads: [pdf]`), avec le style d'un template

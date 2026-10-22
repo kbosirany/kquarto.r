@@ -6,17 +6,17 @@
 \usage{
 add_pdf_download(
   dirname_reports,
-  path = ".",
+  path_reports = "reports",
   format = c("typst", "pdf"),
-  template = NULL
+  template = NULL,
+  path = NULL
 )
 }
 \arguments{
 \item{dirname_reports}{Character vector of book folder names, relative to
-\code{path}.}
+\code{path_reports}.}
 
-\item{path}{Folder in which the report folders are created. Defaults to
-the working directory.}
+\item{path_reports}{Folder in which the report folders are created.}
 
 \item{format}{PDF engine: \code{"typst"} (the default, bundled with Quarto) or
 \code{"pdf"} (LaTeX).}
@@ -26,6 +26,8 @@ the PDF (e.g. \code{"inrae"}). Its files missing from the book (e.g.
 \code{inrae.typ}, \verb{_brand.yml}) are copied; existing files are not
 overwritten. \code{NULL} uses a plain style (table of contents, numbered
 sections, A4).}
+
+\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The paths of the book folders, invisibly.
@@ -44,7 +46,9 @@ and give a static version for the PDF.
 \examples{
 tmp <- tempfile()
 dir.create(tmp)
-create_book("rapport", path = tmp, template = "inrae", author = "Kevin")
-add_pdf_download("rapport", path = tmp, template = "inrae")
+create_book(
+  "rapport", path_reports = tmp, template = "inrae", author = "Kevin"
+)
+add_pdf_download("rapport", path_reports = tmp, template = "inrae")
 cat(readLines(file.path(tmp, "rapport", "_quarto.yml")), sep = "\n")
 }

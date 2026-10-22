@@ -6,7 +6,7 @@
 \usage{
 create_book(
   dirname_reports,
-  path = ".",
+  path_reports = "reports",
   title = NULL,
   author = NULL,
   lang = "fr",
@@ -17,15 +17,15 @@ create_book(
   chapter_prefix = NULL,
   ...,
   formats = NULL,
-  overwrite = FALSE
+  overwrite = FALSE,
+  path = NULL
 )
 }
 \arguments{
 \item{dirname_reports}{Character vector of report folder names, relative
-to \code{path}.}
+to \code{path_reports}.}
 
-\item{path}{Folder in which the report folders are created. Defaults to
-the working directory.}
+\item{path_reports}{Folder in which the report folders are created.}
 
 \item{title}{Book title(s). By default the name of each report folder.
 Otherwise either a single title (only when one report is created), an
@@ -77,6 +77,8 @@ report folder already contains a \verb{_quarto.yml}. If \code{TRUE}, the
 \verb{_quarto.yml} and the template files are overwritten; chapters already
 listed in the old \verb{_quarto.yml} whose file still exists are kept in
 \code{book: chapters}, after those of the template.}
+
+\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The paths of the report folders, invisibly.
@@ -87,15 +89,17 @@ Creates a folder for each report in \code{dirname_reports}, copies the files of
 filled with the given title, author, language, ...
 }
 \details{
-When \code{path} is the root of an R package (it contains a \code{DESCRIPTION}
-file), the report folders are also added to \code{.Rbuildignore}.
+When \code{path_reports} is the root of an R package (it contains a
+\code{DESCRIPTION} file), the report folders are also added to \code{.Rbuildignore};
+when it is a folder of the root of a package (e.g. \verb{reports/}), this
+folder is added.
 }
 \examples{
 tmp <- tempfile()
 dir.create(tmp)
 create_book(
   c("rapport_technique", "note_synthese"),
-  path = tmp,
+  path_reports = tmp,
   title = c(note_synthese = "Note de synthèse"),
   author = "Kevin Orlando",
   chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")

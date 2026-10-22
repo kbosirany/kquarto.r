@@ -6,7 +6,7 @@ test_that("the default template is shipped with the package", {
 
 test_that("create_template_book saves a template usable by create_book", {
   dir <- local_book_env()
-  suppressMessages(create_book("modele", path = dir, title = "Modele"))
+  suppressMessages(create_book("modele", path_reports = dir, title = "Modele"))
   writeLines("# Methodes", file.path(dir, "modele", "methodes.qmd"))
   dir.create(file.path(dir, "modele", "_book"))
   writeLines("x", file.path(dir, "modele", "_book", "index.html"))
@@ -19,7 +19,9 @@ test_that("create_template_book saves a template usable by create_book", {
   expect_false(dir.exists(file.path(path, "_book")))
   expect_true("mon_modele" %in% list_templates_book()$name)
 
-  suppressMessages(create_book("nouveau", path = dir, template = "mon_modele"))
+  suppressMessages(create_book(
+    "nouveau", path_reports = dir, template = "mon_modele"
+  ))
   expect_true(file.exists(file.path(dir, "nouveau", "methodes.qmd")))
   config <- yaml::read_yaml(file.path(dir, "nouveau", "_quarto.yml"))
   expect_equal(config$book$title, "nouveau")
@@ -49,7 +51,7 @@ test_that("template names and folders are validated", {
 test_that("templates can come from another package with pkg::name", {
   dir <- local_book_env()
   suppressMessages(
-    create_book("r", path = dir, template = "kquarto.r::default")
+    create_book("r", path_reports = dir, template = "kquarto.r::default")
   )
   expect_true(file.exists(file.path(dir, "r", "index.qmd")))
 
@@ -57,11 +59,11 @@ test_that("templates can come from another package with pkg::name", {
   expect_true("kquarto.r::default" %in% templates$name)
 
   expect_error(
-    create_book("s", path = dir, template = "pasdepackage123::x"),
+    create_book("s", path_reports = dir, template = "pasdepackage123::x"),
     "not installed"
   )
   expect_error(
-    create_book("s", path = dir, template = "kquarto.r::nope"),
+    create_book("s", path_reports = dir, template = "kquarto.r::nope"),
     "no template"
   )
 })
@@ -73,7 +75,7 @@ test_that("the default template can be set with an option", {
   )
   writeLines("# Charte", file.path(tpl, "charte.qmd"))
   withr::local_options(kquarto.r.template = tpl)
-  suppressMessages(create_book("r", path = dir))
+  suppressMessages(create_book("r", path_reports = dir))
   expect_true(file.exists(file.path(dir, "r", "charte.qmd")))
 })
 
@@ -84,7 +86,7 @@ test_that("the INRAE template is shipped with the package", {
 
   suppressMessages(create_book(
     "rapport",
-    path = dir,
+    path_reports = dir,
     title = "Rapport technique",
     author = "Kevin Orlando",
     template = "inrae",

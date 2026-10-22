@@ -9,11 +9,12 @@ on each report folder.
 ``` r
 render_book(
   dirname_reports = NULL,
-  path = ".",
+  path_reports = "reports",
   output_dir = NULL,
   output_format = NULL,
   quiet = FALSE,
-  ...
+  ...,
+  path = NULL
 )
 ```
 
@@ -21,11 +22,11 @@ render_book(
 
 - dirname_reports:
 
-  Report folder names, relative to `path`. By default, every book found
-  in `path` (see
+  Report folder names, relative to `path_reports`. By default, every
+  book found in `path_reports` (see
   [`list_books()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_books.md)).
 
-- path:
+- path_reports:
 
   Folder containing the report folders.
 
@@ -50,6 +51,10 @@ render_book(
   Other arguments passed to
   [`quarto::quarto_render()`](https://quarto-dev.github.io/quarto-r/reference/quarto_render.html).
 
+- path:
+
+  Deprecated, use `path_reports`.
+
 ## Value
 
 The paths of the output folders, invisibly.
@@ -60,6 +65,6 @@ The paths of the output folders, invisibly.
 if (FALSE) { # \dontrun{
 create_book("rapport")
 render_book("rapport")
-render_book("rapport", output_dir = "../docs/rapport")
+render_book("rapport", output_dir = "../../docs/rapport")
 } # }
 ```

@@ -9,24 +9,26 @@ on the slides of each presentation. The HTML file is written next to the
 
 ``` r
 render_presentation(
-  name = NULL,
-  path = ".",
+  dirname_presentations = NULL,
+  path_presentations = "presentations",
   output_format = NULL,
   quiet = FALSE,
   output_dir = NULL,
-  ...
+  ...,
+  name = NULL,
+  path = NULL
 )
 ```
 
 ## Arguments
 
-- name:
+- dirname_presentations:
 
-  Presentation folder names, relative to `path`. By default, every
-  presentation found in `path` (see
+  Presentation folder names, relative to `path_presentations`. By
+  default, every presentation found in `path_presentations` (see
   [`list_presentations()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_presentations.md)).
 
-- path:
+- path_presentations:
 
   Folder containing the presentation folders.
 
@@ -55,6 +57,10 @@ render_presentation(
 
   Other arguments passed to
   [`quarto::quarto_render()`](https://quarto-dev.github.io/quarto-r/reference/quarto_render.html).
+
+- name, path:
+
+  Deprecated, use `dirname_presentations` and `path_presentations`.
 
 ## Value
 

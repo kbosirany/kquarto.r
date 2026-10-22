@@ -52,7 +52,14 @@ number is the highest existing number for this prefix, plus one, so
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_book_chapter</span><span class="op">(</span><span class="va">book</span>, <span class="va">name</span>, path <span class="op">=</span> <span class="st">"."</span>, title <span class="op">=</span> <span class="va">name</span>, prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_book_chapter</span><span class="op">(</span></span>
+<span>  <span class="va">book</span>,</span>
+<span>  <span class="va">name</span>,</span>
+<span>  path_reports <span class="op">=</span> <span class="st">"reports"</span>,</span>
+<span>  title <span class="op">=</span> <span class="va">name</span>,</span>
+<span>  prefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  path <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -60,7 +67,7 @@ number is the highest existing number for this prefix, plus one, so
 
 
 <dl><dt id="arg-book">book<a class="anchor" aria-label="anchor" href="#arg-book"></a></dt>
-<dd><p>Book folder name, relative to <code>path</code>.</p></dd>
+<dd><p>Book folder name, relative to <code>path_reports</code>.</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
@@ -68,7 +75,7 @@ number is the highest existing number for this prefix, plus one, so
 file name (lower case, no accents, words separated by <code>-</code>).</p></dd>
 
 
-<dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
+<dt id="arg-path-reports">path_reports<a class="anchor" aria-label="anchor" href="#arg-path-reports"></a></dt>
 <dd><p>Folder containing the book folder.</p></dd>
 
 
@@ -82,6 +89,10 @@ default <code>name</code>.</p></dd>
 book's <code>_quarto.yml</code>: <code>"chapitre"</code> for French, <code>"chapter"</code> otherwise
 (see <code><a href="chapter_prefix.html">chapter_prefix()</a></code>).</p></dd>
 
+
+<dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
+<dd><p>Deprecated, use <code>path_reports</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -92,11 +103,11 @@ book's <code>_quarto.yml</code>: <code>"chapitre"</code> for French, <code>"chap
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, path <span class="op">=</span> <span class="va">tmp</span>, lang <span class="op">=</span> <span class="st">"fr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, path_reports <span class="op">=</span> <span class="va">tmp</span>, lang <span class="op">=</span> <span class="st">"fr"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Book(s) created: rapport</span>
-<span class="r-in"><span><span class="fu">create_book_chapter</span><span class="op">(</span><span class="st">"rapport"</span>, <span class="st">"Introduction"</span>, path <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">create_book_chapter</span><span class="op">(</span><span class="st">"rapport"</span>, <span class="st">"Introduction"</span>, path_reports <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Chapter created: rapport/chapitre_01_introduction.qmd</span>
-<span class="r-in"><span><span class="fu">create_book_chapter</span><span class="op">(</span><span class="st">"rapport"</span>, <span class="st">"Matériel et méthodes"</span>, path <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">create_book_chapter</span><span class="op">(</span><span class="st">"rapport"</span>, <span class="st">"Matériel et méthodes"</span>, path_reports <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Chapter created: rapport/chapitre_02_materiel-et-methodes.qmd</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">"rapport"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "_quarto.yml"                         </span>

@@ -12,7 +12,8 @@ Créer, modéliser (templates) et générer des rapports Quarto de type
 
 library(kquarto.r)
 
-# Créer deux rapports avec un _quarto.yml rempli
+# Créer deux rapports avec un _quarto.yml rempli, dans reports/ (argument
+# path_reports ; les présentations vont dans presentations/)
 create_book(
   c("rapport_technique", "note_synthese"),
   title = c(note_synthese = "Note de synthèse"),
@@ -20,19 +21,20 @@ create_book(
   lang = "fr",
   chapters = c("Introduction", "Méthodes")
 )
-# -> rapport_technique/chapitre_01_introduction.qmd, chapitre_02_methodes.qmd
+# -> reports/rapport_technique/chapitre_01_introduction.qmd,
+#    chapitre_02_methodes.qmd
 
 # Ajouter un chapitre : numéro suivant, ajouté au _quarto.yml
 create_book_chapter("rapport_technique", "Résultats")
 # -> chapitre_03_resultats.qmd ("chapter_03_..." si lang = "en")
 
-# Générer un rapport (par défaut dans rapport_technique/_book)
+# Générer un rapport (par défaut dans reports/rapport_technique/_book)
 render_book("rapport_technique")
 
 # ... ou ailleurs, chemin relatif au dossier du rapport
-render_book("rapport_technique", output_dir = "../docs/rapport_technique")
+render_book("rapport_technique", output_dir = "../../docs/rapport_technique")
 
-# Générer tous les books du dossier courant
+# Générer tous les books de reports/
 render_book()
 ```
 

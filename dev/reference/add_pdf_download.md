@@ -12,9 +12,10 @@ output folder.
 ``` r
 add_pdf_download(
   dirname_reports,
-  path = ".",
+  path_reports = "reports",
   format = c("typst", "pdf"),
-  template = NULL
+  template = NULL,
+  path = NULL
 )
 ```
 
@@ -22,12 +23,11 @@ add_pdf_download(
 
 - dirname_reports:
 
-  Character vector of book folder names, relative to `path`.
+  Character vector of book folder names, relative to `path_reports`.
 
-- path:
+- path_reports:
 
-  Folder in which the report folders are created. Defaults to the
-  working directory.
+  Folder in which the report folders are created.
 
 - format:
 
@@ -40,6 +40,10 @@ add_pdf_download(
   `"inrae"`). Its files missing from the book (e.g. `inrae.typ`,
   `_brand.yml`) are copied; existing files are not overwritten. `NULL`
   uses a plain style (table of contents, numbered sections, A4).
+
+- path:
+
+  Deprecated, use `path_reports`.
 
 ## Value
 
@@ -57,9 +61,11 @@ for the PDF.
 ``` r
 tmp <- tempfile()
 dir.create(tmp)
-create_book("rapport", path = tmp, template = "inrae", author = "Kevin")
+create_book(
+  "rapport", path_reports = tmp, template = "inrae", author = "Kevin"
+)
 #> Book(s) created: rapport
-add_pdf_download("rapport", path = tmp, template = "inrae")
+add_pdf_download("rapport", path_reports = tmp, template = "inrae")
 #> PDF download added to: rapport
 cat(readLines(file.path(tmp, "rapport", "_quarto.yml")), sep = "\n")
 #> project:

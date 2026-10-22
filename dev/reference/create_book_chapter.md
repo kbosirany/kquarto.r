@@ -8,21 +8,28 @@ number is the highest existing number for this prefix, plus one, so
 ## Usage
 
 ``` r
-create_book_chapter(book, name, path = ".", title = name, prefix = NULL)
+create_book_chapter(
+  book,
+  name,
+  path_reports = "reports",
+  title = name,
+  prefix = NULL,
+  path = NULL
+)
 ```
 
 ## Arguments
 
 - book:
 
-  Book folder name, relative to `path`.
+  Book folder name, relative to `path_reports`.
 
 - name:
 
   Chapter name, without prefix nor number. It is converted to a file
   name (lower case, no accents, words separated by `-`).
 
-- path:
+- path_reports:
 
   Folder containing the book folder.
 
@@ -36,6 +43,10 @@ create_book_chapter(book, name, path = ".", title = name, prefix = NULL)
   `_quarto.yml`: `"chapitre"` for French, `"chapter"` otherwise (see
   [`chapter_prefix()`](https://kbosirany.github.io/kquarto.r/dev/reference/chapter_prefix.md)).
 
+- path:
+
+  Deprecated, use `path_reports`.
+
 ## Value
 
 The path of the chapter file, invisibly.
@@ -45,11 +56,11 @@ The path of the chapter file, invisibly.
 ``` r
 tmp <- tempfile()
 dir.create(tmp)
-create_book("rapport", path = tmp, lang = "fr")
+create_book("rapport", path_reports = tmp, lang = "fr")
 #> Book(s) created: rapport
-create_book_chapter("rapport", "Introduction", path = tmp)
+create_book_chapter("rapport", "Introduction", path_reports = tmp)
 #> Chapter created: rapport/chapitre_01_introduction.qmd
-create_book_chapter("rapport", "Matériel et méthodes", path = tmp)
+create_book_chapter("rapport", "Matériel et méthodes", path_reports = tmp)
 #> Chapter created: rapport/chapitre_02_materiel-et-methodes.qmd
 list.files(file.path(tmp, "rapport"))
 #> [1] "_quarto.yml"                         

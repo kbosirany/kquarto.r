@@ -23,7 +23,7 @@ vecteur nommé permet de ne changer que certains titres.
 
 create_book(
   c("rapport_technique", "note_synthese"),
-  path = projet,
+  path_reports = projet,
   title = c(note_synthese = "Note de synthèse"),
   author = c("Kevin Orlando", "Camille Martin"),
   lang = "fr",
@@ -75,7 +75,7 @@ prend le numéro suivant et met à jour `_quarto.yml` :
 
 ``` r
 
-create_book_chapter("rapport_technique", "Résultats", path = projet)
+create_book_chapter("rapport_technique", "Résultats", path_reports = projet)
 #> Chapter created: rapport_technique/chapitre_03_resultats.qmd
 list_books(projet)
 #> [1] "note_synthese"     "rapport_technique"

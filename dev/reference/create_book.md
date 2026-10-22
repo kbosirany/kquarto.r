@@ -9,7 +9,7 @@ of `template` into it and writes a `_quarto.yml` (project of type
 ``` r
 create_book(
   dirname_reports,
-  path = ".",
+  path_reports = "reports",
   title = NULL,
   author = NULL,
   lang = "fr",
@@ -20,7 +20,8 @@ create_book(
   chapter_prefix = NULL,
   ...,
   formats = NULL,
-  overwrite = FALSE
+  overwrite = FALSE,
+  path = NULL
 )
 ```
 
@@ -28,12 +29,11 @@ create_book(
 
 - dirname_reports:
 
-  Character vector of report folder names, relative to `path`.
+  Character vector of report folder names, relative to `path_reports`.
 
-- path:
+- path_reports:
 
-  Folder in which the report folders are created. Defaults to the
-  working directory.
+  Folder in which the report folders are created.
 
 - title:
 
@@ -110,14 +110,20 @@ create_book(
   `_quarto.yml` whose file still exists are kept in `book: chapters`,
   after those of the template.
 
+- path:
+
+  Deprecated, use `path_reports`.
+
 ## Value
 
 The paths of the report folders, invisibly.
 
 ## Details
 
-When `path` is the root of an R package (it contains a `DESCRIPTION`
-file), the report folders are also added to `.Rbuildignore`.
+When `path_reports` is the root of an R package (it contains a
+`DESCRIPTION` file), the report folders are also added to
+`.Rbuildignore`; when it is a folder of the root of a package (e.g.
+`reports/`), this folder is added.
 
 ## Examples
 
@@ -126,7 +132,7 @@ tmp <- tempfile()
 dir.create(tmp)
 create_book(
   c("rapport_technique", "note_synthese"),
-  path = tmp,
+  path_reports = tmp,
   title = c(note_synthese = "Note de synthèse"),
   author = "Kevin Orlando",
   chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")

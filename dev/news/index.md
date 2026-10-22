@@ -2,6 +2,31 @@
 
 ## kquarto.r (development version)
 
+- Arguments renommés, nom générique puis qualificatif, comme
+  `dirname_reports` : `path_reports` (dossier des livres, défaut
+  `"reports"`) et `path_presentations` (dossier des présentations,
+  défaut `"presentations"`) remplacent `path` ; `dirname_presentations`
+  remplace `name` et `presentations` ; dans
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  et
+  [`update_pkgdown_yml()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_pkgdown_yml.md),
+  `path_site` remplace `dest`, `subdir_reports` et
+  `subdir_presentations` remplacent `site_subdir`,
+  `presentations_subdir` et `presentations_site_subdir`. Les anciens
+  noms restent acceptés, avec un avertissement. Les défauts passent de
+  `"."` à `"reports"` et `"presentations"`.
+
+- `build_site(path_site = )` donne aussi ce dossier à pkgdown
+  (`override: destination`) et rend les livres et les présentations dans
+  le dossier où pkgdown écrit le site, `<path_site>/dev` pour une
+  version de développement. Avant, pkgdown écrivait dans la
+  `destination` de `_pkgdown.yml`, ce qui laissait un site sans ses
+  pages pkgdown quand `dest` était différent.
+
+- [`create_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_book.md)
+  ajoute le dossier des livres (`reports/`) au `.Rbuildignore` du
+  package qui le contient.
+
 - Nouveau :
   [`add_pdf_download()`](https://kbosirany.github.io/kquarto.r/dev/reference/add_pdf_download.md)
   ajoute à des books existants un format PDF (Typst par défaut) et une
@@ -11,12 +36,14 @@
   ajoute aussi cette icône quand `formats` combine le HTML et un PDF.
   Rendre avec `render_book(output_format = "all")`
   ([\#15](https://github.com/kbosirany/kquarto.r/issues/15)).
+
 - `render_presentation(output_format = "pptx")` rend un PowerPoint, qui
   peut utiliser les masques d’un modèle (`pptx: reference-doc:` dans
   l’en-tête des diapositives) ; `output_dir` copie aussi le `.pptx`. Le
   template `inrae-presentation` désactive l’étirement automatique des
   graphiques de reveal.js (`auto-stretch: false`), qui les faisait
   déborder des masques.
+
 - Le template `inrae-presentation` reprend les masques du modèle
   PowerPoint INRAE (4:3) : diapositive de titre avec le filigrane, le
   chevron et les logos République française et INRAE ; pages avec le
@@ -25,6 +52,7 @@
   intermédiaires (`# Section`) ; diapositive de fin sur fond vert
   (`{.fin-inrae}`). Les fichiers du masque sont dans `images/`. La
   sortie PDF Beamer est inchangée.
+
 - Nouveau : les présentations vont sur le site pkgdown.
   [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
   rend chaque présentation de `presentations_path` (`"presentations"`
@@ -36,6 +64,7 @@
   sans books, et inversement.
   [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)
   a l’argument `output_dir` pour copier les fichiers rendus.
+
 - Nouveau : présentations reveal.js avec
   [`create_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_presentation.md),
   [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)
@@ -48,17 +77,20 @@
   Templates livrés : `default-presentation` et `inrae-presentation`.
   `formats = "beamer"` ajoute une sortie PDF LaTeX (Beamer) ; pas de
   Typst, Quarto n’ayant pas de diapositives Typst.
+
 - Les templates ont un type, déclaré dans un `template.yml` (`book` par
   défaut) : les listes de books et de présentations ne se mélangent pas.
   Un template peut réutiliser des fichiers partagés (`shared:`) ; le
   template `inrae` des books partage désormais sa charte (couleurs,
   polices, logo) avec `inrae-presentation`.
+
 - Nouveau : `create_book(formats = )` ajoute un format PDF aux books :
   `"typst"` (fourni avec Quarto, auteur obligatoire) ou `"pdf"` (LaTeX,
   qui nécessite une distribution LaTeX comme TinyTeX). Le template
   `inrae` a son style pour chacun (couleur et logo, Quarto \>= 1.9.17
   pour Typst). Le PDF se génère avec
   `render_book(output_format = "typst")` ou `"pdf"`.
+
 - [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)
   écrit désormais le tableau complet hors HTML (tableau Markdown,
   compatible Typst, ou `booktabs` en LaTeX) au lieu des premières

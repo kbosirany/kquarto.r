@@ -23,14 +23,19 @@ written by former versions are removed.
 ``` r
 update_pkgdown_yml(
   dirname_reports = NULL,
-  path = "reports",
+  path_reports = "reports",
   titles = NULL,
   pkgdown_file = "_pkgdown.yml",
-  site_subdir = "reports",
+  subdir_reports = "reports",
   add_to_navbar = TRUE,
+  dirname_presentations = NULL,
+  path_presentations = "presentations",
+  subdir_presentations = "presentations",
+  path = NULL,
+  site_subdir = NULL,
   presentations = NULL,
-  presentations_path = "presentations",
-  presentations_site_subdir = "presentations"
+  presentations_path = NULL,
+  presentations_site_subdir = NULL
 )
 ```
 
@@ -38,11 +43,11 @@ update_pkgdown_yml(
 
 - dirname_reports:
 
-  Book folder names, relative to `path`. By default, every book found in
-  `path` (see
+  Book folder names, relative to `path_reports`. By default, every book
+  found in `path_reports` (see
   [`list_books()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_books.md)).
 
-- path:
+- path_reports:
 
   Folder containing the book folders.
 
@@ -56,7 +61,7 @@ update_pkgdown_yml(
 
   Path to the pkgdown configuration file.
 
-- site_subdir:
+- subdir_reports:
 
   Folder of the pkgdown site (relative to its root) where the books are
   rendered, used to build the links.
@@ -65,24 +70,44 @@ update_pkgdown_yml(
 
   Whether to add the components to `navbar: structure: left`.
 
-- presentations:
+- dirname_presentations:
 
-  Presentation folder names, relative to `presentations_path`. By
-  default, every presentation found in `presentations_path` (see
+  Presentation folder names, relative to `path_presentations`. By
+  default, every presentation found in `path_presentations` (see
   [`list_presentations()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_presentations.md)).
   They form the navbar menu `presentations`, titled after the `title` of
   their slides, with headers by category and language as the books (the
   `category` key overriding the category is in the YAML header of the
   slides); without any presentation, the menu is removed.
 
-- presentations_path:
+- path_presentations:
 
   Folder containing the presentation folders.
 
-- presentations_site_subdir:
+- subdir_presentations:
 
   Folder of the pkgdown site (relative to its root) where the
   presentations are rendered, used to build the links.
+
+- path:
+
+  Deprecated, use `path_reports`.
+
+- site_subdir:
+
+  Deprecated, use `subdir_reports`.
+
+- presentations:
+
+  Deprecated, use `dirname_presentations`.
+
+- presentations_path:
+
+  Deprecated, use `path_presentations`.
+
+- presentations_site_subdir:
+
+  Deprecated, use `subdir_presentations`.
 
 ## Value
 

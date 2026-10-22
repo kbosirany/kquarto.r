@@ -1,9 +1,9 @@
 # Create Quarto presentations
 
-Creates one folder per presentation in `path`, containing a single
-`<name>.qmd` (reveal.js slides) and the files of the template (theme,
-logos, ...). Presentations are independent of books: they have their own
-templates (see
+Creates one folder per presentation in `path_presentations`, containing
+a single `<name>.qmd` (reveal.js slides) and the files of the template
+(theme, logos, ...). Presentations are independent of books: they have
+their own templates (see
 [`list_templates_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/create_template_presentation.md))
 and are rendered with
 [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md).
@@ -12,8 +12,8 @@ and are rendered with
 
 ``` r
 create_presentation(
-  name,
-  path = ".",
+  dirname_presentations,
+  path_presentations = "presentations",
   title = NULL,
   subtitle = NULL,
   author = NULL,
@@ -21,25 +21,28 @@ create_presentation(
   lang = "fr",
   template = getOption("kquarto.r.presentation.template", "default-presentation"),
   formats = NULL,
-  overwrite = FALSE
+  overwrite = FALSE,
+  name = NULL,
+  path = NULL
 )
 ```
 
 ## Arguments
 
-- name:
+- dirname_presentations:
 
-  Presentation folder names, created in `path`. The slides are written
-  in `<name>/<name>.qmd`.
+  Presentation folder names, created in `path_presentations`. The slides
+  are written in `<name>/<name>.qmd`.
 
-- path:
+- path_presentations:
 
   Folder where the presentation folders are created.
 
 - title:
 
-  Presentation title. A character vector of the same length as `name`,
-  or named by `name` to set only some titles. Defaults to `name`.
+  Presentation title. A character vector of the same length as
+  `dirname_presentations`, or named by `dirname_presentations` to set
+  only some titles. Defaults to `dirname_presentations`.
 
 - subtitle, author, date:
 
@@ -72,6 +75,10 @@ create_presentation(
 
   Whether to replace the slides of an existing presentation.
 
+- name, path:
+
+  Deprecated, use `dirname_presentations` and `path_presentations`.
+
 ## Value
 
 The paths of the `.qmd` files, invisibly.
@@ -83,7 +90,7 @@ tmp <- tempfile()
 dir.create(tmp)
 create_presentation(
   "seminaire",
-  path = tmp,
+  path_presentations = tmp,
   title = "Mon séminaire",
   author = "Kevin Orlando",
   template = "inrae-presentation"

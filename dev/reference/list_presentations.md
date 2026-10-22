@@ -6,14 +6,18 @@ format is `revealjs`.
 ## Usage
 
 ``` r
-list_presentations(path = ".")
+list_presentations(path_presentations = "presentations", path = NULL)
 ```
 
 ## Arguments
 
-- path:
+- path_presentations:
 
   Folder containing the presentation folders.
+
+- path:
+
+  Deprecated, use `path_presentations`.
 
 ## Value
 
@@ -24,7 +28,7 @@ The names of the presentation folders.
 ``` r
 tmp <- tempfile()
 dir.create(tmp)
-create_presentation("seminaire", path = tmp)
+create_presentation("seminaire", path_presentations = tmp)
 list_presentations(tmp)
 #> [1] "seminaire"
 ```

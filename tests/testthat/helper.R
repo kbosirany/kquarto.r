@@ -27,13 +27,17 @@ mock_render_slides <- function(renders) {
 }
 
 # Quarto compiles the PDF with LuaLaTeX by default. Its fonts need
-# luaotfload, which some distributions ship apart from the `lualatex` binary
-# (Debian: texlive-luatex).
+# luaotfload and the French books need babel-french, which some
+# distributions ship apart from the `lualatex` binary (Debian: texlive-luatex
+# and texlive-lang-french). TinyTeX installs them when needed.
 skip_if_no_lualatex <- function() {
   skip_if(!nzchar(Sys.which("lualatex")), "LuaLaTeX not installed")
   kpsewhich <- Sys.which("kpsewhich")
-  has_luaotfload <- nzchar(kpsewhich) && length(suppressWarnings(
-    system2(kpsewhich, "luaotfload.sty", stdout = TRUE, stderr = FALSE)
-  )) > 0
-  skip_if(!has_luaotfload, "luaotfload not installed (LuaLaTeX fonts)")
+  has_file <- function(file) {
+    nzchar(kpsewhich) && length(suppressWarnings(
+      system2(kpsewhich, file, stdout = TRUE, stderr = FALSE)
+    )) > 0
+  }
+  skip_if(!has_file("luaotfload.sty"), "luaotfload not installed (fonts)")
+  skip_if(!has_file("french.ldf"), "babel-french not installed")
 }

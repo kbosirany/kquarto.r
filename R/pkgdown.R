@@ -216,8 +216,11 @@ set_presentations_menu <- function(config, presentations, path, site_subdir,
 #'   `destination`.
 #' @param subdir_reports Folder of the site where each book is rendered in
 #'   its own sub-folder.
-#' @param render_reports Whether to render the books and the presentations,
-#'   and update the navbar.
+#' @param render_reports Whether to render the books.
+#' @param render_presentations Whether to render the presentations. When one
+#'   of `render_reports` and `render_presentations` is `TRUE`, the navbar is
+#'   updated with every book and presentation found, rendered or not (the
+#'   ones not rendered keep their previous output in the site).
 #' @param path_presentations Folder containing the presentation folders (see
 #'   [create_presentation()]). Without this folder, or without any
 #'   presentation in it, there is no presentation on the site.
@@ -248,6 +251,7 @@ build_site <- function(path_reports = "reports",
                        render_reports = TRUE,
                        path_presentations = "presentations",
                        subdir_presentations = "presentations",
+                       render_presentations = TRUE,
                        build_readme = FALSE,
                        clean = TRUE,
                        ...,
@@ -285,7 +289,9 @@ build_site <- function(path_reports = "reports",
   if (build_readme) {
     devtools::build_readme()
   }
-  if (render_reports) {
+  if (render_reports || render_presentations) {
+    # The navbar lists every book and presentation, also the ones not
+    # rendered this time (their previous output stays in the site).
     books <- list_books(path)
     presentations <- list_presentations(presentations_path)
     if (length(books) == 0 && length(presentations) == 0) {
@@ -294,7 +300,7 @@ build_site <- function(path_reports = "reports",
     # init_site() creates the marker file that lets pkgdown recognise the
     # destination folder once the books are written into it.
     pkgdown_init_site(override = args$override %||% list())
-    for (book in books) {
+    for (book in if (render_reports) books) {
       target <- file.path(dest, site_subdir, book)
       if (clean) unlink(target, recursive = TRUE)
       # The folder must exist for normalizePath() to return an absolute path
@@ -306,7 +312,7 @@ build_site <- function(path_reports = "reports",
         output_dir = normalizePath(target, mustWork = FALSE)
       )
     }
-    for (presentation in presentations) {
+    for (presentation in if (render_presentations) presentations) {
       target <- file.path(dest, presentations_subdir)
       if (clean) unlink(file.path(target, presentation), recursive = TRUE)
       dir.create(target, recursive = TRUE, showWarnings = FALSE)

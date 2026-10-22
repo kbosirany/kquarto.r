@@ -11,6 +11,7 @@ build_site(
   render_reports = TRUE,
   path_presentations = "presentations",
   subdir_presentations = "presentations",
+  render_presentations = TRUE,
   build_readme = FALSE,
   clean = TRUE,
   ...,
@@ -31,8 +32,7 @@ Pages) or \code{"docs"} (GitHub Pages). It is given to pkgdown as its
 \item{subdir_reports}{Folder of the site where each book is rendered in
 its own sub-folder.}
 
-\item{render_reports}{Whether to render the books and the presentations,
-and update the navbar.}
+\item{render_reports}{Whether to render the books.}
 
 \item{path_presentations}{Folder containing the presentation folders (see
 \code{\link[=create_presentation]{create_presentation()}}). Without this folder, or without any
@@ -41,6 +41,11 @@ presentation in it, there is no presentation on the site.}
 \item{subdir_presentations}{Folder of the site where each presentation is
 rendered in its own sub-folder (\code{index.html}, and the PDF if the
 presentation has one).}
+
+\item{render_presentations}{Whether to render the presentations. When one
+of \code{render_reports} and \code{render_presentations} is \code{TRUE}, the navbar is
+updated with every book and presentation found, rendered or not (the
+ones not rendered keep their previous output in the site).}
 
 \item{build_readme}{Whether to rebuild the README with
 \code{\link[devtools:build_readme]{devtools::build_readme()}}.}

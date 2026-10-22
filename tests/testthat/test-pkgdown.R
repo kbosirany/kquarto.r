@@ -186,6 +186,60 @@ test_that("build_site renders the presentations in the site", {
   )
 })
 
+test_that("build_site renders the books or the presentations only", {
+  dir <- local_book_env()
+  dir.create(file.path(dir, "reports"))
+  dir.create(file.path(dir, "presentations"))
+  suppressMessages(create_book(
+    "a_fr", path_reports = file.path(dir, "reports")
+  ))
+  suppressMessages(create_presentation(
+    "point",
+    path_presentations = file.path(dir, "presentations"),
+    title = "Point"
+  ))
+  withr::local_dir(dir)
+  rendered <- character()
+  local_mocked_bindings(
+    render_book = function(dirname_reports, ...) {
+      rendered <<- c(rendered, dirname_reports)
+    },
+    render_presentation = function(dirname_presentations, ...) {
+      rendered <<- c(rendered, dirname_presentations)
+    },
+    .package = "kquarto.r"
+  )
+  local_mocked_bindings(
+    pkgdown_init_site = function(...) NULL,
+    pkgdown_build_site = function(...) "built",
+    pkgdown_dst_path = function(override) override$destination
+  )
+
+  build_site(render_presentations = FALSE)
+  expect_equal(rendered, "a_fr")
+  # the menu of the presentations not rendered is kept
+  config <- yaml::read_yaml("_pkgdown.yml")
+  expect_equal(
+    config$navbar$components$presentations$menu[[1]]$href,
+    "presentations/point/index.html"
+  )
+  expect_equal(config$navbar$structure$left, c("reports", "presentations"))
+
+  rendered <- character()
+  build_site(render_reports = FALSE)
+  expect_equal(rendered, "point")
+  expect_equal(yaml::read_yaml("_pkgdown.yml"), config)
+
+  # neither: pkgdown only, the navbar is not updated
+  unlink("_pkgdown.yml")
+  rendered <- character()
+  expect_equal(
+    build_site(render_reports = FALSE, render_presentations = FALSE), "built"
+  )
+  expect_length(rendered, 0)
+  expect_false(file.exists("_pkgdown.yml"))
+})
+
 test_that("the menus have a header by category, Package then Others", {
   dir <- local_book_env()
   suppressMessages(create_book(

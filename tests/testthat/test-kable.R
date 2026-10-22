@@ -1,4 +1,5 @@
 test_that("kable() makes a scrollable table in HTML output", {
+  skip_if_not_installed("kableExtra")
   tab <- kable(head(iris), is_html_output = TRUE, title = "Iris")
 
   expect_s3_class(tab, "knitr_kable")
@@ -7,6 +8,7 @@ test_that("kable() makes a scrollable table in HTML output", {
 })
 
 test_that("kable() sets the height of the scroll box", {
+  skip_if_not_installed("kableExtra")
   tab <- kable(head(iris), is_html_output = TRUE, height = "123px")
 
   expect_match(as.character(tab), "123px", fixed = TRUE)
@@ -28,4 +30,9 @@ test_that("kable() makes a booktabs table in LaTeX output", {
 
   expect_match(as.character(tab), "toprule", fixed = TRUE)
   expect_match(paste(tab, collapse = ""), "virginica", fixed = TRUE)
+})
+
+test_that("kable() asks for kableExtra in HTML output", {
+  local_mocked_bindings(has_kableextra = function() FALSE)
+  expect_error(kable(head(iris), is_html_output = TRUE), "kableExtra")
 })

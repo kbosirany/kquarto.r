@@ -45,8 +45,10 @@ test_that("build_site renders the books then builds the site", {
   withr::local_dir(dir)
   calls <- list()
   local_mocked_bindings(
-    render_book = function(dirname_reports, path_reports, output_dir, ...) {
-      calls[[length(calls) + 1]] <<- list(dirname_reports, output_dir)
+    run_renders = function(renders, workers) {
+      calls <<- c(calls, lapply(renders, function(x) {
+        list(x$label, render_output_dir(x))
+      }))
     },
     .package = "kquarto.r"
   )
@@ -159,12 +161,9 @@ test_that("build_site renders the presentations in the site", {
   withr::local_dir(dir)
   rendered <- list()
   local_mocked_bindings(
-    render_book = function(...) NULL,
-    render_presentation = function(dirname_presentations, path_presentations,
-                                   output_dir, ...) {
-      rendered[[length(rendered) + 1]] <<- list(
-        dirname_presentations, path_presentations, output_dir
-      )
+    run_renders = function(renders, workers) {
+      rendered <<- renders
+      mock_render_slides(renders)
     },
     .package = "kquarto.r"
   )
@@ -176,9 +175,11 @@ test_that("build_site renders the presentations in the site", {
   expect_equal(
     build_site(path_reports = "reports", path_site = "public"), "built"
   )
-  expect_length(rendered, 1)
-  expect_equal(rendered[[1]][[1]], "point")
-  expect_match(rendered[[1]][[3]], "public[/\\\\]presentations$")
+  # the book and the presentation in the same queue
+  expect_equal(
+    vapply(rendered, function(x) x$label, ""), c("a_fr", "point")
+  )
+  expect_true(file.exists("public/presentations/point/index.html"))
   config <- yaml::read_yaml("_pkgdown.yml")
   expect_equal(
     config$navbar$components$presentations$menu[[1]]$href,
@@ -201,11 +202,9 @@ test_that("build_site renders the books or the presentations only", {
   withr::local_dir(dir)
   rendered <- character()
   local_mocked_bindings(
-    render_book = function(dirname_reports, ...) {
-      rendered <<- c(rendered, dirname_reports)
-    },
-    render_presentation = function(dirname_presentations, ...) {
-      rendered <<- c(rendered, dirname_presentations)
+    run_renders = function(renders, workers) {
+      rendered <<- c(rendered, vapply(renders, function(x) x$label, ""))
+      mock_render_slides(renders)
     },
     .package = "kquarto.r"
   )
@@ -230,14 +229,15 @@ test_that("build_site renders the books or the presentations only", {
   expect_equal(rendered, "point")
   expect_equal(yaml::read_yaml("_pkgdown.yml"), config)
 
-  # neither: pkgdown only, the navbar is not updated
+  # neither: the books and presentations rendered elsewhere (e.g. other CI
+  # jobs) are only added to the navbar
   unlink("_pkgdown.yml")
   rendered <- character()
   expect_equal(
     build_site(render_reports = FALSE, render_presentations = FALSE), "built"
   )
   expect_length(rendered, 0)
-  expect_false(file.exists("_pkgdown.yml"))
+  expect_equal(yaml::read_yaml("_pkgdown.yml"), config)
 })
 
 test_that("the menus have a header by category, Package then Others", {
@@ -321,8 +321,8 @@ test_that("build_site gives path_site to pkgdown, dev folder included", {
   calls <- list()
   built <- NULL
   local_mocked_bindings(
-    render_book = function(dirname_reports, path_reports, output_dir, ...) {
-      calls[[length(calls) + 1]] <<- output_dir
+    run_renders = function(renders, workers) {
+      calls <<- c(calls, lapply(renders, render_output_dir))
     },
     .package = "kquarto.r"
   )
@@ -353,8 +353,8 @@ test_that("build_site and update_pkgdown_yml accept the former names", {
   calls <- list()
   built <- NULL
   local_mocked_bindings(
-    render_book = function(dirname_reports, path_reports, output_dir, ...) {
-      calls[[length(calls) + 1]] <<- output_dir
+    run_renders = function(renders, workers) {
+      calls <<- c(calls, lapply(renders, render_output_dir))
     },
     .package = "kquarto.r"
   )

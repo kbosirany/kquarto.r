@@ -15,7 +15,7 @@ kable(
 \item{x}{A data frame or a matrix.}
 
 \item{is_html_output}{Whether the output is HTML. By default, detected
-with \code{\link[knitr:output_type]{knitr::is_html_output()}} (or \code{TRUE} in an interactive session).}
+with \code{\link[knitr:is_html_output]{knitr::is_html_output()}} (or \code{TRUE} in an interactive session).}
 
 \item{title}{Optional caption of the table.}
 
@@ -33,8 +33,14 @@ is meant to be called from the chunks of the chapters of a book.
 Outside HTML the whole table is written: a Markdown table
 (converted by Quarto, so it works with Typst, Word, ...) or, in LaTeX
 output, a \code{booktabs} table.
+
+The HTML table needs the package kableExtra, which kquarto.r does not
+install: add it to the dependencies of the project whose books call
+\code{kable()}.
 }
 \examples{
-kable(head(iris), is_html_output = TRUE, title = "Iris")
 kable(head(iris), is_html_output = FALSE)
+\dontshow{if (requireNamespace("kableExtra", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+kable(head(iris), is_html_output = TRUE, title = "Iris")
+\dontshow{\}) # examplesIf}
 }

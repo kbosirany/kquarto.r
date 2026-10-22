@@ -217,10 +217,10 @@ set_presentations_menu <- function(config, presentations, path, site_subdir,
 #' @param subdir_reports Folder of the site where each book is rendered in
 #'   its own sub-folder.
 #' @param render_reports Whether to render the books.
-#' @param render_presentations Whether to render the presentations. When one
-#'   of `render_reports` and `render_presentations` is `TRUE`, the navbar is
-#'   updated with every book and presentation found, rendered or not (the
-#'   ones not rendered keep their previous output in the site).
+#' @param render_presentations Whether to render the presentations. The
+#'   navbar is updated with every book and presentation found, rendered or
+#'   not (the ones not rendered keep their previous output in the site, e.g.
+#'   rendered by other CI jobs).
 #' @param path_presentations Folder containing the presentation folders (see
 #'   [create_presentation()]). Without this folder, or without any
 #'   presentation in it, there is no presentation on the site.
@@ -230,6 +230,8 @@ set_presentations_menu <- function(config, presentations, path, site_subdir,
 #' @param build_readme Whether to rebuild the README with
 #'   [devtools::build_readme()].
 #' @param clean Whether to remove a book's previous output before rendering.
+#' @param workers Number of books and presentations rendered at the same
+#'   time, see [render_book()].
 #' @param ... Other arguments passed to [pkgdown::build_site()].
 #' @param path,site_subdir,presentations_path,presentations_subdir Deprecated,
 #'   use `path_reports`, `subdir_reports`, `path_presentations` and
@@ -254,6 +256,7 @@ build_site <- function(path_reports = "reports",
                        render_presentations = TRUE,
                        build_readme = FALSE,
                        clean = TRUE,
+                       workers = getOption("kquarto.r.workers", 1L),
                        ...,
                        path = NULL,
                        dest = NULL,
@@ -289,39 +292,48 @@ build_site <- function(path_reports = "reports",
   if (build_readme) {
     devtools::build_readme()
   }
+  # The navbar lists every book and presentation, also the ones not
+  # rendered this time (their previous output stays in the site).
+  books <- list_books(path)
+  presentations <- list_presentations(presentations_path)
   if (render_reports || render_presentations) {
-    # The navbar lists every book and presentation, also the ones not
-    # rendered this time (their previous output stays in the site).
-    books <- list_books(path)
-    presentations <- list_presentations(presentations_path)
     if (length(books) == 0 && length(presentations) == 0) {
       stop("No Quarto book found in: ", path, call. = FALSE)
     }
     # init_site() creates the marker file that lets pkgdown recognise the
     # destination folder once the books are written into it.
     pkgdown_init_site(override = args$override %||% list())
+    # the books and the presentations in a single queue, so that `workers`
+    # renders them all at the same time
+    renders <- list()
     for (book in if (render_reports) books) {
       target <- file.path(dest, site_subdir, book)
       if (clean) unlink(target, recursive = TRUE)
       # The folder must exist for normalizePath() to return an absolute path
       # (otherwise Quarto resolves it relative to the book folder).
       dir.create(target, recursive = TRUE, showWarnings = FALSE)
-      render_book(
+      renders <- c(renders, book_renders(
         book,
         path_reports = path,
         output_dir = normalizePath(target, mustWork = FALSE)
-      )
+      ))
     }
-    for (presentation in if (render_presentations) presentations) {
+    rendered <- if (render_presentations) presentations else character()
+    if (length(rendered) > 0) {
+      renders <- c(renders, presentation_renders(rendered, presentations_path))
+    }
+    run_renders(renders, workers)
+    if (length(rendered) > 0) {
       target <- file.path(dest, presentations_subdir)
-      if (clean) unlink(file.path(target, presentation), recursive = TRUE)
+      if (clean) unlink(file.path(target, rendered), recursive = TRUE)
       dir.create(target, recursive = TRUE, showWarnings = FALSE)
-      render_presentation(
-        presentation,
-        path_presentations = presentations_path,
-        output_dir = normalizePath(target, mustWork = FALSE)
+      copy_presentation_outputs(
+        rendered, file.path(presentations_path, rendered),
+        normalizePath(target, mustWork = FALSE)
       )
     }
+  }
+  if (length(books) > 0 || length(presentations) > 0) {
     update_pkgdown_yml(
       books,
       path_reports = path,

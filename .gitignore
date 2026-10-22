@@ -5,3 +5,6 @@
 docs
 inst/doc
 *.whl
+# testthat snapshots of the failed tests
+tests/testthat/_problems/
+tests/testthat/testthat-problems.rds

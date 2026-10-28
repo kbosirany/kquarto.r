@@ -1,5 +1,12 @@
 # kquarto.r (development version)
 
+* Nouvelle fonction `source_report_setup(report)` : source le `setup.R` d'un
+  livre depuis le chunk d'initialisation de ses chapitres. Le fichier est
+  cherché depuis le dossier de travail et ses parents
+  (`reports/<report>/setup.R`, ou `setup.R` dans le dossier du livre), donc
+  le même appel marche pour `quarto render` et pour l'exécution des chunks à
+  la main, depuis la racine du projet ou n'importe quel sous-dossier.
+
 * `render_book()`, `render_presentation()` et `build_site()` ont un argument
   `workers` (défaut : option `kquarto.r.workers`, sinon `1`) pour rendre
   plusieurs livres ou présentations en même temps, chacun dans une session R

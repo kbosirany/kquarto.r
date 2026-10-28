@@ -24,6 +24,11 @@
 - [`list_presentations()`](https://kbosirany.github.io/kquarto.r/dev/reference/list_presentations.md)
   : List the presentations of a folder
 
+## Chapitres
+
+- [`source_report_setup()`](https://kbosirany.github.io/kquarto.r/dev/reference/source_report_setup.md)
+  : Source the setup of a report
+
 ## Tableaux
 
 - [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)

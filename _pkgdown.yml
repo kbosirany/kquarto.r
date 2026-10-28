@@ -24,6 +24,9 @@ reference:
       - create_presentation
       - render_presentation
       - list_presentations
+  - title: Chapitres
+    contents:
+      - source_report_setup
   - title: Tableaux
     contents:
       - kable

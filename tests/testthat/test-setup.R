@@ -1,5 +1,7 @@
 local_reports <- function(env = parent.frame()) {
-  dir <- normalizePath(withr::local_tempdir(.local_envir = env))
+  dir <- normalizePath(
+    withr::local_tempdir(.local_envir = env), winslash = "/"
+  )
   book <- file.path(dir, "reports", "rapport")
   dir.create(file.path(book, "sub"), recursive = TRUE)
   writeLines("setup_value <- 42", file.path(book, "setup.R"))

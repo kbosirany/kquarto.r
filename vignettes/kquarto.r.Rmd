@@ -80,7 +80,7 @@ render_book() # tous les books du dossier courant
 ## Sortie PDF (Typst ou LaTeX)
 
 Les templates produisent du HTML. L'argument `formats` ajoute un PDF :
-`"typst"` (fourni avec Quarto, rien à installer, auteur obligatoire) ou
+`"typst"` (fourni avec Quarto, auteur obligatoire ; rien d'autre à installer sauf si le livre contient des widgets, voir plus bas) ou
 `"pdf"` (LaTeX, qui nécessite une distribution comme TinyTeX, installée
 avec `quarto install tinytex`). `kquarto.r` ne dépend d'aucune distribution
 LaTeX.
@@ -94,7 +94,8 @@ render_book("rapport", output_format = "pdf")
 
 Dans le PDF, `kable()` écrit le tableau complet à la place du tableau
 déroulant, et les widgets (`leaflet`, `plotly`...) sont remplacés par une
-capture d'écran (Chrome ou Chromium et `webshot2` nécessaires). Un contenu
+capture d'écran (Chrome ou Chromium et `webshot2` nécessaires :
+`render_book()` prévient avant le rendu s'ils manquent). Un contenu
 propre à un format se place dans
 `::: {.content-visible when-format="html"}`.
 

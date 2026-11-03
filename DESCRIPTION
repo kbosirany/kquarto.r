@@ -29,11 +29,15 @@ Imports:
     withr,
     yaml
 Suggests:
+    chromote,
     devtools,
     kableExtra,
     pkgdown,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    webshot2
+SystemRequirements: Quarto CLI (https://quarto.org); Chrome or Chromium
+    (with webshot2) for the PDF of books with widgets (leaflet, plotly...)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)

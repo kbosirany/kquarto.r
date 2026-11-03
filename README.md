@@ -50,7 +50,8 @@ Les templates produisent du HTML. Pour obtenir aussi un PDF, ajouter un
 format avec `formats` :
 
 ```r
-# PDF avec Typst (fourni avec Quarto, rien à installer)
+# PDF avec Typst (fourni avec Quarto ; Chrome ou Chromium et webshot2
+# seulement si le livre contient des widgets)
 create_book("rapport", template = "inrae", author = "Kevin Orlando",
             formats = c("html", "typst"))
 render_book("rapport", output_format = "typst")
@@ -62,7 +63,7 @@ render_book("rapport", output_format = "pdf")
 
 | | Typst (`"typst"`) | LaTeX (`"pdf"`) |
 |---|---|---|
-| Installation | aucune (inclus dans Quarto) | TinyTeX (`quarto install tinytex`) ou TeX Live |
+| Installation | aucune (inclus dans Quarto), sauf widgets (voir ci-dessous) | TinyTeX (`quarto install tinytex`) ou TeX Live |
 | Auteur | obligatoire | facultatif |
 | Style INRAE | couleur, logo, pied de page | couleurs, logo, pied de page |
 
@@ -75,7 +76,8 @@ Les éléments interactifs doivent être pensés pour les deux formats :
   le PDF ;
 - les widgets (`leaflet`, `plotly`, `DT`...) sont remplacés dans le PDF par
   une capture d'écran de leur état initial, ce qui demande Chrome ou
-  Chromium et le package `webshot2` ;
+  Chromium et le package `webshot2` (`render_book()` prévient avant le rendu
+  s'ils manquent) ;
 - un contenu propre à un format s'écrit avec
   `::: {.content-visible when-format="html"}` (ou `"typst"`, `"pdf"`).
 

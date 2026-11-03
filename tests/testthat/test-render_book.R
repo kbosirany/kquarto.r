@@ -150,3 +150,35 @@ test_that("a book renders to PDF with LaTeX", {
   )
   expect_length(list.files(out, pattern = "[.]pdf$"), 1)
 })
+
+test_that("the PDF of a book with widgets warns when the capture is missing", {
+  dir <- local_book_env()
+  suppressMessages(create_book(
+    "a", template = "inrae", author = "Me", formats = c("html", "typst"),
+    path_reports = dir
+  ))
+  writeLines(
+    c("```{r}", "kleaflet(x)", "```"),
+    file.path(dir, "a", "chapitre_01.qmd")
+  )
+  renders <- book_renders(NULL, dir, output_format = "typst")
+
+  local_mocked_bindings(has_package = function(package) FALSE)
+  expect_warning(check_widget_capture(renders), "webshot2 is")
+
+  local_mocked_bindings(has_package = function(package) TRUE,
+                        has_chrome = function() FALSE)
+  expect_warning(check_widget_capture(renders), "Chrome or Chromium is")
+
+  local_mocked_bindings(has_chrome = function() TRUE)
+  expect_no_warning(check_widget_capture(renders))
+
+  # HTML only: no screenshot needed
+  local_mocked_bindings(has_chrome = function() FALSE)
+  html <- book_renders(NULL, dir, output_format = "html")
+  expect_no_warning(check_widget_capture(html))
+
+  # no widget in the book
+  writeLines("Text", file.path(dir, "a", "chapitre_01.qmd"))
+  expect_no_warning(check_widget_capture(renders))
+})

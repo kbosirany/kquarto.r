@@ -124,6 +124,7 @@ run_renders <- function(renders, workers = 1L, fun = render_in_session) {
       call. = FALSE
     )
   }
+  check_widget_capture(renders)
   if (workers == 1 || length(renders) == 1) {
     for (render in renders) do.call(quarto_render, render$args)
     return(invisible(renders))

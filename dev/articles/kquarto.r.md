@@ -102,7 +102,8 @@ render_book() # tous les books du dossier courant
 ## Sortie PDF (Typst ou LaTeX)
 
 Les templates produisent du HTML. L’argument `formats` ajoute un PDF :
-`"typst"` (fourni avec Quarto, rien à installer, auteur obligatoire) ou
+`"typst"` (fourni avec Quarto, auteur obligatoire ; rien d’autre à
+installer sauf si le livre contient des widgets, voir plus bas) ou
 `"pdf"` (LaTeX, qui nécessite une distribution comme TinyTeX, installée
 avec `quarto install tinytex`). `kquarto.r` ne dépend d’aucune
 distribution LaTeX.
@@ -119,8 +120,10 @@ Dans le PDF,
 [`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)
 écrit le tableau complet à la place du tableau déroulant, et les widgets
 (`leaflet`, `plotly`…) sont remplacés par une capture d’écran (Chrome ou
-Chromium et `webshot2` nécessaires). Un contenu propre à un format se
-place dans `::: {.content-visible when-format="html"}`.
+Chromium et `webshot2` nécessaires :
+[`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md)
+prévient avant le rendu s’ils manquent). Un contenu propre à un format
+se place dans `::: {.content-visible when-format="html"}`.
 
 ## Présentations
 

@@ -2,6 +2,17 @@
 
 ## kquarto.r (development version)
 
+- [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md)
+  (et
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md))
+  préviennent avant le rendu quand un livre qui utilise des widgets
+  (leaflet, plotly, DT…) est rendu en PDF (Typst ou LaTeX) alors que
+  `webshot2` ou Chrome/Chromium manque, avec la commande d’installation,
+  au lieu de laisser Quarto s’arrêter sur « Functions that produce HTML
+  output found in document targeting typst output ». `webshot2` et
+  `chromote` passent en Suggests, et `SystemRequirements` déclare Quarto
+  et Chrome/Chromium.
+
 - Nouvelle fonction `source_report_setup(report)` : source le `setup.R`
   d’un livre depuis le chunk d’initialisation de ses chapitres. Le
   fichier est cherché depuis le dossier de travail et ses parents

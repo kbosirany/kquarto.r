@@ -73,6 +73,6 @@ list_templates_presentation()
 #> 1 /home/runner/work/_temp/Library/kquarto.r/templates/default-presentation
 #> 2   /home/runner/work/_temp/Library/kquarto.r/templates/inrae-presentation
 create_template_presentation("ma_charte", from = "inrae-presentation")
-#> Template 'ma_charte' created in: /tmp/RtmptwpVzV/file1bf96c0bc067/ma_charte
+#> Template 'ma_charte' created in: /tmp/RtmpXDJ5Dk/file1a1967f59c94/ma_charte
 options(old)
 ```

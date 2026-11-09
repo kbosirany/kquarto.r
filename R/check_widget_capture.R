@@ -27,7 +27,8 @@ check_widget_capture <- function(renders) {
   warning(
     "The PDF of ", paste(labels, collapse = ", "), " needs a screenshot of ",
     "the widgets (leaflet, plotly...), but ",
-    paste(missing, collapse = " and "), " not available. Quarto will stop with \"Functions that produce HTML ",
+    paste(missing, collapse = " and "),
+    " not available. Quarto will stop with \"Functions that produce HTML ",
     "output found in document targeting typst output\". Install the R ",
     "package with `install.packages(\"webshot2\")` and Google Chrome or ",
     "Chromium (e.g. on Debian/Ubuntu: `sudo apt-get install chromium`), or ",

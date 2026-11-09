@@ -313,7 +313,7 @@ copy_shared <- function(template_path, to, overwrite = FALSE) {
 
 check_template_name <- function(name) {
   if (!is.character(name) || length(name) != 1 || is.na(name) ||
-      !grepl("^[A-Za-z0-9._-]+$", name)) {
+        !grepl("^[A-Za-z0-9._-]+$", name)) {
     stop(
       "`name` must be a single string made of letters, digits, ",
       "'.', '_' or '-'.",

@@ -14,9 +14,7 @@ create_presentation(
   lang = "fr",
   template = getOption("kquarto.r.presentation.template", "default-presentation"),
   formats = NULL,
-  overwrite = FALSE,
-  name = NULL,
-  path = NULL
+  overwrite = FALSE
 )
 }
 \arguments{
@@ -51,9 +49,6 @@ Typst is not available: Quarto has no Typst slides.}
 
 \item{overwrite}{Whether to replace the slides of an existing
 presentation.}
-
-\item{name, path}{Deprecated, use \code{dirname_presentations} and
-\code{path_presentations}.}
 }
 \value{
 The paths of the \code{.qmd} files, invisibly.

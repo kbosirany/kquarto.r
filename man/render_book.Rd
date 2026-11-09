@@ -11,8 +11,7 @@ render_book(
   output_format = NULL,
   quiet = FALSE,
   ...,
-  workers = getOption("kquarto.r.workers", 1L),
-  path = NULL
+  workers = getOption("kquarto.r.workers", 1L)
 )
 }
 \arguments{
@@ -42,8 +41,6 @@ if one fails, and the error lists the failed ones. Each render needs
 its own memory (an R session, and Chrome for the PDF of interactive
 content), e.g. \code{workers = parallel::detectCores() - 1} on a machine
 with enough memory.}
-
-\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The paths of the output folders, invisibly.

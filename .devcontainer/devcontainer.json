@@ -1,0 +1,16 @@
+{
+  "name": "kquarto.r",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "args": { "R_VERSION": "latest" }
+  },
+  // 14 GB at most (WSL2 has 16 GB)
+  "runArgs": ["--memory=14g"],
+  "postCreateCommand": "Rscript -e 'pak::local_install_dev_deps()'",
+  "customizations": {
+    "vscode": {
+      "extensions": ["REditorSupport.r", "quarto.quarto"]
+    }
+  }
+}

@@ -22,7 +22,6 @@
 #'   its own memory (an R session, and Chrome for the PDF of interactive
 #'   content), e.g. `workers = parallel::detectCores() - 1` on a machine
 #'   with enough memory.
-#' @param path Deprecated, use `path_reports`.
 #'
 #' @return The paths of the output folders, invisibly.
 #' @export
@@ -40,9 +39,7 @@ render_book <- function(dirname_reports = NULL,
                         output_format = NULL,
                         quiet = FALSE,
                         ...,
-                        workers = getOption("kquarto.r.workers", 1L),
-                        path = NULL) {
-  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
+                        workers = getOption("kquarto.r.workers", 1L)) {
   renders <- book_renders(
     dirname_reports, path_reports, output_dir, output_format, quiet, ...
   )
@@ -206,7 +203,7 @@ render_in_session <- function(args) {
 
 check_workers <- function(workers) {
   if (!is.numeric(workers) || length(workers) != 1 || is.na(workers) ||
-      workers < 1 || workers != round(workers)) {
+        workers < 1 || workers != round(workers)) {
     stop("`workers` must be a whole number, 1 or more.", call. = FALSE)
   }
   invisible(TRUE)

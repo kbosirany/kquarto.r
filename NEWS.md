@@ -1,4 +1,26 @@
-# kquarto.r (development version)
+# kquarto.r 0.3.0
+
+* Rupture de compatibilité : les noms d'arguments dépréciés sont supprimés.
+  Utiliser `path_reports` (au lieu de `path`), `dirname_presentations` (au
+  lieu de `name` et `presentations`), `path_presentations` (au lieu de `path`
+  et `presentations_path`), `subdir_reports` (au lieu de `site_subdir`),
+  `subdir_presentations` (au lieu de `presentations_site_subdir` et
+  `presentations_subdir`) et `path_site` (au lieu de `dest`). `build_site()`
+  n'a plus que 13 arguments (18 avant).
+
+* `build_site()` ne s'arrête plus quand le dépôt n'a ni livre ni présentation :
+  il le dit dans un message et construit le site pkgdown seul. Avant, c'était
+  une erreur, qui faisait échouer le job `pages` d'un paquet sans rapport.
+
+* `build_site()` a un argument `output_format` : formats rendus en plus du
+  HTML, qui l'est toujours (`"html"` pour les livres, `"revealjs"` pour les
+  présentations), par exemple `"typst"` ou `"beamer"`. Il n'est donné qu'au
+  rendu des livres et des présentations, pas à pkgdown ; un livre ou une
+  présentation qui ne déclare pas le format n'est pas rendu dedans, et
+  `"all"` rend tous leurs formats. Les fichiers supplémentaires d'un livre
+  sont ajoutés à son dossier du site. `dev/build_site.R` appelle maintenant
+  `kquarto.r::build_site()` (variable `KPKG_OUTPUT_FORMAT`) et
+  `dev/render_reports.R`, qui le doublonnait, est supprimé.
 
 * `render_book()` (et `build_site()`) préviennent avant le rendu quand un livre
   qui utilise des widgets (leaflet, plotly, DT...) est rendu en PDF (Typst ou
@@ -8,12 +30,29 @@
   `webshot2` et `chromote` passent en Suggests, et `SystemRequirements` déclare
   Quarto et Chrome/Chromium.
 
+* `update_gitlab_ci()` accepte aussi la liste écrite sur la ligne de la variable
+  (`- ITEM: [a, b]`) et a un argument `fetch` pour faire un `git fetch origin`
+  avant de lire les branches.
+
+* Nouvelle fonction `update_gitlab_ci()` : met à jour dans `.gitlab-ci.yml` la
+  liste (`ITEM`) de la matrice du job qui rend chaque livre et chaque
+  présentation dans son propre job, avec ceux du dossier de travail et des
+  branches `origin/main` et `origin/dev` (lues avec git). Seules les lignes de
+  la liste changent, commentaires compris.
+
 * Nouvelle fonction `source_report_setup(report)` : source le `setup.R` d'un
   livre depuis le chunk d'initialisation de ses chapitres. Le fichier est
   cherché depuis le dossier de travail et ses parents
   (`reports/<report>/setup.R`, ou `setup.R` dans le dossier du livre), donc
   le même appel marche pour `quarto render` et pour l'exécution des chunks à
   la main, depuis la racine du projet ou n'importe quel sous-dossier.
+
+* Nouvelle fonction `render_site_item(item)` : rend un livre ou une
+  présentation dans le dossier du site pkgdown, là où `build_site()` le
+  rendrait, pour un job de CI par élément (HTML toujours, plus
+  `output_format`). Un élément absent de la branche est ignoré.
+  `build_site(check_rendered = TRUE)` s'arrête si un livre ou une
+  présentation non rendu par `build_site()` n'est pas dans le site.
 
 * `render_book()`, `render_presentation()` et `build_site()` ont un argument
   `workers` (défaut : option `kquarto.r.workers`, sinon `1`) pour rendre

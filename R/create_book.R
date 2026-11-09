@@ -53,7 +53,6 @@
 #'   `_quarto.yml` and the template files are overwritten; chapters already
 #'   listed in the old `_quarto.yml` whose file still exists are kept in
 #'   `book: chapters`, after those of the template.
-#' @param path Deprecated, use `path_reports`.
 #'
 #' @return The paths of the report folders, invisibly.
 #' @export
@@ -81,9 +80,7 @@ create_book <- function(dirname_reports,
                         chapter_prefix = NULL,
                         ...,
                         formats = NULL,
-                        overwrite = FALSE,
-                        path = NULL) {
-  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
+                        overwrite = FALSE) {
   check_dirnames(dirname_reports)
   if (!dir.exists(path_reports)) {
     stop("`path_reports` does not exist: ", path_reports, call. = FALSE)
@@ -112,7 +109,7 @@ create_book <- function(dirname_reports,
 
   template_config <- yaml::read_yaml(file.path(template_path, "_quarto.yml"))
   if ("typst" %in% formats && is.null(author) &&
-      is.null(template_config$book$author)) {
+        is.null(template_config$book$author)) {
     warning(
       "The Typst (PDF) format of a book needs an author: ",
       "set `author`, or rendering will fail.",
@@ -183,7 +180,6 @@ create_book <- function(dirname_reports,
 #'
 #' @param path_reports Folder to search in.
 #' @param recursive Whether to search in subfolders.
-#' @param path Deprecated, use `path_reports`.
 #'
 #' @return The names (relative to `path_reports`) of the folders containing a
 #'   `_quarto.yml` of type `book`.
@@ -194,9 +190,7 @@ create_book <- function(dirname_reports,
 #' dir.create(tmp)
 #' create_book(c("rapport_a", "rapport_b"), path_reports = tmp)
 #' list_books(tmp)
-list_books <- function(path_reports = "reports", recursive = FALSE,
-                       path = NULL) {
-  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
+list_books <- function(path_reports = "reports", recursive = FALSE) {
   dirs <- list.dirs(path_reports, full.names = FALSE, recursive = recursive)
   dirs <- dirs[
     dirs != "" & file.exists(file.path(path_reports, dirs, "_quarto.yml"))
@@ -296,9 +290,7 @@ set_formats <- function(config, formats, template_path) {
 add_pdf_download <- function(dirname_reports,
                              path_reports = "reports",
                              format = c("typst", "pdf"),
-                             template = NULL,
-                             path = NULL) {
-  path_reports <- renamed_arg(path_reports, path, "path_reports", "path")
+                             template = NULL) {
   check_dirnames(dirname_reports)
   format <- match.arg(format)
   template_path <- if (is.null(template)) {
@@ -354,7 +346,7 @@ add_pdf_download <- function(dirname_reports,
 
 check_dirnames <- function(dirname_reports) {
   if (!is.character(dirname_reports) || length(dirname_reports) == 0 ||
-      anyNA(dirname_reports) || any(dirname_reports == "")) {
+        anyNA(dirname_reports) || any(dirname_reports == "")) {
     stop(
       "`dirname_reports` must be a non-empty character vector.",
       call. = FALSE

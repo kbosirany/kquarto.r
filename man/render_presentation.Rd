@@ -11,9 +11,7 @@ render_presentation(
   quiet = FALSE,
   output_dir = NULL,
   ...,
-  workers = getOption("kquarto.r.workers", 1L),
-  name = NULL,
-  path = NULL
+  workers = getOption("kquarto.r.workers", 1L)
 )
 }
 \arguments{
@@ -42,9 +40,6 @@ leaves the files next to the \code{.qmd}. Used by \code{\link[=build_site]{build
 
 \item{workers}{Number of presentations rendered at the same time, see
 \code{\link[=render_book]{render_book()}}.}
-
-\item{name, path}{Deprecated, use \code{dirname_presentations} and
-\code{path_presentations}.}
 }
 \value{
 The paths of the rendered files (\code{.html}, \code{.pdf} for

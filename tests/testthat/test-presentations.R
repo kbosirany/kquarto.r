@@ -37,7 +37,8 @@ test_that("create_presentation writes the slides and the template files", {
   expect_true(file.exists(file.path(dir, "b", "inrae-slides.scss")))
   expect_true(file.exists(file.path(dir, "b", "images", "logo-inrae.png")))
   # the masks of the INRAE PowerPoint template
-  for (image in c("inrae-titre.png", "inrae-titre-vert.png", "inrae-pied.png")) {
+  images <- c("inrae-titre.png", "inrae-titre-vert.png", "inrae-pied.png")
+  for (image in images) {
     expect_true(file.exists(file.path(dir, "b", "images", image)))
   }
   expect_false(file.exists(file.path(dir, "b", "slides.qmd")))

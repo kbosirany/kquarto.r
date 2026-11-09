@@ -9,8 +9,7 @@ create_book_chapter(
   name,
   path_reports = "reports",
   title = name,
-  prefix = NULL,
-  path = NULL
+  prefix = NULL
 )
 }
 \arguments{
@@ -27,8 +26,6 @@ default \code{name}.}
 \item{prefix}{File name prefix. By default derived from the \code{lang} of the
 book's \verb{_quarto.yml}: \code{"chapitre"} for French, \code{"chapter"} otherwise
 (see \code{\link[=chapter_prefix]{chapter_prefix()}}).}
-
-\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The path of the chapter file, invisibly.

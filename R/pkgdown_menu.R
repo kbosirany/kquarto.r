@@ -37,11 +37,6 @@
 #' @param path_presentations Folder containing the presentation folders.
 #' @param subdir_presentations Folder of the pkgdown site (relative to its
 #'   root) where the presentations are rendered, used to build the links.
-#' @param path Deprecated, use `path_reports`.
-#' @param site_subdir Deprecated, use `subdir_reports`.
-#' @param presentations Deprecated, use `dirname_presentations`.
-#' @param presentations_path Deprecated, use `path_presentations`.
-#' @param presentations_site_subdir Deprecated, use `subdir_presentations`.
 #'
 #' @return The YAML list written to `pkgdown_file`, invisibly.
 #' @export
@@ -59,42 +54,22 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
                                add_to_navbar = TRUE,
                                dirname_presentations = NULL,
                                path_presentations = "presentations",
-                               subdir_presentations = "presentations",
-                               path = NULL,
-                               site_subdir = NULL,
-                               presentations = NULL,
-                               presentations_path = NULL,
-                               presentations_site_subdir = NULL) {
-  path <- renamed_arg(path_reports, path, "path_reports", "path")
-  site_subdir <- renamed_arg(
-    subdir_reports, site_subdir, "subdir_reports", "site_subdir"
-  )
-  presentations <- renamed_arg(
-    dirname_presentations, presentations, "dirname_presentations",
-    "presentations"
-  )
-  presentations_path <- renamed_arg(
-    path_presentations, presentations_path, "path_presentations",
-    "presentations_path"
-  )
-  presentations_site_subdir <- renamed_arg(
-    subdir_presentations, presentations_site_subdir, "subdir_presentations",
-    "presentations_site_subdir"
-  )
+                               subdir_presentations = "presentations") {
+  presentations <- dirname_presentations
   if (is.null(dirname_reports)) {
-    dirname_reports <- list_books(path)
+    dirname_reports <- list_books(path_reports)
   }
   if (is.null(presentations)) {
-    presentations <- list_presentations(presentations_path)
+    presentations <- list_presentations(path_presentations)
   }
   if (length(dirname_reports) == 0 && length(presentations) == 0) {
-    stop("No Quarto book found in: ", path, call. = FALSE)
+    stop("No Quarto book found in: ", path_reports, call. = FALSE)
   }
   if (length(dirname_reports) > 0) check_dirnames(dirname_reports)
   if (length(presentations) > 0) check_dirnames(presentations)
 
   configs <- lapply(dirname_reports, function(d) {
-    yml <- file.path(path, d, "_quarto.yml")
+    yml <- file.path(path_reports, d, "_quarto.yml")
     if (file.exists(yml)) yaml::read_yaml(yml) else list()
   })
   titles <- if (is.null(titles)) {
@@ -138,7 +113,7 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
       menu = reports_menu(
         lang,
         titles,
-        file.path(site_subdir, dirname_reports, "index.html"),
+        file.path(subdir_reports, dirname_reports, "index.html"),
         category = category,
         dirnames = dirname_reports
       )
@@ -146,7 +121,7 @@ update_pkgdown_yml <- function(dirname_reports = NULL,
   }
 
   config <- set_presentations_menu(
-    config, presentations, presentations_path, presentations_site_subdir,
+    config, presentations, path_presentations, subdir_presentations,
     add_to_navbar
   )
   yaml::write_yaml(config, pkgdown_file)
@@ -198,171 +173,6 @@ set_presentations_menu <- function(config, presentations, path, site_subdir,
     )
   )
   config
-}
-
-#' Build a pkgdown site including the rendered books
-#'
-#' Renders the books and the presentations into the pkgdown site, adds them
-#' to the navbar (see [update_pkgdown_yml()]) and builds the site with
-#' [pkgdown::build_site()] in `path_site`.
-#'
-#' The site of a development version (pkgdown `development: mode`) is
-#' written by pkgdown in `<path_site>/dev`: the books and the presentations
-#' go there too, so that the links of its navbar work.
-#'
-#' @param path_reports Folder containing the book folders.
-#' @param path_site Folder of the pkgdown site, e.g. `"public"` (GitLab
-#'   Pages) or `"docs"` (GitHub Pages). It is given to pkgdown as its
-#'   `destination`.
-#' @param subdir_reports Folder of the site where each book is rendered in
-#'   its own sub-folder.
-#' @param render_reports Whether to render the books.
-#' @param render_presentations Whether to render the presentations. The
-#'   navbar is updated with every book and presentation found, rendered or
-#'   not (the ones not rendered keep their previous output in the site, e.g.
-#'   rendered by other CI jobs).
-#' @param path_presentations Folder containing the presentation folders (see
-#'   [create_presentation()]). Without this folder, or without any
-#'   presentation in it, there is no presentation on the site.
-#' @param subdir_presentations Folder of the site where each presentation is
-#'   rendered in its own sub-folder (`index.html`, and the PDF if the
-#'   presentation has one).
-#' @param build_readme Whether to rebuild the README with
-#'   [devtools::build_readme()].
-#' @param clean Whether to remove a book's previous output before rendering.
-#' @param workers Number of books and presentations rendered at the same
-#'   time, see [render_book()].
-#' @param ... Other arguments passed to [pkgdown::build_site()].
-#' @param path,site_subdir,presentations_path,presentations_subdir Deprecated,
-#'   use `path_reports`, `subdir_reports`, `path_presentations` and
-#'   `subdir_presentations`.
-#' @param dest Deprecated, use `path_site`. With `dest`, the books and the
-#'   presentations are rendered in `dest` (not in its `dev` folder) and
-#'   pkgdown writes in the `destination` of `_pkgdown.yml`, as before.
-#'
-#' @return The result of [pkgdown::build_site()], invisibly.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' build_site()
-#' }
-build_site <- function(path_reports = "reports",
-                       path_site = "public",
-                       subdir_reports = "reports",
-                       render_reports = TRUE,
-                       path_presentations = "presentations",
-                       subdir_presentations = "presentations",
-                       render_presentations = TRUE,
-                       build_readme = FALSE,
-                       clean = TRUE,
-                       workers = getOption("kquarto.r.workers", 1L),
-                       ...,
-                       path = NULL,
-                       dest = NULL,
-                       site_subdir = NULL,
-                       presentations_path = NULL,
-                       presentations_subdir = NULL) {
-  path <- renamed_arg(path_reports, path, "path_reports", "path")
-  site_subdir <- renamed_arg(
-    subdir_reports, site_subdir, "subdir_reports", "site_subdir"
-  )
-  presentations_path <- renamed_arg(
-    path_presentations, presentations_path, "path_presentations",
-    "presentations_path"
-  )
-  presentations_subdir <- renamed_arg(
-    subdir_presentations, presentations_subdir, "subdir_presentations",
-    "presentations_subdir"
-  )
-  args <- list(...)
-  if (is.null(dest)) {
-    # pkgdown writes in `path_site`, or in `<path_site>/dev` for a
-    # development version: the books and the presentations go there too
-    args$override$destination <- args$override$destination %||% path_site
-    dest <- pkgdown_dst_path(args$override)
-  } else {
-    dest <- renamed_arg(path_site, dest, "path_site", "dest")
-  }
-  for (pkg in c("pkgdown", if (build_readme) "devtools")) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      stop("Package '", pkg, "' is required.", call. = FALSE)
-    }
-  }
-  if (build_readme) {
-    devtools::build_readme()
-  }
-  # The navbar lists every book and presentation, also the ones not
-  # rendered this time (their previous output stays in the site).
-  books <- list_books(path)
-  presentations <- list_presentations(presentations_path)
-  if ((render_reports || render_presentations) &&
-      length(books) == 0 && length(presentations) == 0) {
-    stop("No Quarto book found in: ", path, call. = FALSE)
-  }
-  if (length(books) > 0 || length(presentations) > 0) {
-    # init_site() creates the marker file that lets pkgdown recognise the
-    # destination folder once the books are written into it, here or before
-    # (e.g. by other CI jobs, without rendering here).
-    pkgdown_init_site(override = args$override %||% list())
-  }
-  if (render_reports || render_presentations) {
-    # the books and the presentations in a single queue, so that `workers`
-    # renders them all at the same time
-    renders <- list()
-    for (book in if (render_reports) books) {
-      target <- file.path(dest, site_subdir, book)
-      if (clean) unlink(target, recursive = TRUE)
-      # The folder must exist for normalizePath() to return an absolute path
-      # (otherwise Quarto resolves it relative to the book folder).
-      dir.create(target, recursive = TRUE, showWarnings = FALSE)
-      renders <- c(renders, book_renders(
-        book,
-        path_reports = path,
-        output_dir = normalizePath(target, mustWork = FALSE)
-      ))
-    }
-    rendered <- if (render_presentations) presentations else character()
-    if (length(rendered) > 0) {
-      renders <- c(renders, presentation_renders(rendered, presentations_path))
-    }
-    run_renders(renders, workers)
-    if (length(rendered) > 0) {
-      target <- file.path(dest, presentations_subdir)
-      if (clean) unlink(file.path(target, rendered), recursive = TRUE)
-      dir.create(target, recursive = TRUE, showWarnings = FALSE)
-      copy_presentation_outputs(
-        rendered, file.path(presentations_path, rendered),
-        normalizePath(target, mustWork = FALSE)
-      )
-    }
-  }
-  if (length(books) > 0 || length(presentations) > 0) {
-    update_pkgdown_yml(
-      books,
-      path_reports = path,
-      subdir_reports = site_subdir,
-      dirname_presentations = presentations,
-      path_presentations = presentations_path,
-      subdir_presentations = presentations_subdir
-    )
-  }
-  invisible(do.call(pkgdown_build_site, args))
-}
-
-# Wrappers around pkgdown, so that tests can mock them.
-pkgdown_init_site <- function(...) {
-  pkgdown::init_site(...)
-}
-
-pkgdown_build_site <- function(...) {
-  pkgdown::build_site(...)
-}
-
-# The folder where pkgdown writes the site of the package of the working
-# directory: `destination`, or `<destination>/dev` for a development version.
-pkgdown_dst_path <- function(override) {
-  pkgdown::as_pkgdown(".", override = override)$dst_path
 }
 
 # The language of the books or presentations: the `_en`/`_fr` suffix of

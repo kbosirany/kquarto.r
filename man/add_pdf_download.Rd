@@ -8,8 +8,7 @@ add_pdf_download(
   dirname_reports,
   path_reports = "reports",
   format = c("typst", "pdf"),
-  template = NULL,
-  path = NULL
+  template = NULL
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ the PDF (e.g. \code{"inrae"}). Its files missing from the book (e.g.
 \code{inrae.typ}, \verb{_brand.yml}) are copied; existing files are not
 overwritten. \code{NULL} uses a plain style (table of contents, numbered
 sections, A4).}
-
-\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The paths of the book folders, invisibly.

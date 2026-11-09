@@ -30,7 +30,7 @@ source_report_setup <- function(report, file = "setup.R",
                                 path_reports = "reports",
                                 envir = globalenv()) {
   if (!is.character(report) || length(report) != 1 || is.na(report) ||
-      !nzchar(report)) {
+        !nzchar(report)) {
     stop("`report` must be a single non-empty string.", call. = FALSE)
   }
   setup <- find_report_setup(report, file, path_reports, getwd())

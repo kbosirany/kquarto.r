@@ -102,7 +102,8 @@ chapitres : mettre les calculs lents en cache (`saveRDS()`).
 
 ### Un job de CI par livre
 
-Pour rendre chaque livre et chaque présentation dans son propre job GitLab
+Pour un projet hébergé sur GitLab (ce dépôt, lui, utilise GitHub Actions) :
+pour rendre chaque livre et chaque présentation dans son propre job
 (en parallèle, avec des logs séparés), `render_site_item()` rend un élément
 dans le dossier du site, et `update_gitlab_ci()` tient à jour la liste des
 éléments de la matrice du `.gitlab-ci.yml` (ceux du dossier de travail et de
@@ -210,6 +211,17 @@ options(kquarto.r.template = "inrae")
 # Dériver un template pour une unité (autre logo, chapitres types...)
 create_template_book("inrae_mon_unite", from = "inrae")
 ```
+
+La même charte existe aussi en extension Quarto,
+[kquarto.inrae](https://github.com/kbosirany/kquarto.inrae), utilisable sans
+R et sans copie des fichiers de la charte dans chaque livre :
+
+```bash
+quarto use template kbosirany/kquarto.inrae/exemples/livre
+```
+
+Elle a vocation à remplacer les templates `inrae` et `inrae-presentation`
+de ce package.
 
 Contenu du template (`inst/templates/inrae/`) :
 

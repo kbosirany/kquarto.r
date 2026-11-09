@@ -11,3 +11,4 @@
 ^ci$
 ^Dockerfile$
 ^\.devcontainer$
+^CLAUDE\.md$

@@ -14,8 +14,7 @@ render_book(
   output_format = NULL,
   quiet = FALSE,
   ...,
-  workers = getOption("kquarto.r.workers", 1L),
-  path = NULL
+  workers = getOption("kquarto.r.workers", 1L)
 )
 ```
 
@@ -63,10 +62,6 @@ render_book(
   (an R session, and Chrome for the PDF of interactive content), e.g.
   `workers = parallel::detectCores() - 1` on a machine with enough
   memory.
-
-- path:
-
-  Deprecated, use `path_reports`.
 
 ## Value
 

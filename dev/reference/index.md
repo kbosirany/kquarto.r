@@ -38,8 +38,12 @@
 
 - [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
   : Build a pkgdown site including the rendered books
+- [`render_site_item()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_site_item.md)
+  : Render one book or presentation in the folder of the pkgdown site
 - [`update_pkgdown_yml()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_pkgdown_yml.md)
   : Add the books to the navbar of a pkgdown site
+- [`update_gitlab_ci()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_gitlab_ci.md)
+  : Update the list of books and presentations in the GitLab CI
 
 ## Templates
 

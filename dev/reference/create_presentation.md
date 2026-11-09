@@ -21,9 +21,7 @@ create_presentation(
   lang = "fr",
   template = getOption("kquarto.r.presentation.template", "default-presentation"),
   formats = NULL,
-  overwrite = FALSE,
-  name = NULL,
-  path = NULL
+  overwrite = FALSE
 )
 ```
 
@@ -74,10 +72,6 @@ create_presentation(
 - overwrite:
 
   Whether to replace the slides of an existing presentation.
-
-- name, path:
-
-  Deprecated, use `dirname_presentations` and `path_presentations`.
 
 ## Value
 

@@ -6,7 +6,7 @@ format is `revealjs`.
 ## Usage
 
 ``` r
-list_presentations(path_presentations = "presentations", path = NULL)
+list_presentations(path_presentations = "presentations")
 ```
 
 ## Arguments
@@ -14,10 +14,6 @@ list_presentations(path_presentations = "presentations", path = NULL)
 - path_presentations:
 
   Folder containing the presentation folders.
-
-- path:
-
-  Deprecated, use `path_presentations`.
 
 ## Value
 

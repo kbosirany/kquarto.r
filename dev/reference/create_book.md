@@ -20,8 +20,7 @@ create_book(
   chapter_prefix = NULL,
   ...,
   formats = NULL,
-  overwrite = FALSE,
-  path = NULL
+  overwrite = FALSE
 )
 ```
 
@@ -109,10 +108,6 @@ create_book(
   template files are overwritten; chapters already listed in the old
   `_quarto.yml` whose file still exists are kept in `book: chapters`,
   after those of the template.
-
-- path:
-
-  Deprecated, use `path_reports`.
 
 ## Value
 

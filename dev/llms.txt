@@ -87,7 +87,57 @@ build_site()
 
 # Seulement mettre à jour la barre de navigation
 update_pkgdown_yml()
+
+# Le HTML est toujours rendu ; d'autres formats s'ajoutent (seulement pour
+# les livres et présentations qui les déclarent)
+build_site(output_format = c("typst", "beamer"))
 ```
+
+[`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+donne `output_format` à
+[`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md)
+et à
+[`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md),
+jamais à pkgdown. Chaque format rejoue le code des chapitres : mettre
+les calculs lents en cache
+([`saveRDS()`](https://rdrr.io/r/base/readRDS.html)).
+
+### Un job de CI par livre
+
+Pour rendre chaque livre et chaque présentation dans son propre job
+GitLab (en parallèle, avec des logs séparés),
+[`render_site_item()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_site_item.md)
+rend un élément dans le dossier du site, et
+[`update_gitlab_ci()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_gitlab_ci.md)
+tient à jour la liste des éléments de la matrice du `.gitlab-ci.yml`
+(ceux du dossier de travail et de `origin/main` et `origin/dev`) :
+
+``` r
+
+# dans un job de la matrice `render` (ITEM: reports/01_mon_livre)
+render_site_item("reports/01_mon_livre")
+
+# dans le job `pages`, une fois les rendus récupérés en artefacts : échoue
+# si un livre ou une présentation manque dans le site
+build_site(
+  render_reports = FALSE, render_presentations = FALSE,
+  check_rendered = TRUE
+)
+
+# après avoir ajouté ou retiré un livre
+update_gitlab_ci(fetch = TRUE)
+```
+
+### Noms qui existent aussi ailleurs
+
+[`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+(pkgdown, devtools) et
+[`kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md)
+(knitr) existent dans d’autres packages. Avec les deux packages
+attachés, le dernier chargé masque l’autre : écrire
+[`kquarto.r::build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+et
+[`kquarto.r::kable()`](https://kbosirany.github.io/kquarto.r/dev/reference/kable.md).
 
 ## Présentations
 
@@ -247,8 +297,12 @@ Pour en faire le template par défaut :
 
 - [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
   : Build a pkgdown site including the rendered books
+- [`render_site_item()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_site_item.md)
+  : Render one book or presentation in the folder of the pkgdown site
 - [`update_pkgdown_yml()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_pkgdown_yml.md)
   : Add the books to the navbar of a pkgdown site
+- [`update_gitlab_ci()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_gitlab_ci.md)
+  : Update the list of books and presentations in the GitLab CI
 
 ## Templates
 

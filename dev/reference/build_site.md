@@ -20,13 +20,10 @@ build_site(
   render_presentations = TRUE,
   build_readme = FALSE,
   clean = TRUE,
+  output_format = NULL,
+  check_rendered = FALSE,
   workers = getOption("kquarto.r.workers", 1L),
-  ...,
-  path = NULL,
-  dest = NULL,
-  site_subdir = NULL,
-  presentations_path = NULL,
-  presentations_subdir = NULL
+  ...
 )
 ```
 
@@ -77,6 +74,31 @@ build_site(
 
   Whether to remove a book's previous output before rendering.
 
+- output_format:
+
+  Formats rendered in addition to the HTML, which is always rendered
+  (`"html"` for the books, `"revealjs"` for the presentations), e.g.
+  `"typst"`, `"pdf"` for the books or `"beamer"`, `"pptx"` for the
+  presentations. Only given to
+  [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md)
+  and
+  [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md),
+  not to pkgdown. A book or presentation that does not declare a format
+  is not rendered in it. `"all"` renders all the formats of each one.
+  The additional files of a book are added to its folder in the site.
+  Each format runs the code of the chapters again (`execute: freeze`
+  does not share the results between formats): cache the slow
+  computations in the chapters, e.g. with
+  [`saveRDS()`](https://rdrr.io/r/base/readRDS.html).
+
+- check_rendered:
+
+  Whether to stop if a book (with `render_reports = FALSE`) or a
+  presentation (with `render_presentations = FALSE`) is not in the site
+  yet, as rendered by
+  [`render_site_item()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_site_item.md)
+  in other CI jobs.
+
 - workers:
 
   Number of books and presentations rendered at the same time, see
@@ -86,17 +108,6 @@ build_site(
 
   Other arguments passed to
   [`pkgdown::build_site()`](https://pkgdown.r-lib.org/reference/build_site.html).
-
-- path, site_subdir, presentations_path, presentations_subdir:
-
-  Deprecated, use `path_reports`, `subdir_reports`, `path_presentations`
-  and `subdir_presentations`.
-
-- dest:
-
-  Deprecated, use `path_site`. With `dest`, the books and the
-  presentations are rendered in `dest` (not in its `dev` folder) and
-  pkgdown writes in the `destination` of `_pkgdown.yml`, as before.
 
 ## Value
 

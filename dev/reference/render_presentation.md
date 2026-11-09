@@ -15,9 +15,7 @@ render_presentation(
   quiet = FALSE,
   output_dir = NULL,
   ...,
-  workers = getOption("kquarto.r.workers", 1L),
-  name = NULL,
-  path = NULL
+  workers = getOption("kquarto.r.workers", 1L)
 )
 ```
 
@@ -63,10 +61,6 @@ render_presentation(
 
   Number of presentations rendered at the same time, see
   [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md).
-
-- name, path:
-
-  Deprecated, use `dirname_presentations` and `path_presentations`.
 
 ## Value
 

@@ -5,7 +5,7 @@ List the Quarto books of a folder
 ## Usage
 
 ``` r
-list_books(path_reports = "reports", recursive = FALSE, path = NULL)
+list_books(path_reports = "reports", recursive = FALSE)
 ```
 
 ## Arguments
@@ -17,10 +17,6 @@ list_books(path_reports = "reports", recursive = FALSE, path = NULL)
 - recursive:
 
   Whether to search in subfolders.
-
-- path:
-
-  Deprecated, use `path_reports`.
 
 ## Value
 

@@ -17,7 +17,7 @@ render_presentation()."><meta name="robots" content="noindex"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kquarto.r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,9 +68,7 @@ templates (see <code><a href="create_template_presentation.html">list_templates_
 <span>  lang <span class="op">=</span> <span class="st">"fr"</span>,</span>
 <span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"kquarto.r.presentation.template"</span>, <span class="st">"default-presentation"</span><span class="op">)</span>,</span>
 <span>  formats <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  path <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -124,11 +122,6 @@ Typst is not available: Quarto has no Typst slides.</p></dd>
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
 <dd><p>Whether to replace the slides of an existing
 presentation.</p></dd>
-
-
-<dt id="arg-name-path">name, path<a class="anchor" aria-label="anchor" href="#arg-name-path"></a></dt>
-<dd><p>Deprecated, use <code>dirname_presentations</code> and
-<code>path_presentations</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

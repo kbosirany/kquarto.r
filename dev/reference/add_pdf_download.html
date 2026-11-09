@@ -13,7 +13,7 @@ kept. Render then all the formats with render_book(output_format = &quot;all&quo
 
     <a class="navbar-brand me-2" href="../index.html">kquarto.r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,8 +56,7 @@ kept. Render then all the formats with <code>render_book(output_format = "all")<
 <span>  <span class="va">dirname_reports</span>,</span>
 <span>  path_reports <span class="op">=</span> <span class="st">"reports"</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"typst"</span>, <span class="st">"pdf"</span><span class="op">)</span>,</span>
-<span>  template <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  path <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  template <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,10 +84,6 @@ the PDF (e.g. <code>"inrae"</code>). Its files missing from the book (e.g.
 <code>inrae.typ</code>, <code>_brand.yml</code>) are copied; existing files are not
 overwritten. <code>NULL</code> uses a plain style (table of contents, numbered
 sections, A4).</p></dd>
-
-
-<dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
-<dd><p>Deprecated, use <code>path_reports</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

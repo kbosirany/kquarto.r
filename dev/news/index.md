@@ -1,6 +1,35 @@
 # Changelog
 
-## kquarto.r (development version)
+## kquarto.r 0.3.0
+
+- Rupture de compatibilité : les noms d’arguments dépréciés sont
+  supprimés. Utiliser `path_reports` (au lieu de `path`),
+  `dirname_presentations` (au lieu de `name` et `presentations`),
+  `path_presentations` (au lieu de `path` et `presentations_path`),
+  `subdir_reports` (au lieu de `site_subdir`), `subdir_presentations`
+  (au lieu de `presentations_site_subdir` et `presentations_subdir`) et
+  `path_site` (au lieu de `dest`).
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  n’a plus que 13 arguments (18 avant).
+
+- [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  ne s’arrête plus quand le dépôt n’a ni livre ni présentation : il le
+  dit dans un message et construit le site pkgdown seul. Avant, c’était
+  une erreur, qui faisait échouer le job `pages` d’un paquet sans
+  rapport.
+
+- [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  a un argument `output_format` : formats rendus en plus du HTML, qui
+  l’est toujours (`"html"` pour les livres, `"revealjs"` pour les
+  présentations), par exemple `"typst"` ou `"beamer"`. Il n’est donné
+  qu’au rendu des livres et des présentations, pas à pkgdown ; un livre
+  ou une présentation qui ne déclare pas le format n’est pas rendu
+  dedans, et `"all"` rend tous leurs formats. Les fichiers
+  supplémentaires d’un livre sont ajoutés à son dossier du site.
+  `dev/build_site.R` appelle maintenant
+  [`kquarto.r::build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  (variable `KPKG_OUTPUT_FORMAT`) et `dev/render_reports.R`, qui le
+  doublonnait, est supprimé.
 
 - [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md)
   (et
@@ -13,6 +42,19 @@
   `chromote` passent en Suggests, et `SystemRequirements` déclare Quarto
   et Chrome/Chromium.
 
+- [`update_gitlab_ci()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_gitlab_ci.md)
+  accepte aussi la liste écrite sur la ligne de la variable
+  (`- ITEM: [a, b]`) et a un argument `fetch` pour faire un
+  `git fetch origin` avant de lire les branches.
+
+- Nouvelle fonction
+  [`update_gitlab_ci()`](https://kbosirany.github.io/kquarto.r/dev/reference/update_gitlab_ci.md)
+  : met à jour dans `.gitlab-ci.yml` la liste (`ITEM`) de la matrice du
+  job qui rend chaque livre et chaque présentation dans son propre job,
+  avec ceux du dossier de travail et des branches `origin/main` et
+  `origin/dev` (lues avec git). Seules les lignes de la liste changent,
+  commentaires compris.
+
 - Nouvelle fonction `source_report_setup(report)` : source le `setup.R`
   d’un livre depuis le chunk d’initialisation de ses chapitres. Le
   fichier est cherché depuis le dossier de travail et ses parents
@@ -20,6 +62,16 @@
   donc le même appel marche pour `quarto render` et pour l’exécution des
   chunks à la main, depuis la racine du projet ou n’importe quel
   sous-dossier.
+
+- Nouvelle fonction `render_site_item(item)` : rend un livre ou une
+  présentation dans le dossier du site pkgdown, là où
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  le rendrait, pour un job de CI par élément (HTML toujours, plus
+  `output_format`). Un élément absent de la branche est ignoré.
+  `build_site(check_rendered = TRUE)` s’arrête si un livre ou une
+  présentation non rendu par
+  [`build_site()`](https://kbosirany.github.io/kquarto.r/dev/reference/build_site.md)
+  n’est pas dans le site.
 
 - [`render_book()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_book.md),
   [`render_presentation()`](https://kbosirany.github.io/kquarto.r/dev/reference/render_presentation.md)

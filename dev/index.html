@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kquarto.r</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -152,13 +152,41 @@
 <span><span class="fu"><a href="reference/build_site.html">build_site</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Seulement mettre à jour la barre de navigation</span></span>
-<span><span class="fu"><a href="reference/update_pkgdown_yml.html">update_pkgdown_yml</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/update_pkgdown_yml.html">update_pkgdown_yml</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Le HTML est toujours rendu ; d'autres formats s'ajoutent (seulement pour</span></span>
+<span><span class="co"># les livres et présentations qui les déclarent)</span></span>
+<span><span class="fu"><a href="reference/build_site.html">build_site</a></span><span class="op">(</span>output_format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"typst"</span>, <span class="st">"beamer"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="reference/build_site.html">build_site()</a></code> donne <code>output_format</code> à <code><a href="reference/render_book.html">render_book()</a></code> et à <code><a href="reference/render_presentation.html">render_presentation()</a></code>, jamais à pkgdown. Chaque format rejoue le code des chapitres : mettre les calculs lents en cache (<code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>).</p>
+<div class="section level3">
+<h3 id="un-job-de-ci-par-livre">Un job de CI par livre<a class="anchor" aria-label="anchor" href="#un-job-de-ci-par-livre"></a>
+</h3>
+<p>Pour rendre chaque livre et chaque présentation dans son propre job GitLab (en parallèle, avec des logs séparés), <code><a href="reference/render_site_item.html">render_site_item()</a></code> rend un élément dans le dossier du site, et <code><a href="reference/update_gitlab_ci.html">update_gitlab_ci()</a></code> tient à jour la liste des éléments de la matrice du <code>.gitlab-ci.yml</code> (ceux du dossier de travail et de <code>origin/main</code> et <code>origin/dev</code>) :</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># dans un job de la matrice `render` (ITEM: reports/01_mon_livre)</span></span>
+<span><span class="fu"><a href="reference/render_site_item.html">render_site_item</a></span><span class="op">(</span><span class="st">"reports/01_mon_livre"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># dans le job `pages`, une fois les rendus récupérés en artefacts : échoue</span></span>
+<span><span class="co"># si un livre ou une présentation manque dans le site</span></span>
+<span><span class="fu"><a href="reference/build_site.html">build_site</a></span><span class="op">(</span></span>
+<span>  render_reports <span class="op">=</span> <span class="cn">FALSE</span>, render_presentations <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  check_rendered <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># après avoir ajouté ou retiré un livre</span></span>
+<span><span class="fu"><a href="reference/update_gitlab_ci.html">update_gitlab_ci</a></span><span class="op">(</span>fetch <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="noms-qui-existent-aussi-ailleurs">Noms qui existent aussi ailleurs<a class="anchor" aria-label="anchor" href="#noms-qui-existent-aussi-ailleurs"></a>
+</h3>
+<p><code><a href="reference/build_site.html">build_site()</a></code> (pkgdown, devtools) et <code><a href="reference/kable.html">kable()</a></code> (knitr) existent dans d’autres packages. Avec les deux packages attachés, le dernier chargé masque l’autre : écrire <code><a href="reference/build_site.html">kquarto.r::build_site()</a></code> et <code><a href="reference/kable.html">kquarto.r::kable()</a></code>.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="présentations">Présentations<a class="anchor" aria-label="anchor" href="#pr%C3%A9sentations"></a>
 </h2>
 <p>Une présentation (reveal.js) est un dossier avec un seul fichier <code>&lt;nom&gt;.qmd</code>, indépendant des books. Elle a ses propres templates, rangés dans les mêmes dossiers que ceux des books : un <code>template.yml</code> y déclare le <code>type</code> (<code>book</code> par défaut, ou <code>presentation</code>), et chaque fonction de liste ne montre que son type.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/create_presentation.html">create_presentation</a></span><span class="op">(</span></span>
 <span>  <span class="st">"seminaire"</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Mon séminaire"</span>,</span>
@@ -189,7 +217,7 @@
 <div class="section level2">
 <h2 id="templates">Templates<a class="anchor" aria-label="anchor" href="#templates"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Enregistrer un rapport déjà configuré comme template réutilisable</span></span>
 <span><span class="fu"><a href="reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"mon_template"</span>, from <span class="op">=</span> <span class="st">"rapport_technique"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/list_templates_book.html">list_templates_book</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -201,7 +229,7 @@
 <h3 id="template-inrae">Template INRAE<a class="anchor" aria-label="anchor" href="#template-inrae"></a>
 </h3>
 <p>Le template <code>inrae</code> est livré avec le package : couleurs et polices de la <a href="https://www.inrae.fr/charte-graphique-inrae" class="external-link">charte graphique INRAE</a>, logo, favicon, page de titre et bibliographie (<code>references.bib</code>).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/create_book.html">create_book</a></span><span class="op">(</span><span class="st">"rapport"</span>, template <span class="op">=</span> <span class="st">"inrae"</span>, author <span class="op">=</span> <span class="st">"Kevin Orlando"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Ou comme template par défaut, par exemple dans le .Rprofile</span></span>
@@ -225,7 +253,7 @@
 <h3 id="templates-livrés-par-un-autre-package">Templates livrés par un autre package<a class="anchor" aria-label="anchor" href="#templates-livr%C3%A9s-par-un-autre-package"></a>
 </h3>
 <p>Un package (par exemple une charte d’unité) peut livrer ses templates dans <code>inst/templates/&lt;nom&gt;/</code> :</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Depuis la racine de ce package</span></span>
 <span><span class="fu"><a href="reference/create_template_book.html">create_template_book</a></span><span class="op">(</span><span class="st">"charte"</span>, from <span class="op">=</span> <span class="st">"inrae"</span>, dir <span class="op">=</span> <span class="st">"inst/templates"</span><span class="op">)</span></span>
 <span></span>

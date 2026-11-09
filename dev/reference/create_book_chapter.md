@@ -13,8 +13,7 @@ create_book_chapter(
   name,
   path_reports = "reports",
   title = name,
-  prefix = NULL,
-  path = NULL
+  prefix = NULL
 )
 ```
 
@@ -42,10 +41,6 @@ create_book_chapter(
   File name prefix. By default derived from the `lang` of the book's
   `_quarto.yml`: `"chapitre"` for French, `"chapter"` otherwise (see
   [`chapter_prefix()`](https://kbosirany.github.io/kquarto.r/dev/reference/chapter_prefix.md)).
-
-- path:
-
-  Deprecated, use `path_reports`.
 
 ## Value
 

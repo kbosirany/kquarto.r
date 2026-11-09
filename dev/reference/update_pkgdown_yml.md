@@ -30,12 +30,7 @@ update_pkgdown_yml(
   add_to_navbar = TRUE,
   dirname_presentations = NULL,
   path_presentations = "presentations",
-  subdir_presentations = "presentations",
-  path = NULL,
-  site_subdir = NULL,
-  presentations = NULL,
-  presentations_path = NULL,
-  presentations_site_subdir = NULL
+  subdir_presentations = "presentations"
 )
 ```
 
@@ -88,26 +83,6 @@ update_pkgdown_yml(
 
   Folder of the pkgdown site (relative to its root) where the
   presentations are rendered, used to build the links.
-
-- path:
-
-  Deprecated, use `path_reports`.
-
-- site_subdir:
-
-  Deprecated, use `subdir_reports`.
-
-- presentations:
-
-  Deprecated, use `dirname_presentations`.
-
-- presentations_path:
-
-  Deprecated, use `path_presentations`.
-
-- presentations_site_subdir:
-
-  Deprecated, use `subdir_presentations`.
 
 ## Value
 

@@ -14,8 +14,7 @@ add_pdf_download(
   dirname_reports,
   path_reports = "reports",
   format = c("typst", "pdf"),
-  template = NULL,
-  path = NULL
+  template = NULL
 )
 ```
 
@@ -40,10 +39,6 @@ add_pdf_download(
   `"inrae"`). Its files missing from the book (e.g. `inrae.typ`,
   `_brand.yml`) are copied; existing files are not overwritten. `NULL`
   uses a plain style (table of contents, numbered sections, A4).
-
-- path:
-
-  Deprecated, use `path_reports`.
 
 ## Value
 

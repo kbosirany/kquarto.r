@@ -31,8 +31,6 @@
 #'   Typst is not available: Quarto has no Typst slides.
 #' @param overwrite Whether to replace the slides of an existing
 #'   presentation.
-#' @param name,path Deprecated, use `dirname_presentations` and
-#'   `path_presentations`.
 #'
 #' @return The paths of the `.qmd` files, invisibly.
 #' @export
@@ -60,16 +58,9 @@ create_presentation <- function(dirname_presentations,
                                   "default-presentation"
                                 ),
                                 formats = NULL,
-                                overwrite = FALSE,
-                                name = NULL,
-                                path = NULL) {
-  name <- renamed_arg(
-    if (missing(dirname_presentations)) NULL else dirname_presentations,
-    name, "dirname_presentations", "name"
-  )
-  path <- renamed_arg(
-    path_presentations, path, "path_presentations", "path"
-  )
+                                overwrite = FALSE) {
+  name <- dirname_presentations
+  path <- path_presentations
   check_dirnames(name)
   check_presentation_formats(formats)
   if (!dir.exists(path)) {
@@ -122,7 +113,7 @@ check_presentation_formats <- function(formats) {
     return(invisible(TRUE))
   }
   if (!is.character(formats) || anyNA(formats) ||
-      !all(formats %in% c("revealjs", "beamer"))) {
+        !all(formats %in% c("revealjs", "beamer"))) {
     stop(
       "`formats` must be a subset of \"revealjs\" and \"beamer\" ",
       "(Typst has no slides in Quarto).",
@@ -156,7 +147,6 @@ set_presentation_formats <- function(format, formats, template_path) {
 #' format is `revealjs`.
 #'
 #' @param path_presentations Folder containing the presentation folders.
-#' @param path Deprecated, use `path_presentations`.
 #'
 #' @return The names of the presentation folders.
 #' @export
@@ -166,11 +156,8 @@ set_presentation_formats <- function(format, formats, template_path) {
 #' dir.create(tmp)
 #' create_presentation("seminaire", path_presentations = tmp)
 #' list_presentations(tmp)
-list_presentations <- function(path_presentations = "presentations",
-                               path = NULL) {
-  path <- renamed_arg(
-    path_presentations, path, "path_presentations", "path"
-  )
+list_presentations <- function(path_presentations = "presentations") {
+  path <- path_presentations
   dirs <- list.dirs(path, full.names = FALSE, recursive = FALSE)
   dirs <- dirs[file.exists(file.path(path, dirs, paste0(dirs, ".qmd")))]
   is_slides <- vapply(dirs, function(d) {
@@ -205,8 +192,6 @@ list_presentations <- function(path_presentations = "presentations",
 #' @param ... Other arguments passed to [quarto::quarto_render()].
 #' @param workers Number of presentations rendered at the same time, see
 #'   [render_book()].
-#' @param name,path Deprecated, use `dirname_presentations` and
-#'   `path_presentations`.
 #'
 #' @return The paths of the rendered files (`.html`, `.pdf` for
 #'   `output_format = "beamer"` or `.pptx` for `output_format = "pptx"`),
@@ -224,15 +209,9 @@ render_presentation <- function(dirname_presentations = NULL,
                                 quiet = FALSE,
                                 output_dir = NULL,
                                 ...,
-                                workers = getOption("kquarto.r.workers", 1L),
-                                name = NULL,
-                                path = NULL) {
-  name <- renamed_arg(
-    dirname_presentations, name, "dirname_presentations", "name"
-  )
-  path <- renamed_arg(
-    path_presentations, path, "path_presentations", "path"
-  )
+                                workers = getOption("kquarto.r.workers", 1L)) {
+  name <- dirname_presentations
+  path <- path_presentations
   renders <- presentation_renders(name, path, output_format, quiet, ...)
   run_renders(renders, workers)
   if (!is.null(output_dir)) {

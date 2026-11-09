@@ -17,8 +17,7 @@ create_book(
   chapter_prefix = NULL,
   ...,
   formats = NULL,
-  overwrite = FALSE,
-  path = NULL
+  overwrite = FALSE
 )
 }
 \arguments{
@@ -77,8 +76,6 @@ report folder already contains a \verb{_quarto.yml}. If \code{TRUE}, the
 \verb{_quarto.yml} and the template files are overwritten; chapters already
 listed in the old \verb{_quarto.yml} whose file still exists are kept in
 \code{book: chapters}, after those of the template.}
-
-\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The paths of the report folders, invisibly.

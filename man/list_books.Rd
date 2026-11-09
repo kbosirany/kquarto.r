@@ -4,14 +4,12 @@
 \alias{list_books}
 \title{List the Quarto books of a folder}
 \usage{
-list_books(path_reports = "reports", recursive = FALSE, path = NULL)
+list_books(path_reports = "reports", recursive = FALSE)
 }
 \arguments{
 \item{path_reports}{Folder to search in.}
 
 \item{recursive}{Whether to search in subfolders.}
-
-\item{path}{Deprecated, use \code{path_reports}.}
 }
 \value{
 The names (relative to \code{path_reports}) of the folders containing a

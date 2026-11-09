@@ -227,22 +227,3 @@ test_that("create_book ignores the reports folder of a package", {
   expect_true("^reports$" %in% readLines(file.path(dir, ".Rbuildignore")))
   expect_false(file.exists(file.path(reports, ".Rbuildignore")))
 })
-
-test_that("the former `path` argument still works, with a warning", {
-  dir <- local_book_env()
-  expect_warning(
-    suppressMessages(create_book("a_fr", path = dir)),
-    "`path` is deprecated, use `path_reports`"
-  )
-  expect_warning(
-    expect_equal(list_books(path = dir), "a_fr"),
-    "`path` is deprecated"
-  )
-  expect_warning(
-    expect_warning(
-      suppressMessages(create_presentation(name = "p", path = dir)),
-      "`name` is deprecated, use `dirname_presentations`"
-    ),
-    "`path` is deprecated, use `path_presentations`"
-  )
-})

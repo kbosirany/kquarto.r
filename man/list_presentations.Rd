@@ -4,12 +4,10 @@
 \alias{list_presentations}
 \title{List the presentations of a folder}
 \usage{
-list_presentations(path_presentations = "presentations", path = NULL)
+list_presentations(path_presentations = "presentations")
 }
 \arguments{
 \item{path_presentations}{Folder containing the presentation folders.}
-
-\item{path}{Deprecated, use \code{path_presentations}.}
 }
 \value{
 The names of the presentation folders.

@@ -6,18 +6,19 @@
 \usage{
 render_book(
   dirname_reports = NULL,
-  path = ".",
+  path_reports = "reports",
   output_dir = NULL,
   output_format = NULL,
   quiet = FALSE,
-  ...
+  ...,
+  workers = getOption("kquarto.r.workers", 1L)
 )
 }
 \arguments{
-\item{dirname_reports}{Report folder names, relative to \code{path}. By
-default, every book found in \code{path} (see \code{\link[=list_books]{list_books()}}).}
+\item{dirname_reports}{Report folder names, relative to \code{path_reports}.
+By default, every book found in \code{path_reports} (see \code{\link[=list_books]{list_books()}}).}
 
-\item{path}{Folder containing the report folders.}
+\item{path_reports}{Folder containing the report folders.}
 
 \item{output_dir}{Where the rendered book is written. \code{NULL} (the default)
 keeps the \code{output-dir} of the \verb{_quarto.yml}, i.e. \verb{_book/} inside the
@@ -30,6 +31,16 @@ report folder. Otherwise a path relative to each report folder, e.g.
 \item{quiet}{Whether to suppress Quarto output.}
 
 \item{...}{Other arguments passed to \code{\link[quarto:quarto_render]{quarto::quarto_render()}}.}
+
+\item{workers}{Number of books rendered at the same time. With \code{1} (the
+default, or the option \code{kquarto.r.workers}), the books are rendered one
+after the other in the current session. With more, each book is
+rendered in a background R session (on every OS), its Quarto output
+going to a log file shown when it fails; every book is rendered even
+if one fails, and the error lists the failed ones. Each render needs
+its own memory (an R session, and Chrome for the PDF of interactive
+content), e.g. \code{workers = parallel::detectCores() - 1} on a machine
+with enough memory.}
 }
 \value{
 The paths of the output folders, invisibly.
@@ -41,6 +52,7 @@ Calls \code{\link[quarto:quarto_render]{quarto::quarto_render()}} on each report
 \dontrun{
 create_book("rapport")
 render_book("rapport")
-render_book("rapport", output_dir = "../docs/rapport")
+render_book("rapport", output_dir = "../../docs/rapport")
+render_book(workers = 3)
 }
 }

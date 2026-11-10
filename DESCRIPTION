@@ -1,7 +1,7 @@
 Package: kquarto.r
 Type: Package
 Title: Create, Template and Render 'Quarto' Books
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
     person(
       given = c("Kevin", "Bosirany"),
@@ -21,19 +21,24 @@ URL: https://github.com/kbosirany/kquarto.r,
 BugReports: https://github.com/kbosirany/kquarto.r/issues
 Encoding: UTF-8
 Imports:
-    kableExtra,
+    callr,
     knitr,
     quarto,
     tools,
     utils,
+    withr,
     yaml
 Suggests:
+    chromote,
     devtools,
+    kableExtra,
     pkgdown,
     rmarkdown,
     testthat (>= 3.0.0),
-    withr
+    webshot2
+SystemRequirements: Quarto CLI (https://quarto.org); Chrome or Chromium
+    (with webshot2) for the PDF of books with widgets (leaflet, plotly...)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

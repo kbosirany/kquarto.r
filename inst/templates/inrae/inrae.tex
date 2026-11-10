@@ -1,0 +1,18 @@
+% Style INRAE pour la sortie PDF (LaTeX) : couleurs, logo de la page de
+% titre et pied de page.
+\usepackage{xcolor}
+\definecolor{inraevert}{HTML}{00A3A6}
+\definecolor{inraevertfonce}{HTML}{00787A}
+\definecolor{inraegris}{HTML}{797870}
+\AtBeginDocument{%
+  \hypersetup{colorlinks=true, linkcolor=inraevertfonce,
+    citecolor=inraevertfonce, urlcolor=inraevertfonce}}
+\addtokomafont{disposition}{\color{inraevertfonce}}
+\usepackage{graphicx}
+\titlehead{\includegraphics[width=4cm]{images/logo-inrae.png}}
+\usepackage[headsepline=false]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\ifoot{\color{inraegris}\small INRAE}
+\ofoot{\color{inraegris}\small\pagemark}
+\renewcommand*{\chapterpagestyle}{scrheadings}

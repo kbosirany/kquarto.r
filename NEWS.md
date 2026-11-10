@@ -1,3 +1,153 @@
+# kquarto.r 0.3.0
+
+* Cette version a été développée sur la forge INRAE sous le nom `quarto.r`
+  (du 3 au 9 novembre 2026), puis ramenée dans ce dépôt sous le nom
+  `kquarto.r`. Le dépôt de la forge n'est plus maintenu.
+
+* La charte INRAE existe aussi en extension Quarto :
+  [kquarto.inrae](https://github.com/kbosirany/kquarto.inrae).
+
+* Rupture de compatibilité : les noms d'arguments dépréciés sont supprimés.
+  Utiliser `path_reports` (au lieu de `path`), `dirname_presentations` (au
+  lieu de `name` et `presentations`), `path_presentations` (au lieu de `path`
+  et `presentations_path`), `subdir_reports` (au lieu de `site_subdir`),
+  `subdir_presentations` (au lieu de `presentations_site_subdir` et
+  `presentations_subdir`) et `path_site` (au lieu de `dest`). `build_site()`
+  n'a plus que 13 arguments (18 avant).
+
+* `build_site()` ne s'arrête plus quand le dépôt n'a ni livre ni présentation :
+  il le dit dans un message et construit le site pkgdown seul. Avant, c'était
+  une erreur, qui faisait échouer le job `pages` d'un paquet sans rapport.
+
+* `build_site()` a un argument `output_format` : formats rendus en plus du
+  HTML, qui l'est toujours (`"html"` pour les livres, `"revealjs"` pour les
+  présentations), par exemple `"typst"` ou `"beamer"`. Il n'est donné qu'au
+  rendu des livres et des présentations, pas à pkgdown ; un livre ou une
+  présentation qui ne déclare pas le format n'est pas rendu dedans, et
+  `"all"` rend tous leurs formats. Les fichiers supplémentaires d'un livre
+  sont ajoutés à son dossier du site. `dev/build_site.R` appelle maintenant
+  `kquarto.r::build_site()` (variable `KPKG_OUTPUT_FORMAT`) et
+  `dev/render_reports.R`, qui le doublonnait, est supprimé.
+
+* `render_book()` (et `build_site()`) préviennent avant le rendu quand un livre
+  qui utilise des widgets (leaflet, plotly, DT...) est rendu en PDF (Typst ou
+  LaTeX) alors que `webshot2` ou Chrome/Chromium manque, avec la commande
+  d'installation, au lieu de laisser Quarto s'arrêter sur « Functions that
+  produce HTML output found in document targeting typst output ».
+  `webshot2` et `chromote` passent en Suggests, et `SystemRequirements` déclare
+  Quarto et Chrome/Chromium.
+
+* `update_gitlab_ci()` accepte aussi la liste écrite sur la ligne de la variable
+  (`- ITEM: [a, b]`) et a un argument `fetch` pour faire un `git fetch origin`
+  avant de lire les branches.
+
+* Nouvelle fonction `update_gitlab_ci()` : met à jour dans `.gitlab-ci.yml` la
+  liste (`ITEM`) de la matrice du job qui rend chaque livre et chaque
+  présentation dans son propre job, avec ceux du dossier de travail et des
+  branches `origin/main` et `origin/dev` (lues avec git). Seules les lignes de
+  la liste changent, commentaires compris.
+
+* Nouvelle fonction `source_report_setup(report)` : source le `setup.R` d'un
+  livre depuis le chunk d'initialisation de ses chapitres. Le fichier est
+  cherché depuis le dossier de travail et ses parents
+  (`reports/<report>/setup.R`, ou `setup.R` dans le dossier du livre), donc
+  le même appel marche pour `quarto render` et pour l'exécution des chunks à
+  la main, depuis la racine du projet ou n'importe quel sous-dossier.
+
+* Nouvelle fonction `render_site_item(item)` : rend un livre ou une
+  présentation dans le dossier du site pkgdown, là où `build_site()` le
+  rendrait, pour un job de CI par élément (HTML toujours, plus
+  `output_format`). Un élément absent de la branche est ignoré.
+  `build_site(check_rendered = TRUE)` s'arrête si un livre ou une
+  présentation non rendu par `build_site()` n'est pas dans le site.
+
+* `render_book()`, `render_presentation()` et `build_site()` ont un argument
+  `workers` (défaut : option `kquarto.r.workers`, sinon `1`) pour rendre
+  plusieurs livres ou présentations en même temps, chacun dans une session R
+  en arrière-plan (callr, sur tous les OS). La sortie de Quarto de chaque
+  rendu va dans un fichier de log, affiché en cas d'échec ; tous les rendus
+  vont au bout et l'erreur liste ceux qui ont échoué. `build_site()` met les
+  livres et les présentations dans la même file. Nouvelle dépendance :
+  callr (déjà installé avec quarto, via processx).
+* kableExtra passe des Imports aux Suggests : il n'est plus installé avec
+  kquarto.r. `kable()` en a toujours besoin pour la sortie HTML et donne une
+  erreur claire sans lui : l'ajouter aux dépendances des projets dont les
+  livres appellent `kable()`. kquarto.r installe ainsi 15 paquets de moins.
+* `build_site(render_reports = FALSE, render_presentations = FALSE)` met
+  quand même à jour la barre de navigation, avec les livres et les
+  présentations rendus ailleurs (par exemple par d'autres jobs de CI). Il
+  initialise aussi le site pkgdown (`pkgdown::init_site()`), sans quoi pkgdown
+  refuse d'écrire dans le dossier déjà rempli par ces rendus.
+* `build_site()` a un argument `render_presentations` : `render_reports`
+  ne concerne plus que les livres et `render_presentations` les
+  présentations, pour n'en rendre qu'une partie. La barre de navigation liste
+  toujours tous les livres et présentations trouvés, ceux qui ne sont pas
+  rendus gardant leur sortie précédente. Avant, `render_reports = FALSE`
+  désactivait aussi les présentations.
+* Arguments renommés, nom générique puis qualificatif, comme `dirname_reports` :
+  `path_reports` (dossier des livres, défaut `"reports"`) et
+  `path_presentations` (dossier des présentations, défaut `"presentations"`)
+  remplacent `path` ; `dirname_presentations` remplace `name` et
+  `presentations` ; dans `build_site()` et `update_pkgdown_yml()`,
+  `path_site` remplace `dest`, `subdir_reports` et `subdir_presentations`
+  remplacent `site_subdir`, `presentations_subdir` et
+  `presentations_site_subdir`. Les anciens noms restent acceptés, avec un
+  avertissement. Les défauts passent de `"."` à `"reports"` et
+  `"presentations"`.
+* `build_site(path_site = )` donne aussi ce dossier à pkgdown (`override:
+  destination`) et rend les livres et les présentations dans le dossier où
+  pkgdown écrit le site, `<path_site>/dev` pour une version de
+  développement. Avant, pkgdown écrivait dans la `destination` de
+  `_pkgdown.yml`, ce qui laissait un site sans ses pages pkgdown quand `dest`
+  était différent.
+* `create_book()` ajoute le dossier des livres (`reports/`) au
+  `.Rbuildignore` du package qui le contient.
+
+* Nouveau : `add_pdf_download()` ajoute à des books existants un format PDF
+  (Typst par défaut) et une icône « Download PDF » dans le volet gauche de la
+  version HTML (`book: downloads: [pdf]`), avec le style d'un template
+  optionnel. `create_book()` ajoute aussi cette icône quand `formats` combine
+  le HTML et un PDF. Rendre avec `render_book(output_format = "all")` (#15).
+* `render_presentation(output_format = "pptx")` rend un PowerPoint, qui peut
+  utiliser les masques d'un modèle (`pptx: reference-doc:` dans l'en-tête des
+  diapositives) ; `output_dir` copie aussi le `.pptx`. Le template
+  `inrae-presentation` désactive l'étirement automatique des graphiques de
+  reveal.js (`auto-stretch: false`), qui les faisait déborder des masques.
+* Le template `inrae-presentation` reprend les masques du modèle PowerPoint
+  INRAE (4:3) : diapositive de titre avec le filigrane, le chevron et les
+  logos République française et INRAE ; pages avec le motif et le logo en pied
+  de page, le titre de la présentation, la ligne date / information / auteur
+  et le numéro `p. N` ; pages intermédiaires (`# Section`) ; diapositive de fin
+  sur fond vert (`{.fin-inrae}`). Les fichiers du masque sont dans
+  `images/`. La sortie PDF Beamer est inchangée.
+* Nouveau : les présentations vont sur le site pkgdown. `build_site()` rend
+  chaque présentation de `presentations_path` (`"presentations"` par défaut)
+  dans `<dest>/presentations/<nom>/` (`index.html`, et le PDF s'il y en a un)
+  et `update_pkgdown_yml()` ajoute le menu `Presentations` à la barre de
+  navigation, avec le `title` de chaque présentation. Un site peut avoir des
+  présentations sans books, et inversement. `render_presentation()` a
+  l'argument `output_dir` pour copier les fichiers rendus.
+* Nouveau : présentations reveal.js avec `create_presentation()`,
+  `render_presentation()` et `list_presentations()`, et leurs templates
+  (`create_template_presentation()`, `list_templates_presentation()`,
+  `remove_template_presentation()`). Templates livrés :
+  `default-presentation` et `inrae-presentation`. `formats = "beamer"`
+  ajoute une sortie PDF LaTeX (Beamer) ; pas de Typst, Quarto n'ayant pas
+  de diapositives Typst.
+* Les templates ont un type, déclaré dans un `template.yml` (`book` par
+  défaut) : les listes de books et de présentations ne se mélangent pas.
+  Un template peut réutiliser des fichiers partagés (`shared:`) ; le
+  template `inrae` des books partage désormais sa charte (couleurs,
+  polices, logo) avec `inrae-presentation`.
+* Nouveau : `create_book(formats = )` ajoute un format PDF aux books :
+  `"typst"` (fourni avec Quarto, auteur obligatoire) ou `"pdf"` (LaTeX, qui
+  nécessite une distribution LaTeX comme TinyTeX). Le template `inrae` a
+  son style pour chacun (couleur et logo, Quarto >= 1.9.17 pour Typst).
+  Le PDF se génère avec `render_book(output_format = "typst")` ou
+  `"pdf"`.
+* `kable()` écrit désormais le tableau complet hors HTML (tableau Markdown,
+  compatible Typst, ou `booktabs` en LaTeX) au lieu des premières lignes.
+
 # kquarto.r 0.2.0
 
 Cette version ajoute la construction d'un site pkgdown avec ses rapports

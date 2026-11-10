@@ -26,6 +26,7 @@ format:
   html:
     theme:
       - cosmo
+      - inrae-charte.scss
       - inrae.scss
     toc: true
     number-sections: true

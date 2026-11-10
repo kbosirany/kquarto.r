@@ -1,6 +1,15 @@
 .Rproj.user
+docs
 .Rhistory
 .RData
-.Ruserdata
-docs
+.httr-oauth
+.DS_Store
+.quarto
 inst/doc
+*.whl
+# testthat snapshots of the failed tests
+tests/testthat/_problems/
+tests/testthat/testthat-problems.rds
+
+# cache of the CI
+/ci/

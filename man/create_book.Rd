@@ -6,7 +6,7 @@
 \usage{
 create_book(
   dirname_reports,
-  path = ".",
+  path_reports = "reports",
   title = NULL,
   author = NULL,
   lang = "fr",
@@ -16,15 +16,15 @@ create_book(
   chapters = NULL,
   chapter_prefix = NULL,
   ...,
+  formats = NULL,
   overwrite = FALSE
 )
 }
 \arguments{
 \item{dirname_reports}{Character vector of report folder names, relative
-to \code{path}.}
+to \code{path_reports}.}
 
-\item{path}{Folder in which the report folders are created. Defaults to
-the working directory.}
+\item{path_reports}{Folder in which the report folders are created.}
 
 \item{title}{Book title(s). By default the name of each report folder.
 Otherwise either a single title (only when one report is created), an
@@ -50,7 +50,7 @@ report folder (\code{project: output-dir}).}
 
 \item{chapters}{Optional character vector of chapter names. Each one
 creates a numbered chapter file after \code{index.qmd} with
-\code{\link[=create_book_chapter]{create_book_chapter()}}, e.g. \code{chapitre-01-introduction.qmd}. A
+\code{\link[=create_book_chapter]{create_book_chapter()}}, e.g. \code{chapitre_01_introduction.qmd}. A
 chapter whose file already exists is not created again.}
 
 \item{chapter_prefix}{Prefix of the chapter files. By default
@@ -59,6 +59,17 @@ chapter whose file already exists is not created again.}
 \item{...}{Additional fields merged (recursively) into \verb{_quarto.yml}, e.g.
 \code{format = list(html = list(theme = "flatly"))} or
 \code{book = list(chapters = c("index.qmd", "methodes.qmd"))}.}
+
+\item{formats}{Output formats of the book. \code{NULL} (the default) keeps
+those of the template (HTML for the shipped templates). \code{"typst"} adds
+a PDF built with Typst (bundled with Quarto, nothing to install) and
+\code{"pdf"} a PDF built with LaTeX (needs a LaTeX distribution, e.g.
+TinyTeX: \verb{quarto install tinytex}). Both are styled like the template
+if it has a \code{typst.yml} / \code{pdf.yml}. \code{"html"} keeps the HTML format.
+E.g. \code{c("html", "pdf")}. Render with \code{render_book(output_format = "pdf")} or \code{"typst"}. The Typst PDF needs an \code{author}. When the HTML
+is combined with a PDF format, the HTML book gets a "Download PDF"
+icon in its sidebar (\verb{book: downloads: [pdf]}), which links to the PDF
+rendered with \code{render_book(output_format = "all")}.}
 
 \item{overwrite}{If \code{FALSE} (the default), an error is raised when a
 report folder already contains a \verb{_quarto.yml}. If \code{TRUE}, the
@@ -75,15 +86,17 @@ Creates a folder for each report in \code{dirname_reports}, copies the files of
 filled with the given title, author, language, ...
 }
 \details{
-When \code{path} is the root of an R package (it contains a \code{DESCRIPTION}
-file), the report folders are also added to \code{.Rbuildignore}.
+When \code{path_reports} is the root of an R package (it contains a
+\code{DESCRIPTION} file), the report folders are also added to \code{.Rbuildignore};
+when it is a folder of the root of a package (e.g. \verb{reports/}), this
+folder is added.
 }
 \examples{
 tmp <- tempfile()
 dir.create(tmp)
 create_book(
   c("rapport_technique", "note_synthese"),
-  path = tmp,
+  path_reports = tmp,
   title = c(note_synthese = "Note de synthèse"),
   author = "Kevin Orlando",
   chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")

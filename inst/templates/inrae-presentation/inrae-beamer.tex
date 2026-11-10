@@ -1,0 +1,19 @@
+% Charte INRAE pour la sortie Beamer (PDF)
+\usepackage{graphicx}
+\definecolor{inraevert}{HTML}{00A3A6}
+\definecolor{inraevertfonce}{HTML}{00787A}
+\definecolor{inraegris}{HTML}{797870}
+\setbeamercolor{structure}{fg=inraevertfonce}
+\setbeamercolor{frametitle}{fg=inraevertfonce}
+\setbeamercolor{title}{fg=inraevertfonce}
+\setbeamercolor{footline}{fg=inraegris}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{frametitle}{%
+  \vskip0.6em\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}%
+  \insertframetitle\par}
+\setbeamertemplate{footline}{%
+  \leavevmode\hfill\usebeamercolor[fg]{footline}\footnotesize
+  INRAE\hspace{2em}\insertframenumber{} / \inserttotalframenumber\hspace{1em}%
+  \vskip0.8em}
+\setbeamertemplate{headline}{%
+  \hfill\includegraphics[height=0.7cm]{images/logo-inrae.png}\hspace{0.8em}}

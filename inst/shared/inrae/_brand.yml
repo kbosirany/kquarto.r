@@ -1,0 +1,8 @@
+# Charte INRAE pour la sortie PDF (Typst) : couleur principale et logo
+# de la page de titre.
+color:
+  palette:
+    inrae-vert: "#00a3a6"
+  primary: inrae-vert
+logo:
+  medium: images/logo-inrae.png

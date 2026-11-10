@@ -16,18 +16,30 @@ reference:
       - create_book
       - create_book_chapter
       - render_book
+      - add_pdf_download
       - list_books
       - chapter_prefix
+  - title: Présentations
+    contents:
+      - create_presentation
+      - render_presentation
+      - list_presentations
+  - title: Chapitres
+    contents:
+      - source_report_setup
   - title: Tableaux
     contents:
       - kable
   - title: Site pkgdown
     contents:
       - build_site
+      - render_site_item
       - update_pkgdown_yml
+      - update_gitlab_ci
   - title: Templates
     contents:
       - create_template_book
       - list_templates_book
       - remove_template_book
+      - create_template_presentation
       - template_dir

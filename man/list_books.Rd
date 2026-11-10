@@ -4,15 +4,15 @@
 \alias{list_books}
 \title{List the Quarto books of a folder}
 \usage{
-list_books(path = ".", recursive = FALSE)
+list_books(path_reports = "reports", recursive = FALSE)
 }
 \arguments{
-\item{path}{Folder to search in.}
+\item{path_reports}{Folder to search in.}
 
 \item{recursive}{Whether to search in subfolders.}
 }
 \value{
-The names (relative to \code{path}) of the folders containing a
+The names (relative to \code{path_reports}) of the folders containing a
 \verb{_quarto.yml} of type \code{book}.
 }
 \description{
@@ -21,6 +21,6 @@ List the Quarto books of a folder
 \examples{
 tmp <- tempfile()
 dir.create(tmp)
-create_book(c("rapport_a", "rapport_b"), path = tmp)
+create_book(c("rapport_a", "rapport_b"), path_reports = tmp)
 list_books(tmp)
 }

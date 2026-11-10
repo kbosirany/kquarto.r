@@ -2,6 +2,13 @@
 
 ## kquarto.r 0.3.0
 
+- Cette version a été développée sur la forge INRAE sous le nom
+  `quarto.r` (du 3 au 9 novembre 2026), puis ramenée dans ce dépôt sous
+  le nom `kquarto.r`. Le dépôt de la forge n’est plus maintenu.
+
+- La charte INRAE existe aussi en extension Quarto :
+  [kquarto.inrae](https://github.com/kbosirany/kquarto.inrae).
+
 - Rupture de compatibilité : les noms d’arguments dépréciés sont
   supprimés. Utiliser `path_reports` (au lieu de `path`),
   `dirname_presentations` (au lieu de `name` et `presentations`),

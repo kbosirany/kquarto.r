@@ -1,8 +1,8 @@
 # Format a table for a Quarto book
 
-Renders a data frame as a styled, scrollable table in HTML output and as
-a `booktabs` table in LaTeX/PDF output. It is meant to be called from
-the chunks of the chapters of a book.
+Renders a data frame as a styled, scrollable table in HTML output, and
+as a plain full table in PDF output (Typst, LaTeX) or any other format.
+It is meant to be called from the chunks of the chapters of a book.
 
 ## Usage
 
@@ -41,13 +41,28 @@ A `knitr_kable` object.
 
 ## Details
 
-In LaTeX output, only the first rows of `x` are kept (see
-[`utils::head()`](https://rdrr.io/r/utils/head.html)), as a long table
-does not fit in a page.
+Outside HTML the whole table is written: a Markdown table (converted by
+Quarto, so it works with Typst, Word, ...) or, in LaTeX output, a
+`booktabs` table.
+
+The HTML table needs the package kableExtra, which kquarto.r does not
+install: add it to the dependencies of the project whose books call
+`kable()`.
 
 ## Examples
 
 ``` r
+kable(head(iris), is_html_output = FALSE)
+#> 
+#> 
+#> | Sepal.Length| Sepal.Width| Petal.Length| Petal.Width|Species |
+#> |------------:|-----------:|------------:|-----------:|:-------|
+#> |          5.1|         3.5|          1.4|         0.2|setosa  |
+#> |          4.9|         3.0|          1.4|         0.2|setosa  |
+#> |          4.7|         3.2|          1.3|         0.2|setosa  |
+#> |          4.6|         3.1|          1.5|         0.2|setosa  |
+#> |          5.0|         3.6|          1.4|         0.2|setosa  |
+#> |          5.4|         3.9|          1.7|         0.4|setosa  |
 kable(head(iris), is_html_output = TRUE, title = "Iris")
 #> <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:100%; overflow-x: scroll; width:100%; "><table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 #> <caption style="font-size: initial !important;">Iris</caption>
@@ -105,19 +120,4 @@ kable(head(iris), is_html_output = TRUE, title = "Iris")
 #>   </tr>
 #> </tbody>
 #> </table></div>
-kable(head(iris), is_html_output = FALSE)
-#> 
-#> \begin{tabular}{rrrrl}
-#> \toprule
-#> Sepal.Length & Sepal.Width & Petal.Length & Petal.Width & Species\\
-#> \midrule
-#> 5.1 & 3.5 & 1.4 & 0.2 & setosa\\
-#> 4.9 & 3.0 & 1.4 & 0.2 & setosa\\
-#> 4.7 & 3.2 & 1.3 & 0.2 & setosa\\
-#> 4.6 & 3.1 & 1.5 & 0.2 & setosa\\
-#> 5.0 & 3.6 & 1.4 & 0.2 & setosa\\
-#> \addlinespace
-#> 5.4 & 3.9 & 1.7 & 0.4 & setosa\\
-#> \bottomrule
-#> \end{tabular}
 ```

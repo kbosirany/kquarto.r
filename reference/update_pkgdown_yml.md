@@ -4,11 +4,18 @@ Writes a menu entry for each book into the `_pkgdown.yml` file, so that
 [`pkgdown::build_site()`](https://pkgdown.r-lib.org/reference/build_site.html)
 links to the rendered books (see
 [`build_site()`](https://kbosirany.github.io/kquarto.r/reference/build_site.md)).
-The books form one navbar menu, `reports`. When the books have several
-languages (the `-en`/`-fr` suffix of their folder name), the menu has a
-header by language (`English`, `Français`) followed by the titles of its
-books; with a single language, or without any suffix, the titles are
-listed without header. The components `reports_en` and `reports_fr`
+The books form one navbar menu, `reports`. Each book has a category:
+`package` (the reference material about the package functions) when its
+folder name starts with a number (`01_...`), `others` otherwise (project
+report, meeting...); a `category: package` or `category: others` key in
+its `_quarto.yml` overrides it. With both categories, the menu has a
+header by category (`Package`, `Others`), suffixed by the language
+(`[en]`, `[fr]`, the `_en`/`_fr` suffix of the folder name) when there
+are several languages. With a single category, the menu has a header by
+language (`English`, `Français`) when there are several languages, none
+otherwise. The `package` items are sorted by folder name, the `others`
+items by date (folder name starting with `YYYYMMDD`), most recent first,
+then by folder name. The components `reports_en` and `reports_fr`
 written by former versions are removed.
 
 ## Usage
@@ -16,11 +23,14 @@ written by former versions are removed.
 ``` r
 update_pkgdown_yml(
   dirname_reports = NULL,
-  path = "reports",
+  path_reports = "reports",
   titles = NULL,
   pkgdown_file = "_pkgdown.yml",
-  site_subdir = "reports",
-  add_to_navbar = TRUE
+  subdir_reports = "reports",
+  add_to_navbar = TRUE,
+  dirname_presentations = NULL,
+  path_presentations = "presentations",
+  subdir_presentations = "presentations"
 )
 ```
 
@@ -28,11 +38,11 @@ update_pkgdown_yml(
 
 - dirname_reports:
 
-  Book folder names, relative to `path`. By default, every book found in
-  `path` (see
+  Book folder names, relative to `path_reports`. By default, every book
+  found in `path_reports` (see
   [`list_books()`](https://kbosirany.github.io/kquarto.r/reference/list_books.md)).
 
-- path:
+- path_reports:
 
   Folder containing the book folders.
 
@@ -46,7 +56,7 @@ update_pkgdown_yml(
 
   Path to the pkgdown configuration file.
 
-- site_subdir:
+- subdir_reports:
 
   Folder of the pkgdown site (relative to its root) where the books are
   rendered, used to build the links.
@@ -54,6 +64,25 @@ update_pkgdown_yml(
 - add_to_navbar:
 
   Whether to add the components to `navbar: structure: left`.
+
+- dirname_presentations:
+
+  Presentation folder names, relative to `path_presentations`. By
+  default, every presentation found in `path_presentations` (see
+  [`list_presentations()`](https://kbosirany.github.io/kquarto.r/reference/list_presentations.md)).
+  They form the navbar menu `presentations`, titled after the `title` of
+  their slides, with headers by category and language as the books (the
+  `category` key overriding the category is in the YAML header of the
+  slides); without any presentation, the menu is removed.
+
+- path_presentations:
+
+  Folder containing the presentation folders.
+
+- subdir_presentations:
+
+  Folder of the pkgdown site (relative to its root) where the
+  presentations are rendered, used to build the links.
 
 ## Value
 
@@ -64,6 +93,6 @@ The YAML list written to `pkgdown_file`, invisibly.
 ``` r
 if (FALSE) { # \dontrun{
 update_pkgdown_yml()
-update_pkgdown_yml("rapport-fr", titles = "Mon rapport")
+update_pkgdown_yml("rapport_fr", titles = "Mon rapport")
 } # }
 ```

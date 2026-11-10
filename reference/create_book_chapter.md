@@ -1,6 +1,6 @@
 # Add a chapter to a Quarto book
 
-Creates a numbered chapter file (e.g. `chapitre-03-methodes.qmd`) in a
+Creates a numbered chapter file (e.g. `chapitre_03_methodes.qmd`) in a
 book folder and appends it to `book: chapters` in `_quarto.yml`. The
 number is the highest existing number for this prefix, plus one, so
 `index.qmd` is never touched and chapters start at `01`.
@@ -8,21 +8,27 @@ number is the highest existing number for this prefix, plus one, so
 ## Usage
 
 ``` r
-create_book_chapter(book, name, path = ".", title = name, prefix = NULL)
+create_book_chapter(
+  book,
+  name,
+  path_reports = "reports",
+  title = name,
+  prefix = NULL
+)
 ```
 
 ## Arguments
 
 - book:
 
-  Book folder name, relative to `path`.
+  Book folder name, relative to `path_reports`.
 
 - name:
 
   Chapter name, without prefix nor number. It is converted to a file
   name (lower case, no accents, words separated by `-`).
 
-- path:
+- path_reports:
 
   Folder containing the book folder.
 
@@ -45,15 +51,15 @@ The path of the chapter file, invisibly.
 ``` r
 tmp <- tempfile()
 dir.create(tmp)
-create_book("rapport", path = tmp, lang = "fr")
+create_book("rapport", path_reports = tmp, lang = "fr")
 #> Book(s) created: rapport
-create_book_chapter("rapport", "Introduction", path = tmp)
-#> Chapter created: rapport/chapitre-01-introduction.qmd
-create_book_chapter("rapport", "Matériel et méthodes", path = tmp)
-#> Chapter created: rapport/chapitre-02-materiel-et-methodes.qmd
+create_book_chapter("rapport", "Introduction", path_reports = tmp)
+#> Chapter created: rapport/chapitre_01_introduction.qmd
+create_book_chapter("rapport", "Matériel et méthodes", path_reports = tmp)
+#> Chapter created: rapport/chapitre_02_materiel-et-methodes.qmd
 list.files(file.path(tmp, "rapport"))
 #> [1] "_quarto.yml"                         
-#> [2] "chapitre-01-introduction.qmd"        
-#> [3] "chapitre-02-materiel-et-methodes.qmd"
+#> [2] "chapitre_01_introduction.qmd"        
+#> [3] "chapitre_02_materiel-et-methodes.qmd"
 #> [4] "index.qmd"                           
 ```

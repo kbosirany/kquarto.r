@@ -9,7 +9,7 @@ of `template` into it and writes a `_quarto.yml` (project of type
 ``` r
 create_book(
   dirname_reports,
-  path = ".",
+  path_reports = "reports",
   title = NULL,
   author = NULL,
   lang = "fr",
@@ -19,6 +19,7 @@ create_book(
   chapters = NULL,
   chapter_prefix = NULL,
   ...,
+  formats = NULL,
   overwrite = FALSE
 )
 ```
@@ -27,12 +28,11 @@ create_book(
 
 - dirname_reports:
 
-  Character vector of report folder names, relative to `path`.
+  Character vector of report folder names, relative to `path_reports`.
 
-- path:
+- path_reports:
 
-  Folder in which the report folders are created. Defaults to the
-  working directory.
+  Folder in which the report folders are created.
 
 - title:
 
@@ -73,7 +73,7 @@ create_book(
   Optional character vector of chapter names. Each one creates a
   numbered chapter file after `index.qmd` with
   [`create_book_chapter()`](https://kbosirany.github.io/kquarto.r/reference/create_book_chapter.md),
-  e.g. `chapitre-01-introduction.qmd`. A chapter whose file already
+  e.g. `chapitre_01_introduction.qmd`. A chapter whose file already
   exists is not created again.
 
 - chapter_prefix:
@@ -86,6 +86,20 @@ create_book(
   Additional fields merged (recursively) into `_quarto.yml`, e.g.
   `format = list(html = list(theme = "flatly"))` or
   `book = list(chapters = c("index.qmd", "methodes.qmd"))`.
+
+- formats:
+
+  Output formats of the book. `NULL` (the default) keeps those of the
+  template (HTML for the shipped templates). `"typst"` adds a PDF built
+  with Typst (bundled with Quarto, nothing to install) and `"pdf"` a PDF
+  built with LaTeX (needs a LaTeX distribution, e.g. TinyTeX:
+  `quarto install tinytex`). Both are styled like the template if it has
+  a `typst.yml` / `pdf.yml`. `"html"` keeps the HTML format. E.g.
+  `c("html", "pdf")`. Render with `render_book(output_format = "pdf")`
+  or `"typst"`. The Typst PDF needs an `author`. When the HTML is
+  combined with a PDF format, the HTML book gets a "Download PDF" icon
+  in its sidebar (`book: downloads: [pdf]`), which links to the PDF
+  rendered with `render_book(output_format = "all")`.
 
 - overwrite:
 
@@ -101,8 +115,10 @@ The paths of the report folders, invisibly.
 
 ## Details
 
-When `path` is the root of an R package (it contains a `DESCRIPTION`
-file), the report folders are also added to `.Rbuildignore`.
+When `path_reports` is the root of an R package (it contains a
+`DESCRIPTION` file), the report folders are also added to
+`.Rbuildignore`; when it is a folder of the root of a package (e.g.
+`reports/`), this folder is added.
 
 ## Examples
 
@@ -111,7 +127,7 @@ tmp <- tempfile()
 dir.create(tmp)
 create_book(
   c("rapport_technique", "note_synthese"),
-  path = tmp,
+  path_reports = tmp,
   title = c(note_synthese = "Note de synthèse"),
   author = "Kevin Orlando",
   chapters = c("Introduction", "M\u00e9thodes", "R\u00e9sultats")
@@ -119,13 +135,13 @@ create_book(
 #> Book(s) created: rapport_technique, note_synthese
 list.files(tmp, recursive = TRUE)
 #>  [1] "note_synthese/_quarto.yml"                     
-#>  [2] "note_synthese/chapitre-01-introduction.qmd"    
-#>  [3] "note_synthese/chapitre-02-methodes.qmd"        
-#>  [4] "note_synthese/chapitre-03-resultats.qmd"       
+#>  [2] "note_synthese/chapitre_01_introduction.qmd"    
+#>  [3] "note_synthese/chapitre_02_methodes.qmd"        
+#>  [4] "note_synthese/chapitre_03_resultats.qmd"       
 #>  [5] "note_synthese/index.qmd"                       
 #>  [6] "rapport_technique/_quarto.yml"                 
-#>  [7] "rapport_technique/chapitre-01-introduction.qmd"
-#>  [8] "rapport_technique/chapitre-02-methodes.qmd"    
-#>  [9] "rapport_technique/chapitre-03-resultats.qmd"   
+#>  [7] "rapport_technique/chapitre_01_introduction.qmd"
+#>  [8] "rapport_technique/chapitre_02_methodes.qmd"    
+#>  [9] "rapport_technique/chapitre_03_resultats.qmd"   
 #> [10] "rapport_technique/index.qmd"                   
 ```

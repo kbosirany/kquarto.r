@@ -1,7 +1,7 @@
 # Image of the CI and of the dev container: R, Quarto, pandoc, Chrome (for
 # the screenshots of the widgets in the PDF) and pak. The R packages of the
 # project and their system libraries are not in the image: pak installs them
-# (cache of the CI, see .gitlab-ci.yml).
+# (in a CI, keep their library in the cache of the runner).
 #
 # Build, with the version of R (latest, devel, 4.4...):
 #   docker build --build-arg R_VERSION=latest -t kquarto.r:latest .
